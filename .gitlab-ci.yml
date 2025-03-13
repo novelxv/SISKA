@@ -1,0 +1,26 @@
+image: node:18
+
+stages:
+  - install
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - cd backend
+  - npm install
+
+test-backend:
+  stage: test
+  script:
+    - npm run test
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  script:
+    - echo "Deploying to production..."
