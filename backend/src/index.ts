@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import pool from "./config/db";
 
 dotenv.config();
 const app = express();
@@ -11,4 +12,12 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+pool.query("SELECT NOW()", (err, res) => {
+    if (err){
+        console.error("Database connection error:", err);
+    } else {
+        console.log("Database connected at:", res.rows[0].now);
+    }
 });
