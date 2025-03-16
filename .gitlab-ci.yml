@@ -13,7 +13,7 @@ cache:
 before_script:
   - cd backend
   - npm cache clean --force
-  - if ($IsWindows) { Remove-Item -Recurse -Force node_modules, package-lock.json } else { rm -rf node_modules package-lock.json }
+  - 'if [ "$OSTYPE" = "msys" ]; then Remove-Item -Recurse -Force node_modules, package-lock.json; else rm -rf node_modules package-lock.json; fi'
   - npm install
 
 test-backend:
