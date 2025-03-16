@@ -75,6 +75,46 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
+.passwordInputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.passwordInput {
+    padding-right: 40px;
+}
+
+.passwordToggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    transition: color 0.2s;
+    height: auto;
+    width: auto;
+    margin: 0;
+}
+
+.passwordToggle:hover {
+    color: #4b5563;
+    background: transparent;
+    border: none;
+}
+
+.passwordToggle:focus {
+    outline: none;
+    color: #3b82f6;
+}
+
 .button {
     margin-top: 16px;
     padding: 12px 24px;
