@@ -10,7 +10,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
     
     const { username, password, role } = req.body;
-    if (!["AKADEMIK", "ADMIN_KK"].includes(role)) {
+    if (!["AKADEMIK", "ADMIN_KK", "ADMIN_PRODI"].includes(role)) {
         res.status(400).json({ error: "Invalid role" });
         return;
     }

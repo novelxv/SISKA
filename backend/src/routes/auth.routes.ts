@@ -12,7 +12,7 @@ router.post(
     [
         body("username").notEmpty().isString(),
         body("password").isLength({ min: 6 }),
-        body("role").isIn(["AKADEMIK", "ADMIN_KK"]),
+        body("role").isIn(["AKADEMIK", "ADMIN_KK", "ADMIN_PRODI"]),
     ],
     register
 );

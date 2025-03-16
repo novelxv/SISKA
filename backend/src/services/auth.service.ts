@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-export const registerUser = async (username: string, password: string, role: "AKADEMIK" | "ADMIN_KK") => {
+export const registerUser = async (username: string, password: string, role: "AKADEMIK" | "ADMIN_KK" | "ADMIN_PRODI") => {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     return await prisma.user.create({

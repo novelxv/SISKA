@@ -17,4 +17,5 @@ model User {
 enum Role {
     AKADEMIK
     ADMIN_KK
+    ADMIN_PRODI
 }
