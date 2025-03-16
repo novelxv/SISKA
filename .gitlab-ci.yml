@@ -13,7 +13,7 @@ cache:
 before_script:
   - cd backend
   - npm cache clean --force
-  - rm -rf node_modules package-lock.json
+  - if ($IsWindows) { Remove-Item -Recurse -Force node_modules, package-lock.json } else { rm -rf node_modules package-lock.json }
   - npm install
 
 test-backend:
