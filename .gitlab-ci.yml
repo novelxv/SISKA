@@ -6,26 +6,37 @@ stages:
   - deploy
 
 cache:
-  key: "node_modules"
   paths:
     - backend/node_modules/
 
 before_script:
   - cd backend
-  - npm cache clean --force
-  - 'if [ "$OSTYPE" = "msys" ]; then Remove-Item -Recurse -Force node_modules, package-lock.json; else rm -rf node_modules package-lock.json; fi'
+  - echo "Checking files in backend directory..."
+  - ls
+  - if ($IsWindows) {
+      Write-Host "Running on Windows";
+      Remove-Item -Recurse -Force node_modules, package-lock.json -ErrorAction SilentlyContinue
+    } else {
+      echo "Running on Linux/macOS";
+      rm -rf node_modules package-lock.json
+    }
   - npm install
+
+install:
+  stage: install
+  script:
+    - echo "Installation completed"
 
 test-backend:
   stage: test
-  tags:
-    - siska
   script:
     - npm run test
+  only:
+    - main
 
 deploy:
   stage: deploy
-  only:
-    - main
   script:
     - echo "Deploying to production..."
+  only:
+    - main
