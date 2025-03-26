@@ -1,5 +1,6 @@
 import React from 'react';
 import Sidebar from '../components/Navbar';
+import "../styles/Global.css"
 
 const Dashboard: React.FC = () => {
     return (
