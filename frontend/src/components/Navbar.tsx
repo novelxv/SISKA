@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaUsers, FaFileAlt, FaUserCog, FaSignOutAlt } from "react-icons/fa";
-import "../styles/Sidebar.css";
+import "../styles/Navbar.css";
 
 const Sidebar = () => {
   const location = useLocation();
