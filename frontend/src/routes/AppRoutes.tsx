@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
+import SKList from "../pages/SKList";
 
 const AppRoutes = () => {
     const auth = useContext(AuthContext);
@@ -11,7 +12,8 @@ const AppRoutes = () => {
         <Router>
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/dashboard" element={auth?.token ? <Dashboard /> : <Navigate to="/login" />} />
+                <Route path="/dosen" element={auth?.token ? <Dashboard /> : <Navigate to="/login" />} />
+                <Route path="/sk" element={auth?.token ? <SKList /> : <Navigate to="/login" />} />
             </Routes>
         </Router>
     );
