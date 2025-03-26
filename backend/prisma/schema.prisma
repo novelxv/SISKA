@@ -19,3 +19,152 @@ enum Role {
     ADMIN_KK
     ADMIN_PRODI
 }
+
+model Dosen {
+  id_dosen           Int       @id @default(autoincrement())
+  nama_tanpa_gelar  String
+  nama_plus_gelar   String
+  NIDN              String?
+  NIP               String?
+  KK                KelompokKeahlian?
+  jenis_kepegawaian JenisKepegawaian?
+  pangkat           String?
+  jabatan_fungsional String?
+  status_kepegawaian StatusKepegawaian?
+  aktif_mulai       DateTime?
+  aktif_sampai      DateTime?
+  keterangan        String?
+  instansi_asal     String?
+  Pembimbing        Pembimbing[]
+  Penguji           Penguji[]
+  DosenMatkul       DosenMatkul[]
+}
+
+enum KelompokKeahlian {
+    INFORMATIKA
+    ELEKTRONIKA
+    REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN
+    SISTEM_KENDALI_DAN_KOMPUTER
+    TEKNIK_TELEKOMUNIKASI
+    TEKNIK_KETENAGALISTRIKAN
+    TEKNIK_KOMPUTER
+    TEKNOLOGI_INFORMASI
+}
+
+enum JenisKepegawaian {
+    DOSEN_TETAP
+    BHMN
+    DOSEN_TAK_TETAP_PENGAJAR
+    DOSEN_TAK_TETAP_PENELITI
+    DOSEN_LUAR_STEI
+    DOSEN_LUAR_ITB
+    DOSEN_INDUSTRI
+    TUTOR
+}
+
+enum StatusKepegawaian {
+    AKTIF
+    PENSIUN
+    PENSIUN_JANDA_DUDA
+    TUGAS_BELAJAR
+    MENGUNDURKAN_DIRI
+    DIBERHENTIKAN_HORMAT
+}
+
+model Pembimbing {
+  id_dosen        Int @id
+  NIM             String
+  jabatan         String
+  tanggal_sidang  DateTime
+
+  Dosen           Dosen   @relation(fields: [id_dosen], references: [id_dosen])
+  Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
+}
+
+model Penguji {
+  id_dosen        Int @id
+  NIM             String
+  jabatan         String
+  tanggal_sidang  DateTime
+
+  Dosen           Dosen   @relation(fields: [id_dosen], references: [id_dosen])
+  Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
+}
+
+model Mahasiswa {
+  NIM             String    @id
+  nama            String
+  jurusan         String
+  NIP_doswal      String
+
+  Pembimbing      Pembimbing[]
+  Penguji         Penguji[]
+  Asisten         Asisten[]
+}
+
+model Asisten {
+  NIM             String
+  kode_matkul     String
+  jabatan         JabatanAsisten
+
+  Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
+  MataKuliah      MataKuliah @relation(fields: [kode_matkul], references: [kode_matkul])
+
+  @@id([NIM, kode_matkul])
+}
+
+enum JabatanAsisten {
+    ASISTEN_KULIAH
+    KOORDINATOR_ASISTEN_KULIAH
+    ASISTEN_PRAKTIKUM
+    KOORDINATOR_ASISTEN_PRAKTIKUM
+}
+
+model MataKuliah {
+  kode_matkul     String   @id
+  mata_kuliah     String
+  kode_prodi      String
+  sks             Int
+  no_kelas        String
+  kuota           Int
+  jumlah_peserta  Int
+  dosen_pengampu  String
+  pembatasan      String
+
+  DosenMatkul     DosenMatkul[]
+  Asisten         Asisten[] 
+}
+
+model DosenMatkul {
+  id_dosen        Int
+  kode_matkul     String
+  beban_riil      Float
+  jabatan         String
+
+  Dosen           Dosen       @relation(fields: [id_dosen], references: [id_dosen])
+  MataKuliah      MataKuliah  @relation(fields: [kode_matkul], references: [kode_matkul])
+
+  @@id([id_dosen, kode_matkul])
+}
+
+model SK {
+  no_sk           String    @id
+  jenis_sk        String
+  semester        Int
+  tanggal         DateTime
+  NIP_dekan       String
+  tanda_tangan    String
+  file_sk         String
+
+  Dekan           Dekan @relation(fields: [NIP_dekan], references: [NIP])
+}
+
+model Dekan {
+  NIP             String   @id
+  nama            String
+  aktif_mulai     DateTime
+  aktif_sampai    DateTime?
+  status          String
+
+  SK              SK[]
+}
