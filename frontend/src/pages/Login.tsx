@@ -23,7 +23,7 @@ const Login = () => {
         try {
             await auth?.login(username, password);
             toast.success("Login berhasil!");
-            setTimeout(() => navigate("/dashboard"), 1500);
+            setTimeout(() => navigate("/dosen"), 1500);
         } catch (err) {
             const errorMessage = typeof err === "string" ? err : "Login gagal. Silakan coba lagi.";
             setError(errorMessage);
