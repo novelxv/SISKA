@@ -1,9 +1,10 @@
 import React from 'react';
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from '../components/Navbar';
 import "../styles/Global.css"
 import "../styles/SK.css"
-import { FaDownload, FaSearch, FaCaretDown, FaPencilAlt } from 'react-icons/fa';
+import { FaDownload, FaSearch, FaAngleDown, FaPencilAlt } from 'react-icons/fa';
 
 const dummy_sk = [
     {'no' : '74', 'judul': 'SK Dekan tentang Dosen pembimbing, Promotor dan penguji Tugas Akhir, Tesis dan Disertasi Yudisium Nov. 2024, Des. 2024, Jan. 2025 & Feb. 2025', 'tanggal': '12 Februari 2025'},
@@ -23,6 +24,11 @@ const SKList = () => {
     const [sklist, setSK] = useState(dummy_sk);
     const [draftlist, setDraft] = useState(dummy_draft);
     const [query, setQuery] = useState('');
+    const navigate = useNavigate();
+
+    const navToDraft = () =>{ 
+        navigate('/draft-sk');
+    }
 
     return (
         <div className='container'>
@@ -36,14 +42,14 @@ const SKList = () => {
                     </div>
                     <div className='filter dropdown'>
                         <div>Jenis SK</div>
-                        <div><FaCaretDown /></div>
+                        <div><FaAngleDown /></div>
                     </div>
                     <div></div>
                     <div className='sort'>
                         <p>Sort: </p>
                         <div className='filter dropdown'>
                             <div>Tanggal ↓</div>
-                            <div><FaCaretDown /></div>
+                            <div><FaAngleDown /></div>
                         </div>
                     </div>
                 </div>
@@ -61,7 +67,7 @@ const SKList = () => {
                         <tr>
                             <td><a href='./src/assets/contoh_sk.pdf' target='_blank'><FaDownload/></a></td>
                             <td>{sk.no}</td>
-                            <td>{sk.judul}</td>
+                            <td><div className='td-judul'>{sk.judul}</div></td>
                             <td>{sk.tanggal}</td>
                         </tr>
                     ))}
@@ -81,16 +87,16 @@ const SKList = () => {
                         <tbody>
                         {draftlist.map((draft, _) => (
                             <tr>
-                                <td>{draft.judul}</td>
+                                <td><div className='td-judul'>{draft.judul}</div></td>
                                 <td>{draft.buat}</td>
                                 <td>{draft.modif}</td>
-                                <td><FaPencilAlt/></td>
+                                <td className='edit-button'><div><FaPencilAlt/></div></td>
                             </tr>
                         ))}
                         </tbody>
                     </div>
                     <div className='skbaru'>
-                        <div className='button'>
+                        <div className='button-blue' onClick={navToDraft}>
                             + SK Baru
                         </div>
                     </div>

@@ -11,15 +11,16 @@
 .skfilters {
     width: 100%;
     display: grid;
-    grid-template-columns: 30% 20% 20% 30%;
+    grid-template-columns: 30% 20% 14% 30%;
     margin: 1.5vw 0;
+    gap: 2%;
 }
 
 .filter {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-right: 2vw;
+    /* margin-right: 2vw; */
     padding: 0.75vw;
     border: 1px solid gray;
     border-radius: 15px;
@@ -47,12 +48,22 @@
 .skbaru {
     display: flex;
     justify-content: flex-end;
-    margin: 1vw;
+    margin: 1vw 0;
 }
 
-.button {
+.button-blue {
     width: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.td-judul {
+    text-align: left;
+}
+
+.edit-button:hover {
+    background-color: #f7fcfe;
+    color: #1075BA;
+    cursor: pointer;
 }

@@ -90,6 +90,20 @@ body {
     background: #0c5a90;
 }
 
+.button-white {
+    padding: 7px 12px;
+    background: white;
+    color: #1075BA;
+    border-radius: 15px;
+    text-decoration: none;
+    border: 3px solid #1075BA;
+    cursor: pointer;
+}
+
+.button-white:hover {
+    background: #f7fcfe;
+}
+
 /* Pagination */
 .pagination {
     display: flex;
