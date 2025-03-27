@@ -17,19 +17,19 @@ const Sidebar = () => {
         <ul>
           <li className={location.pathname === "/dosen" ? "active" : ""}>
             <Link to="/dosen">
-              <FaUsers className="icon" />
+              <FaUsers />
               Dosen
             </Link>
           </li>
           <li className={location.pathname === "/sk" ? "active" : ""}>
             <Link to="/sk">
-              <FaFileAlt className="icon" />
+              <FaFileAlt />
               Surat Keputusan (SK)
             </Link>
           </li>
           <li className={location.pathname === "/kelola-akun" ? "active" : ""}>
             <Link to="/kelola-akun">
-              <FaUserCog className="icon" />
+              <FaUserCog />
               Kelola Akun
             </Link>
           </li>
@@ -39,7 +39,7 @@ const Sidebar = () => {
       {/* Logout Button */}
       <div className="logout">
         <Link to="/logout">
-          <FaSignOutAlt className="icon" />
+          <FaSignOutAlt />
           Logout
         </Link>
       </div>

@@ -4,6 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import SKList from "../pages/SKList";
+import Dosen from "../pages/Dosen";
+import AddDosen from "../pages/AddDosen";
 import KelolaAkun from "../pages/KelolaAkun";
 import DraftSK from "../pages/DraftSK";
 
@@ -14,8 +16,11 @@ const AppRoutes = () => {
         <Router>
             <Routes>
                 <Route path="/login" element={<Login />} />
+                {/* <Route path="/dosen" element={<Dosen />}/> */}
                 <Route path="/dosen" element={auth?.token ? <Dashboard /> : <Navigate to="/login" />} />
                 <Route path="/sk" element={auth?.token ? <SKList /> : <Navigate to="/login" />} />
+                <Route path="/dosen/:nama" element={auth?.token ? <Dosen /> : <Navigate to="/login" />} />
+                <Route path="/add-dosen" element={auth?.token ? <AddDosen /> : <Navigate to="/login" />} />
                 <Route path="/kelola-akun" element={auth?.token ? <KelolaAkun /> : <Navigate to="/login" />} />
                 <Route path="/draft-sk" element={auth?.token ? <DraftSK /> : <Navigate to="/login" />} />
             </Routes>
