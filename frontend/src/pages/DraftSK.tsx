@@ -28,7 +28,7 @@ const DraftSK = () => {
                     <div className='inputrow1'>
                         <div className='template'>
                             <div>Template: </div>
-                            <select name="jenisSK" id="jenisSK">
+                            <select name="jenisSK" id="jenisSK" className='sk-select'>
                                 <option>SK Pengajaran</option>
                                 <option>SK Pembimbing dan Penguji</option>
                                 <option>SK Pembimbing Mahasiswa Aktif</option>
@@ -42,31 +42,31 @@ const DraftSK = () => {
                     <div className='inputrow2'>
                         <div>
                             Judul SK <br></br>
-                            <input type="text"></input>
+                            <input type="text" className='sk-input'></input>
                         </div>
                     </div>
                     <div className='inputrow3'>
                         <div>
                             Nomor SK <br></br>
-                            <input type="text"></input>
+                            <input type="text" className='sk-input'></input>
                         </div>
                         <div>
                             Tanggal <br></br>
-                            <input type="text"></input>
+                            <input type="text" className='sk-input'></input>
                         </div>
                         <div>
                             Semester <br></br>
-                            <input type="text"></input>
+                            <input type="text" className='sk-input'></input>
                         </div>
                     </div>
                     <div className='inputrow4'>
                         <div>
                             Nama Dekan <br></br>
-                            <input type="text"></input>
+                            <input type="text" className='sk-input'></input>
                         </div>
                         <div>
                             NIP Dekan <br></br>
-                            <input type="text"></input>
+                            <input type="text" className='sk-input'></input>
                         </div>
                     </div>
                     <div className='inputrow5'>

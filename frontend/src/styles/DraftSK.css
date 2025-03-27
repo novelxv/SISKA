@@ -12,7 +12,7 @@
     cursor: pointer;
 }
 
-input {
+.sk-input {
     background-color: white;
     color: black;
     border: 1px solid gray;
@@ -22,7 +22,7 @@ input {
     width: 100%;
 }
 
-select {
+.sk-select {
     background-color: white;
     color: black;
     border: 1px solid gray;

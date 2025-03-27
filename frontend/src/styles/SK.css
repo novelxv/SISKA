@@ -1,5 +1,6 @@
 .content {
-    padding: 2vw;
+    margin: 2vw;
+    width: 70%;
     overflow: auto;
     font-size: 14px;
 }
@@ -11,26 +12,45 @@
 .skfilters {
     width: 100%;
     display: grid;
-    grid-template-columns: 30% 20% 14% 30%;
+    grid-template-columns: 30% 28% 20% 15%;
     margin: 1.5vw 0;
     gap: 2%;
 }
 
-.filter {
+.search {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    /* margin-right: 2vw; */
     padding: 0.75vw;
     border: 1px solid gray;
-    border-radius: 15px;
+    border-radius: 10px;
     align-items: center;
+}
+
+.sk-search {
+    border: 0px;
+    padding: 0px;
+    background-color: white;
+    color: black;
+    width: 100%;
+}
+
+.sk-search:focus {
+    outline: none;
+}
+
+.sk-select {
+    background-color: white;
+    color: black;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 0.75vw;
 }
 
 .sort {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 1vw;
     align-items: center;
 }
