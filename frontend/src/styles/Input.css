@@ -1,0 +1,15 @@
+.form-input {
+    background-color: white;
+    color: black;
+}
+
+.input-error {
+    border-color: red;
+  }
+  
+.error-text {
+color: red;
+font-size: 0.8rem;
+margin-top: 4px;
+}
+  

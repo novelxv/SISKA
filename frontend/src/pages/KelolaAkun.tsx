@@ -3,10 +3,11 @@ import Sidebar from "../components/Navbar";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/KelolaAkun.css";
 import "../styles/Global.css";
-import SearchBar from "../components/SearchBar";
+import Search from "../components/Search";
 import SortButton from "../components/SortButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 interface User {
     id: number;
@@ -16,7 +17,8 @@ interface User {
 }
 
 const KelolaAkun: React.FC = () => {
-    const [searchQuery, setSearchQuery] = useState<string>("");
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState<string>("");
     const [users, setUsers] = useState<User[]>([
         { id: 1, username: "adminstei1", password: "admin123", role: "AKADEMIK" },
@@ -45,8 +47,7 @@ const KelolaAkun: React.FC = () => {
     };
 
     const handleSearch = (query: string) => {
-        setSearchQuery(query);
-        console.log("Pencarian untuk:", query);
+        setSearchTerm(query);
     };
 
     const handleDeleteClick = (user: User) => {
@@ -69,10 +70,10 @@ const KelolaAkun: React.FC = () => {
             <main className="content">
                 <div className="header">
                     <h1>Daftar Akun</h1>
-                    <button className="button-blue">+ Tambah Akun</button>
+                    <button className="button-blue" onClick={() => navigate("/tambah-akun")}>+ Tambah Akun</button>
                 </div>
                 <div className="kelola-filtercontainer">
-                    <SearchBar onSearch={handleSearch} />
+                    <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
                     <SortButton items={["username", "role"]} onSelect={handleSort} />
                 </div>
 
@@ -90,7 +91,7 @@ const KelolaAkun: React.FC = () => {
                         <tbody>
                             {users
                                 .filter(user =>
-                                    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+                                    user.username.toLowerCase().includes(searchTerm.toLowerCase())
                                 )
                                 .map((user, index) => (
                                     <tr key={user.id}>
