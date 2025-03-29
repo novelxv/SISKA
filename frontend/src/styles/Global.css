@@ -50,6 +50,25 @@ body {
     line-height: 150%;
 }
 
+/* Form Header */
+.formheader {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+}
+
+.formheader h1 {
+    color: #000;
+    font-family: "Poppins";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+}
+
 /* Table Container */
 .table-container {
     flex-grow: 1;

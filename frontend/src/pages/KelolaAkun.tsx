@@ -4,7 +4,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/KelolaAkun.css";
 import "../styles/Global.css";
 import Search from "../components/Search";
-import SortButton from "../components/SortButton";
+import SortButtonNew from "../components/SortButtonNew";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -74,7 +74,11 @@ const KelolaAkun: React.FC = () => {
                 </div>
                 <div className="kelola-filtercontainer">
                     <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
-                    <SortButton items={["username", "role"]} onSelect={handleSort} />
+                    <SortButtonNew 
+                        options={["username", "role"]} 
+                        selectedOption={selectedSort} 
+                        onChange={handleSort} 
+                    />
                 </div>
 
                 <div className="table-container">

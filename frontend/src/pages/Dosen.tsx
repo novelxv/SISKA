@@ -3,6 +3,7 @@ import Sidebar from '../components/Navbar';
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaDownload, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import '../styles/Dosen.css';
 import "../styles/Global.css";
+import SortButtonNew from '../components/SortButtonNew';
 import Search from '../components/Search';
 
 interface DosenData {
@@ -28,6 +29,16 @@ export default function Dosen() {
   const [filteredData, setFilteredData] = useState<DosenData[]>([]);
   const itemsPerPage = 10;
   
+  const prodiOptions = [
+    "",
+    "132 - Teknik Elektro",
+    "135 - Teknik Informatika",
+    "180 - Teknik Tenaga Listrik",
+    "181 - Teknik Telekomunikasi",
+    "182 - Sistem dan Teknologi Informasi",
+    "183 - Teknik Biomedis"
+  ];
+
   // Data dosen dummy
   const dosenNames = [
     "Achmad Imam Kistijantoro",
@@ -112,7 +123,7 @@ export default function Dosen() {
 
       filtered = filtered.filter(dosen => dosen.id % 3 === parseInt(prodi) % 3);
     }
-    
+
     if (kk) {
       filtered = filtered.filter(dosen => dosen.kk === kk);
     }
@@ -251,6 +262,17 @@ export default function Dosen() {
         <div className="filter-row">
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           
+          {/* <SortButtonNew 
+            options={["Prodi", ...prodiOptions.slice(1)]} // Display "Prodi" as label
+            selectedOption={prodi} 
+            onChange={setProdi} 
+          />
+
+          <SortButtonNew 
+            options={["KK", ...kkOptions]} 
+            selectedOption={kk} 
+            onChange={setKK} 
+          /> */}
           <div className="filter-select">
             <select 
               value={prodi} 

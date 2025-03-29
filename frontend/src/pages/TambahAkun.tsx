@@ -6,7 +6,7 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import "../styles/TambahAkun.css";
 import InputField from "../components/Input";
 import { toast } from "react-toastify";
-
+import SortButtonNew from "../components/SortButtonNew";
 
 const TambahAkun: React.FC = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const TambahAkun: React.FC = () => {
       <Sidebar />
       <div className="content-area">
         <div className="form-container">
-          <div className="header">
+          <div className="formheader">
             <button className="back-button" onClick={handleCancel}>
               <RiArrowLeftSLine size={24} />
             </button>
