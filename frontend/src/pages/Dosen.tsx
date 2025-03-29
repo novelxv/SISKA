@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Navbar';
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaDownload, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import '../styles/Dosen.css';
+import "../styles/Global.css";
+import Search from '../components/Search';
 
 interface DosenData {
   id: number;
@@ -235,7 +237,7 @@ export default function Dosen() {
       <Sidebar />
       <main className="dosen-content">
 
-        <div className="header-container">
+        <div className="header">
           <h1>Daftar Dosen</h1>
           
           <button className="add-dosen-btn">
@@ -247,18 +249,7 @@ export default function Dosen() {
         </div>
         
         <div className="filter-row">
-          <div className="search-container">
-            <input 
-              type="text" 
-              placeholder="Cari Dosen..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-            <span className="search-icon-wrapper">
-              <FaSearch />
-            </span>
-          </div>
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           
           <div className="filter-select">
             <select 
