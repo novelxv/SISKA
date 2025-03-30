@@ -76,6 +76,8 @@ body {
     background: white;
     padding: 20px;
     border-radius: 10px;
+    height: 400px;
+    overflow-y: auto;
     overflow-x: auto; /* Scroll if table overflow */
 }
 

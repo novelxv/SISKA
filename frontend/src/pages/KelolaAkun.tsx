@@ -4,6 +4,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/KelolaAkun.css";
 import "../styles/Global.css";
 import Search from "../components/Search";
+import ButtonWithIcon from "../components/Button";
 import SortButtonNew from "../components/SortButtonNew";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,6 +17,15 @@ const KelolaAkun: React.FC = () => {
     const [selectedSort, setSelectedSort] = useState<string>("");
     const [users, setUsers] = useState<User[]>([]);
     const [allUsers, setAllUsers] = useState<User[]>([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(users.length / itemsPerPage);
+    const displayedUsers = users.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+    
 
     // State for modal
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,12 +52,13 @@ const KelolaAkun: React.FC = () => {
     const handleSort = (role: string) => {
         console.log("INI ISI DARI ROLE", role);
         setSelectedSort(role);
+        const normalizeRole = (r: string) => r.replace(/_/g, " ");
     
         if (role === "" || role === "Semua Role") {
             console.log("MASUK SINI");
             setUsers(allUsers);
         } else {
-            const filteredUsers = allUsers.filter(user => user.role === role);
+            const filteredUsers = allUsers.filter(user => normalizeRole(user.role) === role);
             setUsers(filteredUsers);
         }
     };
@@ -66,6 +77,9 @@ const KelolaAkun: React.FC = () => {
         navigate(`/edit-akun/${user.id}`);
     };
 
+    const handleAddAkun = () => {
+        navigate('/tambah-akun');
+    }
     const confirmDelete = async () => {
         if (selectedUser) {
             try {
@@ -88,7 +102,7 @@ const KelolaAkun: React.FC = () => {
             <main className="content">
                 <div className="header">
                     <h1>Daftar Akun</h1>
-                    <button className="button-blue" onClick={() => navigate("/tambah-akun")}>+ Tambah Akun</button>
+                    <ButtonWithIcon text="Tambah Dosen" onClick={handleAddAkun} />
                 </div>
                 <div className="kelola-filtercontainer">
                     <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
@@ -111,33 +125,59 @@ const KelolaAkun: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users
-                                .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
-                                .map((user, index) => (
-                                    <tr key={user.id}>
-                                        <td>{index + 1}</td>
-                                        <td>{user.username}</td>
-                                        <td>{user.password}</td>
-                                        <td>{user.role}</td>
-                                        <td>
-                                            <div className="action-icons">
-                                                <FaEdit onClick={() => handleEditClick(user)}/>
-                                                <FaTrash onClick={() => handleDeleteClick(user)}/>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                            {users.length > 0 ? (
+                                users
+                                    .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+                                    .map((user, index) => (
+                                        <tr key={user.id}>
+                                            <td>{index + 1}</td>
+                                            <td>{user.username}</td>
+                                            <td>{user.password}</td>
+                                            <td>{user.role.replace(/_/g, " ")}</td>
+                                            <td>
+                                                <div className="action-icons">
+                                                    <FaEdit onClick={() => handleEditClick(user)} />
+                                                    <FaTrash onClick={() => handleDeleteClick(user)} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="no-data">No Data Available</td>
+                                </tr>
+                            )}
                         </tbody>
 
                     </table>
                 </div>
 
                 <div className="pagination">
-                    <button className="active">1</button>
-                    <button>2</button>
-                    <button>...</button>
-                    <button>10</button>
+                    <button 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                    >
+                        &laquo;
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button 
+                            key={index + 1} 
+                            className={currentPage === index + 1 ? "active" : ""}
+                            onClick={() => setCurrentPage(index + 1)}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+
+                    <button 
+                        disabled={currentPage === totalPages} 
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                    >
+                        &raquo;
+                    </button>
                 </div>
+
             </main>
 
             {/* Confirmation Delete */}
