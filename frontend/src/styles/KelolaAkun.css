@@ -133,3 +133,7 @@
     font-weight: bold;
     border-color: #007bff;
 }
+
+.pagination-container {
+    padding-left: 20px;
+}
