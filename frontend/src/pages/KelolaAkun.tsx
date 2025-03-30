@@ -213,7 +213,9 @@ const KelolaAkun: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {displayedUsers.length > 0 ? (
+                            {displayedUsers
+                                .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+                                .length > 0 ? (
                                 displayedUsers
                                     .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
                                     .map((user, index) => (
