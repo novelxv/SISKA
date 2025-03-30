@@ -148,23 +148,37 @@ model DosenMatkul {
 }
 
 model SK {
-  no_sk           String    @id
-  jenis_sk        String
-  semester        Int
-  tanggal         DateTime
-  NIP_dekan       String
-  tanda_tangan    String
-  file_sk         String
+  no_sk         String   @id
+  judul         String
+  jenis_sk      JenisSK
+  semester      Int
+  tanggal       DateTime
+  status        SKStatus
+  NIP_dekan     String
+  file_sk       String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
-  Dekan           Dekan @relation(fields: [NIP_dekan], references: [NIP])
+  Dekan         Dekan @relation(fields: [NIP_dekan], references: [NIP])
+}
+
+enum JenisSK {
+  PENGAJARAN
+  PEMBIMBING_PENGUJI
+  PEMBIMBING_AKTIF
+  WALI_TPB
+  WALI_MHS_AKTIF
+  ASISTEN_PRAKTIKUM
+}
+
+enum SKStatus {
+  DRAFT
+  PUBLISHED
 }
 
 model Dekan {
-  NIP             String   @id
-  nama            String
-  aktif_mulai     DateTime
-  aktif_sampai    DateTime?
-  status          String
-
-  SK              SK[]
+  NIP           String   @id
+  nama          String
+  ttd_url       String?
+  SKs           SK[]
 }
