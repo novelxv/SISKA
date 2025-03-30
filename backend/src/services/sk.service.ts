@@ -12,7 +12,23 @@ export const createDraftSKService = async (data: {
     semester: number;
     tanggal: string;
     NIP_dekan: string;
+    nama_dekan: string;
+    ttd_dekan: string;
 }) => {
+    const existingDekan = await prisma.dekan.findUnique({
+        where: { NIP: data.NIP_dekan },
+    });
+
+    if (!existingDekan) {
+        await prisma.dekan.create({
+            data: {
+                NIP: data.NIP_dekan,
+                nama: data.nama_dekan,
+                ttd_url: data.ttd_dekan,
+            },
+        });
+    }
+
     return await prisma.sK.create({
         data: {
             no_sk: data.no_sk,
