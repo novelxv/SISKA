@@ -5,6 +5,7 @@ import '../styles/Dosen.css';
 import "../styles/Global.css";
 import SortButtonNew from '../components/SortButtonNew';
 import Search from '../components/Search';
+import { useNavigate } from 'react-router-dom';
 
 interface DosenData {
   id: number;
@@ -28,7 +29,7 @@ export default function Dosen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState<DosenData[]>([]);
   const itemsPerPage = 10;
-  
+  const navigate = useNavigate();
   const prodiOptions = [
     "",
     "132 - Teknik Elektro",
@@ -63,7 +64,7 @@ export default function Dosen() {
     "Adi Mulyanto"
   ];
   
-  const kkOptions = ["KK Teknik Ketenagalistrikan", "KK Teknik Telekomunikasi", "KK Elektronika", "KK Sistem dan Komputer", "KK Teknik Komputer", "KK Teknik Biomedika", "KK Teknologi Informasi", "KK Rekayasa Perangkat Lunak dan Pengetahuan"];
+  const kkOptions = ["KK Informatika", "KK Teknik Ketenagalistrikan", "KK Teknik Telekomunikasi", "KK Elektronika", "KK Sistem dan Komputer", "KK Teknik Komputer", "KK Teknik Biomedika", "KK Teknologi Informasi", "KK Rekayasa Perangkat Lunak dan Pengetahuan"];
   const pangkatOptions = ["III / a", "III / b", "III / c", "III / d", "IV / a", "IV / b"];
   const jabatanOptions = ["LEKTOR", "LEKTOR KEPALA", "ASISTEN AHLI", "GURU BESAR"];
   
@@ -243,6 +244,10 @@ export default function Dosen() {
     return items;
   };
 
+  const handleAddDosen = () => {
+    navigate('/tambah-dosen');
+  }
+
   return (
     <div className="dosen-page">
       <Sidebar />
@@ -251,7 +256,7 @@ export default function Dosen() {
         <div className="header">
           <h1>Daftar Dosen</h1>
           
-          <button className="add-dosen-btn">
+          <button className="add-dosen-btn" onClick={handleAddDosen}>
             <span className="icon-wrapper">
               <FaPlus />
             </span>
@@ -273,7 +278,7 @@ export default function Dosen() {
             selectedOption={kk} 
             onChange={setKK} 
           /> */}
-          <div className="filter-select">
+          {/* <div className="filter-select">
             <select 
               value={prodi} 
               onChange={(e) => setProdi(e.target.value)}
@@ -287,7 +292,7 @@ export default function Dosen() {
               <option value='6'>183 - Teknik Biomedis</option>
             </select>
           </div>
-          
+           */}
           <div className="filter-select">
             <select 
               value={kk} 
