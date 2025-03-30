@@ -56,6 +56,10 @@ const KelolaAkun: React.FC = () => {
         setIsModalOpen(true);
     };
 
+    const handleEditClick = (user: User) => {
+        navigate(`/edit-akun/${user.id}`);
+    };
+
     const confirmDelete = async () => {
         if (selectedUser) {
             try {
@@ -113,7 +117,9 @@ const KelolaAkun: React.FC = () => {
                                         <td>{user.role}</td>
                                         <td>
                                             <div className="action-icons">
-                                                <FaEdit />
+                                                <button className="icon-button" onClick={() => handleEditClick(user)}>
+                                                    <FaEdit />
+                                                </button>
                                                 <button className="icon-button" onClick={() => handleDeleteClick(user)}>
                                                     <FaTrash />
                                                 </button>
