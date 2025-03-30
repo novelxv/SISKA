@@ -29,8 +29,8 @@ model Dosen {
   KK                KelompokKeahlian?
   jenis_kepegawaian JenisKepegawaian?
   pangkat           String?
-  jabatan_fungsional String?
-  status_kepegawaian StatusKepegawaian?
+  jabatan_fungsional JabatanFungsional?
+  status_kepegawaian StatusKepegawaian
   aktif_mulai       DateTime?
   aktif_sampai      DateTime?
   instansi_asal     String?
@@ -52,12 +52,12 @@ enum KelompokKeahlian {
 
 enum JenisKepegawaian {
     DOSEN_TETAP
-    BHMN
     DOSEN_TAK_TETAP_PENGAJAR
     DOSEN_TAK_TETAP_PENELITI
     DOSEN_LUAR_STEI
     DOSEN_LUAR_ITB
     DOSEN_INDUSTRI
+    ASISTEN_AKADEMIK
     TUTOR
 }
 
@@ -69,6 +69,13 @@ enum StatusKepegawaian {
     TUGAS_BELAJAR
     MENGUNDURKAN_DIRI
     DIBERHENTIKAN_HORMAT
+}
+
+enum JabatanFungsional {
+  ASISTEN_AHLI
+  LEKTOR
+  LEKTOR_KEPALA
+  GURU_BESAR
 }
 
 model Pembimbing {
