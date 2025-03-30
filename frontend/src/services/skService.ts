@@ -14,8 +14,10 @@ export const uploadTTD = async (nip: string, file: File) => {
     return response.data;
 };
 
-export const previewSK = async (no_sk: string): Promise<Blob> => {
-    const response = await api.get(`/sk/${no_sk}/preview`, { responseType: "blob" });
+export const previewSK = async (formData: any): Promise<Blob> => {
+    const response = await api.post("/sk/preview", formData, {
+        responseType: "blob",
+    });
     return response.data;
 };
 
