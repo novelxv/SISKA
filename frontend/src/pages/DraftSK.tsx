@@ -17,9 +17,9 @@ const DraftSK = () => {
     }
 
     return (
-        <div className='container'>
+        <div className='draft-sk-container'>
             <Sidebar />
-            <div className='content'>
+            <div className='draft-sk-content'>
                 <div className='draftheader'>
                     <div className='title back-button' onClick={navToSK}><FaAngleLeft/></div>
                     <h1 className='title'>Draft SK</h1>
@@ -82,7 +82,6 @@ const DraftSK = () => {
                             <div className='button-white'><FaDownload/>DOCX</div>
                         </div>
                         <div className='downloads'>
-                            <div className='terbit button-blue' onClick={navToSK}>Terbitkan</div>
                             <div className='button-blue' onClick={navToSK}>Simpan</div>
                         </div>
                     </div>

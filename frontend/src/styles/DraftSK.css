@@ -1,3 +1,17 @@
+.draft-sk-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.draft-sk-content {
+    flex: 1;
+    padding: 2vw;
+    height: 100vh;
+    font-size: 14px;
+    overflow-y: scroll;
+}
+
 .draftheader {
     display: flex;
     flex-direction: row;
