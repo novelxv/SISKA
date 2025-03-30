@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Navbar";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/KelolaAkun.css";
@@ -8,30 +8,31 @@ import SortButtonNew from "../components/SortButtonNew";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-    id: number;
-    username: string;
-    password: string;
-    role: string;
-}
+import { getUsers, deleteUser, User } from "../services/userService";
 
 const KelolaAkun: React.FC = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState<string>("");
-    const [users, setUsers] = useState<User[]>([
-        { id: 1, username: "adminstei1", password: "admin123", role: "AKADEMIK" },
-        { id: 2, username: "adminkk1", password: "admin123", role: "ADMIN_KK" },
-        { id: 3, username: "adminprodi1", password: "admin123", role: "ADMIN_PRODI" },
-        { id: 4, username: "user1", password: "password1", role: "AKADEMIK" },
-        { id: 5, username: "user2", password: "password2", role: "ADMIN_KK" },
-        { id: 6, username: "adminstei1", password: "admin123", role: "AKADEMIK" },
-    ]);
+    const [users, setUsers] = useState<User[]>([]);
 
     // State for modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+    // Fetch users from API
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const usersData = await getUsers();
+                setUsers(usersData);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                toast.error("Gagal memuat data akun");
+            }
+        };
+        fetchUsers();
+    }, []);
 
     const handleSort = (criteria: string) => {
         setSelectedSort(criteria);
@@ -55,14 +56,21 @@ const KelolaAkun: React.FC = () => {
         setIsModalOpen(true);
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (selectedUser) {
-            setUsers(users.filter(user => user.id !== selectedUser.id));
-            toast.success(`Akun ${selectedUser.username} telah dihapus!`);
-            setIsModalOpen(false);
-            setSelectedUser(null);
+            try {
+                await deleteUser(selectedUser.id);
+                setUsers(users.filter(user => user.id !== selectedUser.id));
+                toast.success(`Akun ${selectedUser.username} berhasil dihapus.`);
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                toast.error("Gagal menghapus akun");
+            } finally {
+                setIsModalOpen(false);
+                setSelectedUser(null);
+            }
         }
-    };
+    };    
 
     return (
         <div className="container">
@@ -106,7 +114,9 @@ const KelolaAkun: React.FC = () => {
                                         <td>
                                             <div className="action-icons">
                                                 <FaEdit />
-                                                <FaTrash onClick={() => handleDeleteClick(user)} />
+                                                <button className="icon-button" onClick={() => handleDeleteClick(user)}>
+                                                    <FaTrash />
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
