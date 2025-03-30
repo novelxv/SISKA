@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Navbar";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import "../styles/KelolaAkun.css";
 import "../styles/Global.css";
 import Search from "../components/Search";
@@ -20,11 +20,99 @@ const KelolaAkun: React.FC = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
-    const totalPages = Math.ceil(users.length / itemsPerPage);
     const displayedUsers = users.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    
+    const totalPages = Math.ceil(users.length / itemsPerPage);
+    
+    const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+        setCurrentPage(page);
+    }
+    };
+    
+    const renderPaginationItems = () => {
+        const items = [];
+        
+        // Previous Button
+        items.push(
+            <button 
+                key="prev"
+                className="pagination-btn prev" 
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+            >
+                <span className="icon-wrapper">
+                    <FaChevronLeft />
+                </span>
+            </button>
+        );
+    
+        items.push(
+            <button 
+                key={1}
+                className={`pagination-btn ${currentPage === 1 ? 'active' : ''}`}
+                onClick={() => handlePageChange(1)}
+            >
+                1
+            </button>
+        );
+    
+        if (currentPage > 3) {
+            items.push(<span key="ellipsis1" className="pagination-ellipsis">...</span>);
+        }
+    
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+            items.push(
+                <button 
+                    key={i}
+                    className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
+                    onClick={() => handlePageChange(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+    
+        if (currentPage < totalPages - 2) {
+            items.push(<span key="ellipsis2" className="pagination-ellipsis">...</span>);
+        }
+    
+        if (totalPages > 1) {
+            items.push(
+                <button 
+                    key={totalPages}
+                    className={`pagination-btn ${currentPage === totalPages ? 'active' : ''}`}
+                    onClick={() => handlePageChange(totalPages)}
+                >
+                    {totalPages}
+                </button>
+            );
+        }
+    
+        // Next Button
+        items.push(
+            <button 
+                key="next"
+                className="pagination-btn next"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+            >
+                <span className="icon-wrapper">
+                    <FaChevronRight />
+                </span>
+            </button>
+        );
+    
+        return items;
+    };
+    
+
     
 
     // State for modal
@@ -102,7 +190,7 @@ const KelolaAkun: React.FC = () => {
             <main className="content">
                 <div className="header">
                     <h1>Daftar Akun</h1>
-                    <ButtonWithIcon text="Tambah Dosen" onClick={handleAddAkun} />
+                    <ButtonWithIcon text="Tambah Akun" onClick={handleAddAkun} />
                 </div>
                 <div className="kelola-filtercontainer">
                     <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
@@ -125,12 +213,12 @@ const KelolaAkun: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.length > 0 ? (
-                                users
+                            {displayedUsers.length > 0 ? (
+                                displayedUsers
                                     .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
                                     .map((user, index) => (
                                         <tr key={user.id}>
-                                            <td>{index + 1}</td>
+                                            <td>{indexOfFirstItem + index + 1}</td> {/* Correct numbering per page */}
                                             <td>{user.username}</td>
                                             <td>{user.password}</td>
                                             <td>{user.role.replace(/_/g, " ")}</td>
@@ -149,33 +237,14 @@ const KelolaAkun: React.FC = () => {
                             )}
                         </tbody>
 
+
                     </table>
                 </div>
 
-                <div className="pagination">
-                    <button 
-                        disabled={currentPage === 1} 
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                    >
-                        &laquo;
-                    </button>
-
-                    {Array.from({ length: totalPages }, (_, index) => (
-                        <button 
-                            key={index + 1} 
-                            className={currentPage === index + 1 ? "active" : ""}
-                            onClick={() => setCurrentPage(index + 1)}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
-
-                    <button 
-                        disabled={currentPage === totalPages} 
-                        onClick={() => setCurrentPage(currentPage + 1)}
-                    >
-                        &raquo;
-                    </button>
+                <div className="pagination-container">
+                    <div className="pagination">
+                    {renderPaginationItems()}
+                    </div>
                 </div>
 
             </main>
