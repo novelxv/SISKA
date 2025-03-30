@@ -57,10 +57,10 @@ const DraftSK = () => {
   };
 
   const handleSimpan = async () => {
-    if (!ttdFilename) {
-      toast.error("Silakan upload tanda tangan terlebih dahulu.");
-      return;
-    }
+    // if (!ttdFilename) {
+    //   toast.error("Silakan upload tanda tangan terlebih dahulu.");
+    //   return;
+    // }
 
     try {
       await createDraftSK({
@@ -74,6 +74,7 @@ const DraftSK = () => {
         ttd_dekan: ttdFilename,
       });
       toast.success("Draft SK berhasil disimpan!");
+      setTimeout(() => navigate("/sk"), 1500);
     } catch (err) {
       console.error(err);
       toast.error("Gagal menyimpan draft SK");
@@ -92,11 +93,21 @@ const DraftSK = () => {
 
   const handlePreview = async () => {
     try {
-      const blob = await previewSK(noSK);
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank");
+        const payload = {
+            no_sk: noSK,
+            judul,
+            jenis_sk: jenisSK,
+            semester: Number(semester),
+            tanggal,
+            NIP_dekan: nipDekan,
+            nama_dekan: namaDekan,
+        };
+
+        const blob = await previewSK(payload);
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, "_blank");
     } catch (err) {
-      toast.error("Gagal membuka preview");
+        toast.error("Gagal membuka preview");
     }
   };
 
