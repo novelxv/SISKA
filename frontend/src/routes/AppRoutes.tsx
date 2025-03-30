@@ -38,7 +38,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                    path="/add-dosen"
+                    path="/tambah-dosen"
                     element={
                         <ProtectedRoute>
                             <AddDosen />
