@@ -15,37 +15,43 @@ const KelolaAkun: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState<string>("");
     const [users, setUsers] = useState<User[]>([]);
+    const [allUsers, setAllUsers] = useState<User[]>([]);
 
     // State for modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+    const roleOptions = ["AKADEMIK", "ADMIN KK", "ADMIN PRODI"];
 
     // Fetch users from API
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const usersData = await getUsers();
+                setAllUsers(usersData);
                 setUsers(usersData);
             } catch (error) {
                 console.error("Error fetching users:", error);
                 toast.error("Gagal memuat data akun");
             }
         };
+        
         fetchUsers();
     }, []);
 
-    const handleSort = (criteria: string) => {
-        setSelectedSort(criteria);
-        const sortedUsers = [...users].sort((a, b) => {
-            const valueA = a[criteria as keyof User];
-            const valueB = b[criteria as keyof User];
-            if (typeof valueA === "string" && typeof valueB === "string") {
-                return valueA.localeCompare(valueB);
-            }
-            return 0;
-        });
-        setUsers(sortedUsers);
+    const handleSort = (role: string) => {
+        console.log("INI ISI DARI ROLE", role);
+        setSelectedSort(role);
+    
+        if (role === "" || role === "Semua Role") {
+            console.log("MASUK SINI");
+            setUsers(allUsers);
+        } else {
+            const filteredUsers = allUsers.filter(user => user.role === role);
+            setUsers(filteredUsers);
+        }
     };
+    
 
     const handleSearch = (query: string) => {
         setSearchTerm(query);
@@ -87,7 +93,7 @@ const KelolaAkun: React.FC = () => {
                 <div className="kelola-filtercontainer">
                     <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
                     <SortButtonNew 
-                        options={["username", "role"]} 
+                        options={["Semua Role", ...roleOptions]} 
                         selectedOption={selectedSort} 
                         onChange={handleSort} 
                     />
@@ -106,9 +112,7 @@ const KelolaAkun: React.FC = () => {
                         </thead>
                         <tbody>
                             {users
-                                .filter(user =>
-                                    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-                                )
+                                .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
                                 .map((user, index) => (
                                     <tr key={user.id}>
                                         <td>{index + 1}</td>
@@ -117,17 +121,14 @@ const KelolaAkun: React.FC = () => {
                                         <td>{user.role}</td>
                                         <td>
                                             <div className="action-icons">
-                                                <button className="icon-button" onClick={() => handleEditClick(user)}>
-                                                    <FaEdit />
-                                                </button>
-                                                <button className="icon-button" onClick={() => handleDeleteClick(user)}>
-                                                    <FaTrash />
-                                                </button>
+                                                <FaEdit onClick={() => handleEditClick(user)}/>
+                                                <FaTrash onClick={() => handleDeleteClick(user)}/>
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
                         </tbody>
+
                     </table>
                 </div>
 
