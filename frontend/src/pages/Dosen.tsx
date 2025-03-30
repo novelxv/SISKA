@@ -3,6 +3,7 @@ import Sidebar from '../components/Navbar';
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaDownload, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import '../styles/Dosen.css';
 import "../styles/Global.css";
+import ButtonWithIcon from "../components/Button.tsx";
 import SortButtonNew from '../components/SortButtonNew';
 import Search from '../components/Search';
 import { useNavigate } from 'react-router-dom';
@@ -256,12 +257,8 @@ export default function Dosen() {
         <div className="header">
           <h1>Daftar Dosen</h1>
           
-          <button className="add-dosen-btn" onClick={handleAddDosen}>
-            <span className="icon-wrapper">
-              <FaPlus />
-            </span>
-            <span>Tambah Dosen</span>
-          </button>
+          <ButtonWithIcon text="Tambah Dosen" onClick={handleAddDosen} />
+
         </div>
         
         <div className="filter-row">

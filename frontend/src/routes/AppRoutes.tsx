@@ -7,6 +7,7 @@ import Dosen from "../pages/Dosen";
 import AddDosen from "../pages/AddDosen";
 import KelolaAkun from "../pages/KelolaAkun";
 import TambahAkun from "../pages/TambahAkun";
+import EditAkun from "../pages/EditAkun";
 import DraftSK from "../pages/DraftSK";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -68,6 +69,15 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute allowedRoles={["AKADEMIK"]}>
                             <KelolaAkun />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/edit-akun/:id"
+                    element={
+                        <ProtectedRoute allowedRoles={["AKADEMIK"]}>
+                            <EditAkun />
                         </ProtectedRoute>
                     }
                 />

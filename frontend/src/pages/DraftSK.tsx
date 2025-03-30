@@ -1,96 +1,241 @@
-import React from 'react';
-import { useState } from "react";
-import Sidebar from '../components/Navbar';
-import "../styles/Global.css"
-import "../styles/DraftSK.css"
-import { FaAngleLeft, FaDownload, FaImage, FaRegEye } from 'react-icons/fa';
-import { FaFileArrowUp } from 'react-icons/fa6';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import Sidebar from "../components/Navbar";
+import "../styles/Global.css";
+import "../styles/DraftSK.css";
+import { FaAngleLeft, FaImage, FaRegEye } from "react-icons/fa";
+import { FaFileArrowUp } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  createDraftSK,
+  uploadTTD,
+  previewSK,
+  publishSK,
+} from "../services/skService";
+
+const jenisSKOptions = [
+  { label: "SK Pengajaran", value: "PENGAJARAN" },
+  { label: "SK Pembimbing dan Penguji", value: "PEMBIMBING_PENGUJI" },
+  { label: "SK Pembimbing Mahasiswa Aktif", value: "PEMBIMBING_AKTIF" },
+  { label: "SK Dosen Wali TPB", value: "WALI_TPB" },
+  { label: "SK Dosen Wali Mahasiswa Aktif", value: "WALI_MHS_AKTIF" },
+  { label: "SK Asisten Perkuliahan dan Praktikum", value: "ASISTEN_PRAKTIKUM" },
+];
 
 const DraftSK = () => {
-    const [draft, setDraft] = useState({});
-    const [query, setQuery] = useState('');
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const navToSK = () =>{ 
-        navigate('/sk');
+  const [jenisSK, setJenisSK] = useState("PENGAJARAN");
+  const [judul, setJudul] = useState("");
+  const [noSK, setNoSK] = useState("");
+  const [tanggal, setTanggal] = useState("");
+  const [semester, setSemester] = useState(1);
+  const [nipDekan, setNipDekan] = useState("");
+  const [namaDekan, setNamaDekan] = useState("");
+  const [ttdFile, setTtdFile] = useState<File | null>(null);
+  const [ttdFilename, setTtdFilename] = useState<string | null>(null);
+  const [ttdPreview, setTtdPreview] = useState<string | null>(null);
+
+  const navToSK = () => {
+    navigate("/sk");
+  };
+
+  const handleTTDChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setTtdFile(file);
+      setTtdPreview(URL.createObjectURL(file));
+
+      try {
+        const result = await uploadTTD(nipDekan, file);
+        setTtdFilename(result.fileName);
+        toast.success("TTD berhasil diunggah");
+      } catch (err) {
+        toast.error("Gagal upload TTD");
+      }
+    }
+  };
+
+  const handleSimpan = async () => {
+    if (!ttdFilename) {
+      toast.error("Silakan upload tanda tangan terlebih dahulu.");
+      return;
     }
 
-    return (
-        <div className='container'>
-            <Sidebar />
-            <div className='content'>
-                <div className='draftheader'>
-                    <div className='title back-button' onClick={navToSK}><FaAngleLeft/></div>
-                    <h1 className='title'>Draft SK</h1>
-                </div>
-                <form>
-                    <div className='inputrow1'>
-                        <div className='template'>
-                            <div>Template: </div>
-                            <select name="jenisSK" id="jenisSK" className='sk-select'>
-                                <option>SK Pengajaran</option>
-                                <option>SK Pembimbing dan Penguji</option>
-                                <option>SK Pembimbing Mahasiswa Aktif</option>
-                                <option>SK Dosen Wali TPB</option>
-                                <option>SK Dosen Wali Mahasiswa Aktif</option>
-                                <option>SK Asisten Perkuliahan dan Praktikum</option>
-                            </select>
-                        </div>
-                        <div className='button-blue'><FaRegEye/>Preview</div>
-                    </div>
-                    <div className='inputrow2'>
-                        <div>
-                            Judul SK <br></br>
-                            <input type="text" className='sk-input'></input>
-                        </div>
-                    </div>
-                    <div className='inputrow3'>
-                        <div>
-                            Nomor SK <br></br>
-                            <input type="text" className='sk-input'></input>
-                        </div>
-                        <div>
-                            Tanggal <br></br>
-                            <input type="text" className='sk-input'></input>
-                        </div>
-                        <div>
-                            Semester <br></br>
-                            <input type="text" className='sk-input'></input>
-                        </div>
-                    </div>
-                    <div className='inputrow4'>
-                        <div>
-                            Nama Dekan <br></br>
-                            <input type="text" className='sk-input'></input>
-                        </div>
-                        <div>
-                            NIP Dekan <br></br>
-                            <input type="text" className='sk-input'></input>
-                        </div>
-                    </div>
-                    <div className='inputrow5'>
-                        <div>
-                            <div>TTD Dekan</div>
-                            <div className='button-white'><FaFileArrowUp/>Pilih file</div>
-                        </div>
-                        <div className='signpreview'><FaImage /></div>
-                    </div>
-                    <div className='inputrow6'>
-                        <div className='downloads'>
-                            <div className='button-white'><FaDownload/>PDF</div>
-                            <div className='button-white'><FaDownload/>DOCX</div>
-                        </div>
-                        <div className='downloads'>
-                            <div className='terbit button-blue' onClick={navToSK}>Terbitkan</div>
-                            <div className='button-blue' onClick={navToSK}>Simpan</div>
-                        </div>
-                    </div>
-                </form>
+    try {
+      await createDraftSK({
+        no_sk: noSK,
+        judul,
+        jenis_sk: jenisSK,
+        semester: Number(semester),
+        tanggal,
+        NIP_dekan: nipDekan,
+        nama_dekan: namaDekan,
+        ttd_dekan: ttdFilename,
+      });
+      toast.success("Draft SK berhasil disimpan!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Gagal menyimpan draft SK");
+    }
+  };
 
-            </div>
+  const handleTerbitkan = async () => {
+    try {
+      await publishSK(noSK);
+      toast.success("SK berhasil diterbitkan!");
+      setTimeout(() => navigate("/sk"), 1500);
+    } catch (err) {
+      toast.error("Gagal menerbitkan SK");
+    }
+  };
+
+  const handlePreview = async () => {
+    try {
+      const blob = await previewSK(noSK);
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (err) {
+      toast.error("Gagal membuka preview");
+    }
+  };
+
+  return (
+    <div className="container">
+      <Sidebar />
+      <ToastContainer />
+      <div className="content">
+        <div className="draftheader">
+          <div className="title back-button" onClick={navToSK}>
+            <FaAngleLeft />
+          </div>
+          <h1 className="title">Draft SK</h1>
         </div>
-    );
+        <form>
+          <div className="inputrow1">
+            <div className="template">
+              <div>Template: </div>
+              <select
+                name="jenisSK"
+                className="sk-select"
+                value={jenisSK}
+                onChange={(e) => setJenisSK(e.target.value)}
+              >
+                {jenisSKOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="button-blue" onClick={handlePreview}>
+              <FaRegEye />
+              Preview
+            </div>
+          </div>
+
+          <div className="inputrow2">
+            <div>
+              Judul SK <br />
+              <input
+                type="text"
+                className="sk-input"
+                value={judul}
+                onChange={(e) => setJudul(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="inputrow3">
+            <div>
+              Nomor SK <br />
+              <input
+                type="text"
+                className="sk-input"
+                value={noSK}
+                onChange={(e) => setNoSK(e.target.value)}
+              />
+            </div>
+            <div>
+              Tanggal <br />
+              <input
+                type="date"
+                className="sk-input"
+                value={tanggal}
+                onChange={(e) => setTanggal(e.target.value)}
+              />
+            </div>
+            <div>
+              Semester <br />
+              <input
+                type="number"
+                className="sk-input"
+                value={semester}
+                onChange={(e) => setSemester(Number(e.target.value))}
+              />
+            </div>
+          </div>
+
+          <div className="inputrow4">
+            <div>
+              Nama Dekan <br />
+              <input
+                type="text"
+                className="sk-input"
+                value={namaDekan}
+                onChange={(e) => setNamaDekan(e.target.value)}
+              />
+            </div>
+            <div>
+              NIP Dekan <br />
+              <input
+                type="text"
+                className="sk-input"
+                value={nipDekan}
+                onChange={(e) => setNipDekan(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="inputrow5">
+            <div>
+              <div>TTD Dekan</div>
+              <div className="button-white">
+                <label htmlFor="upload-ttd" style={{ cursor: "pointer" }}>
+                  <FaFileArrowUp /> Pilih file
+                </label>
+                <input
+                  type="file"
+                  id="upload-ttd"
+                  accept="image/*"
+                  onChange={handleTTDChange}
+                  style={{ display: "none" }}
+                />
+              </div>
+            </div>
+            <div className="signpreview">
+              {ttdPreview ? (
+                <img src={ttdPreview} alt="Preview TTD" style={{ height: 80 }} />
+              ) : (
+                <FaImage />
+              )}
+            </div>
+          </div>
+
+          <div className="inputrow6">
+            <div className="downloads">
+              <div className="terbit button-blue" onClick={handleTerbitkan}>
+                Terbitkan
+              </div>
+              <div className="button-blue" onClick={handleSimpan}>
+                Simpan
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default DraftSK;

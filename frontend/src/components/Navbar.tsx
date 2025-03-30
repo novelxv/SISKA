@@ -18,7 +18,7 @@ const Sidebar = () => {
     <aside className="sidebar">
       {/* Logo */}
       <div className="logo">
-        <img src="../../public/Logo SiSKA.png" alt="SISKA Logo" className="logo-img" />
+        <img src="/Logo SiSKA.png" alt="SISKA Logo" className="logo-img" />
       </div>
 
       {/* Navigation Menu */}

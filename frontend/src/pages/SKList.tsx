@@ -5,6 +5,7 @@ import Sidebar from '../components/Navbar';
 import "../styles/Global.css"
 import "../styles/SK.css"
 import { FaDownload, FaSearch, FaPencilAlt } from 'react-icons/fa';
+import { FaFileArrowUp } from 'react-icons/fa6';
 
 const dummy_sk = [
     {'no' : '74', 'judul': 'SK Dekan tentang Dosen pembimbing, Promotor dan penguji Tugas Akhir, Tesis dan Disertasi Yudisium Nov. 2024, Des. 2024, Jan. 2025 & Feb. 2025', 'tanggal': '12 Februari 2025', 'jenis' : '2'},
@@ -40,10 +41,12 @@ const SKList = () => {
     }
 
     return (
-        <div className='container'>
+        <div className='sk-container'>
             <Sidebar />
-            <div className='content'>
-                <h1 className='skheader'>Surat Keputusan</h1>
+            <div className='sk-content'>
+                <div className='header'>
+                    <h1>Surat Keputusan</h1>
+                </div>
                 <div className='skfilters'>
                     <div className='search'>
                         <input onChange={handleSearch} type="text" className='sk-search' placeholder='Cari...'></input>
@@ -89,7 +92,12 @@ const SKList = () => {
                     </tbody>
                 </table>
                 <div className='draft-content'>
-                    <h2 className='draft-header'>Draft SK</h2>
+                    <div className='header'>
+                        <h2 className='draft-header'>Draft SK</h2>
+                        <div className='button-blue' onClick={navToDraft}>
+                            + SK Baru
+                        </div>
+                    </div>
                     <table className='table'>
                         <thead>
                             <tr>
@@ -110,10 +118,20 @@ const SKList = () => {
                         ))}
                         </tbody>
                     </table>
-                    <div className='skbaru'>
+                    {/* <div className='sk-baru-button'>
                         <div className='button-blue' onClick={navToDraft}>
                             + SK Baru
                         </div>
+                    </div> */}
+                    <div className='header'>
+                        <h2>Penerbitan SK</h2>
+                    </div>
+                    <div className='terbit-sk-row'>
+                        <div className='upload-sk'>
+                            <div className='button-white'><FaFileArrowUp/>Pilih file</div>
+                            <div>Pilih file SK untuk diterbitkan</div>
+                        </div>
+                        <div className='terbit button-blue'>Terbitkan</div>
                     </div>
                 </div>
             </div>

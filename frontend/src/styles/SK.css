@@ -1,12 +1,15 @@
-.content {
-    margin: 2vw;
-    width: 70%;
-    overflow: auto;
-    font-size: 14px;
+.sk-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
-.skheader {
-    font-size: 40px;
+.sk-content {
+    flex: 1;
+    padding: 2vw;
+    height: 100vh;
+    font-size: 14px;
+    overflow-y: scroll;
 }
 
 .skfilters {
@@ -56,20 +59,22 @@
 }
 
 .draft-content {
-    width: auto;
-    margin: 1vw 0;
+    /* width: 100%;
+    height: 100vh; */
+    /* margin: 1vw 0; */
 }
 
 .draft-header {
     margin: 1vw 0;
-    font-size: 28px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.skbaru {
+/* .sk-baru-button {
     display: flex;
     justify-content: flex-end;
     margin: 1vw 0;
-}
+} */
 
 .button-blue {
     width: 15%;
@@ -86,4 +91,15 @@
     background-color: #f7fcfe;
     color: #1075BA;
     cursor: pointer;
+}
+
+.upload-sk {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+.terbit-sk-row {
+    display: flex;
+    justify-content: space-between;
 }

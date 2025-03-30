@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Navbar";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import "../styles/KelolaAkun.css";
 import "../styles/Global.css";
 import Search from "../components/Search";
+import ButtonWithIcon from "../components/Button";
 import SortButtonNew from "../components/SortButtonNew";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,37 +16,141 @@ const KelolaAkun: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState<string>("");
     const [users, setUsers] = useState<User[]>([]);
+    const [allUsers, setAllUsers] = useState<User[]>([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const displayedUsers = users.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    
+    const totalPages = Math.ceil(users.length / itemsPerPage);
+    
+    const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+        setCurrentPage(page);
+    }
+    };
+    
+    const renderPaginationItems = () => {
+        const items = [];
+        
+        // Previous Button
+        items.push(
+            <button 
+                key="prev"
+                className="pagination-btn prev" 
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+            >
+                <span className="icon-wrapper">
+                    <FaChevronLeft />
+                </span>
+            </button>
+        );
+    
+        items.push(
+            <button 
+                key={1}
+                className={`pagination-btn ${currentPage === 1 ? 'active' : ''}`}
+                onClick={() => handlePageChange(1)}
+            >
+                1
+            </button>
+        );
+    
+        if (currentPage > 3) {
+            items.push(<span key="ellipsis1" className="pagination-ellipsis">...</span>);
+        }
+    
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+            items.push(
+                <button 
+                    key={i}
+                    className={`pagination-btn ${currentPage === i ? 'active' : ''}`}
+                    onClick={() => handlePageChange(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+    
+        if (currentPage < totalPages - 2) {
+            items.push(<span key="ellipsis2" className="pagination-ellipsis">...</span>);
+        }
+    
+        if (totalPages > 1) {
+            items.push(
+                <button 
+                    key={totalPages}
+                    className={`pagination-btn ${currentPage === totalPages ? 'active' : ''}`}
+                    onClick={() => handlePageChange(totalPages)}
+                >
+                    {totalPages}
+                </button>
+            );
+        }
+    
+        // Next Button
+        items.push(
+            <button 
+                key="next"
+                className="pagination-btn next"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+            >
+                <span className="icon-wrapper">
+                    <FaChevronRight />
+                </span>
+            </button>
+        );
+    
+        return items;
+    };
+    
+
+    
 
     // State for modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+    const roleOptions = ["AKADEMIK", "ADMIN KK", "ADMIN PRODI"];
 
     // Fetch users from API
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const usersData = await getUsers();
+                setAllUsers(usersData);
                 setUsers(usersData);
             } catch (error) {
                 console.error("Error fetching users:", error);
                 toast.error("Gagal memuat data akun");
             }
         };
+        
         fetchUsers();
     }, []);
 
-    const handleSort = (criteria: string) => {
-        setSelectedSort(criteria);
-        const sortedUsers = [...users].sort((a, b) => {
-            const valueA = a[criteria as keyof User];
-            const valueB = b[criteria as keyof User];
-            if (typeof valueA === "string" && typeof valueB === "string") {
-                return valueA.localeCompare(valueB);
-            }
-            return 0;
-        });
-        setUsers(sortedUsers);
+    const handleSort = (role: string) => {
+        console.log("INI ISI DARI ROLE", role);
+        setSelectedSort(role);
+        const normalizeRole = (r: string) => r.replace(/_/g, " ");
+    
+        if (role === "" || role === "Semua Role") {
+            console.log("MASUK SINI");
+            setUsers(allUsers);
+        } else {
+            const filteredUsers = allUsers.filter(user => normalizeRole(user.role) === role);
+            setUsers(filteredUsers);
+        }
     };
+    
 
     const handleSearch = (query: string) => {
         setSearchTerm(query);
@@ -56,6 +161,13 @@ const KelolaAkun: React.FC = () => {
         setIsModalOpen(true);
     };
 
+    const handleEditClick = (user: User) => {
+        navigate(`/edit-akun/${user.id}`);
+    };
+
+    const handleAddAkun = () => {
+        navigate('/tambah-akun');
+    }
     const confirmDelete = async () => {
         if (selectedUser) {
             try {
@@ -78,12 +190,12 @@ const KelolaAkun: React.FC = () => {
             <main className="content">
                 <div className="header">
                     <h1>Daftar Akun</h1>
-                    <button className="button-blue" onClick={() => navigate("/tambah-akun")}>+ Tambah Akun</button>
+                    <ButtonWithIcon text="Tambah Akun" onClick={handleAddAkun} />
                 </div>
                 <div className="kelola-filtercontainer">
                     <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
                     <SortButtonNew 
-                        options={["username", "role"]} 
+                        options={["Semua Role", ...roleOptions]} 
                         selectedOption={selectedSort} 
                         onChange={handleSort} 
                     />
@@ -101,36 +213,42 @@ const KelolaAkun: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users
-                                .filter(user =>
-                                    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-                                )
-                                .map((user, index) => (
-                                    <tr key={user.id}>
-                                        <td>{index + 1}</td>
-                                        <td>{user.username}</td>
-                                        <td>{user.password}</td>
-                                        <td>{user.role}</td>
-                                        <td>
-                                            <div className="action-icons">
-                                                <FaEdit />
-                                                <button className="icon-button" onClick={() => handleDeleteClick(user)}>
-                                                    <FaTrash />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                            {displayedUsers
+                                .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+                                .length > 0 ? (
+                                displayedUsers
+                                    .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+                                    .map((user, index) => (
+                                        <tr key={user.id}>
+                                            <td>{indexOfFirstItem + index + 1}</td> {/* Correct numbering per page */}
+                                            <td>{user.username}</td>
+                                            <td>{user.password}</td>
+                                            <td>{user.role.replace(/_/g, " ")}</td>
+                                            <td>
+                                                <div className="action-icons">
+                                                    <FaEdit onClick={() => handleEditClick(user)} />
+                                                    <FaTrash onClick={() => handleDeleteClick(user)} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="no-data">No Data Available</td>
+                                </tr>
+                            )}
                         </tbody>
+
+
                     </table>
                 </div>
 
-                <div className="pagination">
-                    <button className="active">1</button>
-                    <button>2</button>
-                    <button>...</button>
-                    <button>10</button>
+                <div className="pagination-container">
+                    <div className="pagination">
+                    {renderPaginationItems()}
+                    </div>
                 </div>
+
             </main>
 
             {/* Confirmation Delete */}
