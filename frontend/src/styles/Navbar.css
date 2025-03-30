@@ -77,20 +77,25 @@
     background: #2c2c5e;
     padding: 15px 20px;
     text-align: center;
-    width: calc(100% + 32px); 
+    width: calc(100% + 32px);
     margin-left: -16px;
-  }
-  
-  .logout a {
-    color: white;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .logout a:hover {
-    opacity: 0.8;
-  }
-  
+    }
+
+    .logout button {
+        color: white;
+        background: none;
+        border: none;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .logout button:hover {
+        opacity: 0.8;
+    }
+    

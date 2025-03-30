@@ -1,9 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { FaUsers, FaFileAlt, FaUserCog, FaSignOutAlt } from "react-icons/fa";
 import "../styles/Navbar.css";
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
+  const handleLogout = () => {
+    auth?.logout();
+    navigate("/login");
+  };
 
   return (
     <aside className="sidebar">
@@ -16,32 +25,32 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li className={location.pathname === "/dosen" ? "active" : ""}>
-            <Link to="/dosen">
+            <a href="/dosen">
               <FaUsers />
               Dosen
-            </Link>
+            </a>
           </li>
           <li className={location.pathname === "/sk" ? "active" : ""}>
-            <Link to="/sk">
+            <a href="/sk">
               <FaFileAlt />
               Surat Keputusan (SK)
-            </Link>
+            </a>
           </li>
           <li className={location.pathname === "/kelola-akun" ? "active" : ""}>
-            <Link to="/kelola-akun">
+            <a href="/kelola-akun">
               <FaUserCog />
               Kelola Akun
-            </Link>
+            </a>
           </li>
         </ul>
       </nav>
 
       {/* Logout Button */}
       <div className="logout">
-        <Link to="/logout">
+        <button onClick={handleLogout} className="logout">
           <FaSignOutAlt />
           Logout
-        </Link>
+        </button>
       </div>
     </aside>
   );
