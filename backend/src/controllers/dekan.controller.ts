@@ -23,11 +23,13 @@ export const getDekanTTD = async (req: Request, res: Response) => {
 
         if (!ttdPath) {
             res.status(404).json({ message: "Tanda tangan tidak ditemukan" });
+            return;
         }
 
         const fullPath = path.join(__dirname, "../../public", ttdPath);
         if (!fs.existsSync(fullPath)) {
             res.status(404).json({ message: "File tidak ditemukan" });
+            return;
         }
 
         res.sendFile(fullPath);

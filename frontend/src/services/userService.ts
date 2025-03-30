@@ -15,3 +15,17 @@ export const getUsers = async (): Promise<User[]> => {
 export const deleteUser = async (id: number): Promise<void> => {
     await api.delete(`/users/${id}`);
 };
+
+export const getUserById = async (id: number): Promise<User> => {
+    const response = await api.get(`/users/${id}`);
+    return response.data;
+};
+
+export const updateUser = async (id: number, data: {
+    username: string;
+    password: string;
+    role: User["role"];
+}): Promise<User> => {
+    const response = await api.put(`/users/${id}`, data);
+    return response.data;
+};
