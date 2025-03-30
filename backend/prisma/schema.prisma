@@ -33,7 +33,6 @@ model Dosen {
   status_kepegawaian StatusKepegawaian?
   aktif_mulai       DateTime?
   aktif_sampai      DateTime?
-  keterangan        String?
   instansi_asal     String?
   Pembimbing        Pembimbing[]
   Penguji           Penguji[]
@@ -64,6 +63,7 @@ enum JenisKepegawaian {
 
 enum StatusKepegawaian {
     AKTIF
+    TIDAK_AKTIF
     PENSIUN
     PENSIUN_JANDA_DUDA
     TUGAS_BELAJAR
@@ -130,7 +130,6 @@ model MataKuliah {
   jumlah_peserta  Int
   dosen_pengampu  String
   pembatasan      String
-
   DosenMatkul     DosenMatkul[]
   Asisten         Asisten[] 
 }
