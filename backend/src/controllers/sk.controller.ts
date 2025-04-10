@@ -49,19 +49,19 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
 
 export const generatePreviewSK = async (req: Request, res: Response) => {
     try {
-        const { no_sk } = req.params;
-        const docBuffer = await generateSKPreviewService(no_sk);
+        const data = req.body;
+        const docBuffer = await generateSKPreviewService(data);
 
         const tmpDir = os.tmpdir();
-        const tempDocxPath = path.join(tmpDir, `${no_sk}.docx`);
-        const tempPdfPath = path.join(tmpDir, `${no_sk}.pdf`);
+        const tempDocxPath = path.join(tmpDir, `preview-${Date.now()}.docx`);
+        const tempPdfPath = tempDocxPath.replace(".docx", ".pdf");
 
         fs.writeFileSync(tempDocxPath, docBuffer);
         const pdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
 
         const pdfBuffer = fs.readFileSync(pdfPath);
         res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `inline; filename=preview-${no_sk}.pdf`);
+        res.setHeader("Content-Disposition", `inline; filename=preview.pdf`);
         res.send(pdfBuffer);
 
         fs.unlinkSync(tempDocxPath);

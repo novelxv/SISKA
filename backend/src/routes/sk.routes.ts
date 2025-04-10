@@ -8,7 +8,7 @@ router.post("/", authMiddleware, akademikMiddleware, createDraftSK);
 router.get("/draft", authMiddleware, akademikMiddleware, getDraftSKs);
 router.put("/:no_sk/publish", authMiddleware, akademikMiddleware, publishSK);
 router.get("/published", authMiddleware, getPublishedSKs);
-router.get("/:no_sk/preview", authMiddleware, akademikMiddleware, generatePreviewSK);
+router.post("/preview", authMiddleware, akademikMiddleware, generatePreviewSK);
 router.get("/:no_sk/download", authMiddleware, downloadPublishedSK);
 router.get("/:no_sk/detail", authMiddleware, getSKDetail);
 

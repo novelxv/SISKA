@@ -58,7 +58,24 @@ export const publishSKService = async (no_sk: string): Promise<void> => {
     if (!existing) throw new Error("SK tidak ditemukan");
 
     // Generate file
-    const docBuffer = await generateSKPreviewService(no_sk);
+    const skData = await prisma.sK.findUnique({
+        where: { no_sk },
+        include: { Dekan: true },
+    });
+
+    if (!skData || !skData.Dekan) {
+        throw new Error("SK data or Dekan data not found");
+    }
+
+    const docBuffer = await generateSKPreviewService({
+        no_sk: skData.no_sk,
+        judul: skData.judul,
+        jenis_sk: skData.jenis_sk,
+        semester: skData.semester,
+        tanggal: skData.tanggal.toISOString(),
+        NIP_dekan: skData.NIP_dekan,
+        nama_dekan: skData.Dekan.nama,
+    });
     const outputDir = path.join(__dirname, "../../public/uploads/sk");
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
