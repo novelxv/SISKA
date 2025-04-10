@@ -1,19 +1,14 @@
 .password-container {
     position: relative;
-    display: flex;
     align-items: center;
-}
-
-.password-container input {
-    width: 400%;
-    padding-right: 50px;
+    width: 100%;
 }
 
 .toggle-password {
     position: absolute;
     right: -5px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-5%);
     background: none;
     border: none;
     color: #007bff;
@@ -23,4 +18,17 @@
 
 .toggle-password:hover {
     text-decoration: underline;
+}
+
+.form-container {
+    max-width: 500px;
+    margin-left: 0;
+}
+
+.form-container form {
+    padding-top: 10px;
+}
+
+.formheader h1 {
+    margin-bottom: 0;
 }
