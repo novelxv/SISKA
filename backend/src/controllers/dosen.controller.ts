@@ -33,7 +33,7 @@ export const getDosenById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const dosen = await getDosenByIdService(id);
         if (!dosen) {
-            return res.status(404).json({ message: "Dosen tidak ditemukan" });
+            res.status(404).json({ message: "Dosen tidak ditemukan" });
         }
         res.status(200).json(dosen);
     } catch (err) {
