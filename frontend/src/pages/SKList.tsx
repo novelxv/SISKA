@@ -5,8 +5,9 @@ import "../styles/Global.css";
 import "../styles/SK.css";
 import { FaDownload, FaSearch, FaPencilAlt } from "react-icons/fa";
 import { FaFileArrowUp } from "react-icons/fa6";
-import { getPublishedSK, getDraftSK, downloadSK } from "../services/skService";
-import { toast } from "react-toastify";
+import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF } from "../services/skService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const jenisSKMap: Record<string, string> = {
   PENGAJARAN: "SK Pengajaran",
@@ -31,7 +32,34 @@ const SKList = () => {
   const [draftlist, setDraft] = useState<SK[]>([]);
   const [query, setQuery] = useState("");
   const [jenis, setJenis] = useState("");
+  const [skFile, setSkFile] = useState<File | null>(null);
+  const [skFileName, setSkFileName] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const handleSKFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSkFile(file);
+      setSkFileName(file.name);
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!skFile) {
+      toast.warning("Silakan pilih file SK terlebih dahulu");
+      return;
+    }
+    try {
+      const result = await uploadSKPDF(skFile);
+      toast.success("File SK berhasil diterbitkan");
+      setSkFile(null);
+      setSkFileName(null);
+    } catch (err) {
+      // console.error("Upload Error:", err);
+      toast.error("Gagal upload file SK");
+    }
+  };
+  
 
   const navToDraft = () => {
     navigate("/draft-sk");
@@ -83,6 +111,7 @@ const SKList = () => {
   return (
     <div className="sk-container">
       <Sidebar />
+      <ToastContainer />
       <div className="sk-content">
         <div className="header">
           <h1>Surat Keputusan</h1>
@@ -200,13 +229,23 @@ const SKList = () => {
           </div>
           <div className="terbit-sk-row">
             <div className="upload-sk">
-              <div className="button-white">
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleSKFileChange}
+                hidden
+                id="fileInput"
+              />
+              <label htmlFor="fileInput" className="button-white">
                 <FaFileArrowUp />
                 Pilih file
+              </label>
+
+              <div>
+                {skFileName ? skFileName : "Pilih file SK untuk diterbitkan"}
               </div>
-              <div>Pilih file SK untuk diterbitkan</div>
             </div>
-            <div className="terbit button-blue">Terbitkan</div>
+            <div className="terbit button-blue" onClick={handlePublish}>Terbitkan</div>
           </div>
         </div>
       </div>

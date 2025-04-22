@@ -1,5 +1,16 @@
 import api from "./api";
 
+export const uploadSKPDF = async (file: File) => {
+    const formData = new FormData();
+    formData.append("sk", file);
+  
+    const response = await api.post(`/sk/upload/sk`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  };
+  
+
 export const createDraftSK = async (data: any) => {
     const response = await api.post("/sk", data);
     return response.data;

@@ -5,6 +5,29 @@ import path from "path";
 
 const prisma = new PrismaClient();
 
+export const uploadSKService = async (filename: string) => {
+    const no_sk = `SK-${Date.now()}`;
+    const jenis_sk = "PENGAJARAN";
+    const tanggal = new Date();
+    const semester = 2;
+
+    const dekan = await prisma.dekan.findFirst();
+    if (!dekan) throw new Error("Dekan tidak ditemukan");
+
+    return await prisma.sK.create({
+        data: {
+            no_sk,
+            judul: "DUMMY FILE UPLOAD",
+            jenis_sk,
+            tanggal,
+            semester,
+            NIP_dekan: dekan.NIP,
+            status: "PUBLISHED",
+            file_sk: `uploads/sk/${filename}`,
+        },
+    });
+};
+
 export const createDraftSKService = async (data: {
     no_sk: string;
     judul: string;

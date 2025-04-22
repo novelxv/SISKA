@@ -1,10 +1,52 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { Request, Response } from "express";
-import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService } from "../services/sk.service";
+import { NextFunction, Request, Response } from "express";
+import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService } from "../services/sk.service";
 import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
+import multer from "multer";
+
+const storageSK = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = path.join(__dirname, "../../public/uploads/sk");
+        fs.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath);
+    },
+    filename: function (req, file, cb) {
+        const originalName = path.parse(file.originalname).name;
+        const ext = path.extname(file.originalname);
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const newFilename = `${originalName}-${uniqueSuffix}${ext}`;
+        cb(null, newFilename);
+    },
+});
+
+const uploadSK = multer({ storage: storageSK });
+
+export const uploadSKFile = [
+    uploadSK.single("sk"),
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const file = req.file;
+
+        if (!file) {
+            res.status(400).json({ message: "File SK tidak ditemukan" });
+            return;
+        }
+
+        try {
+            const savedSK = await uploadSKService(file.filename);
+            res.status(200).json({
+                message: "File SK berhasil diunggah",
+                fileName: file.filename,
+                sk: savedSK,
+            });
+        } catch (err) {
+            console.error("Error simpan file SK:", err);
+            res.status(500).json({ message: "Gagal menyimpan metadata file SK" });
+        }
+    },
+];
 
 export const createDraftSK = async (req: Request, res: Response) => {
     try {
