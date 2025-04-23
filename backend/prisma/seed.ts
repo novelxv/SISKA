@@ -124,6 +124,10 @@ const mapKKToEnum = (kk: string | undefined): KelompokKeahlian | undefined => {
   }
 
 async function main() {
+
+    await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Dosen" CASCADE;`);
+    await prisma.$executeRawUnsafe(`TRUNCATE TABLE "User" CASCADE;`);
+
     const hashedPassword = await bcrypt.hash('akademik123', 10);
     const dosen = readExcelDosen("./sheets/sheets_pengajaran.xlsx");
     for (const row of dosen) {
