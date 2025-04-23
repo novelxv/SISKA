@@ -29,9 +29,10 @@ export const parseSKWaliAktifMetadata = async (filePath: string): Promise<Parsed
   }
 
   const semester = /Semester\s+I/i.test(text) ? 1 : /Semester\s+II/i.test(text) ? 2 : 0;
-  const nip = text.match(/NIP\s+(\d{18})/)?.[1] || "";
+  const rawNIPMatch = text.match(/NIP[.\s]*((?:\d{8}\s*\d{6}\s*\d\s*\d{3}))/i);
+  const rawNIP = rawNIPMatch?.[1]?.replace(/\s+/g, "") || "";
+  const nip = rawNIP.length === 18 ? rawNIP : "";
   const namaDekan = text.match(/DEKAN[,\s]*([\w\s.,'-]+)\s+NIP/i)?.[1].trim() || "";
-
   return {
     no_sk,
     judul,
