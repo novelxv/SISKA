@@ -41,10 +41,13 @@ export const uploadSKFile = [
                 fileName: file.filename,
                 sk: savedSK,
             });
-        } catch (err) {
+        } catch (err: any) {
             console.error("Error simpan file SK:", err);
-            res.status(500).json({ message: "Gagal menyimpan metadata file SK" });
+                res.status(400).json({
+                message: err.message || "Gagal menyimpan metadata file SK",
+            });
         }
+        
     },
 ];
 

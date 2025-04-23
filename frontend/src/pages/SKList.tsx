@@ -53,20 +53,22 @@ const SKList = () => {
 
   const handlePublish = async () => {
     if (!skFile) {
-      toast.warning("Silakan pilih file SK terlebih dahulu")
-      return
+      toast.warning("Silakan pilih file SK terlebih dahulu");
+      return;
     }
     try {
-      const result = await uploadSKPDF(skFile)
-      toast.success("File SK berhasil diterbitkan")
-      setSkFile(null)
-      setSkFileName(null)
-      // Refresh the published SK list
-      fetchData()
-    } catch (err) {
-      toast.error("Gagal upload file SK")
+      const result = await uploadSKPDF(skFile);
+      toast.success("File SK berhasil diterbitkan");
+      setSkFile(null);
+      setSkFileName(null);
+      fetchData();
+    } catch (err: any) {
+      const errorMsg =
+        err.response?.data?.message || "Gagal upload file SK";
+      toast.error(errorMsg);
     }
-  }
+  };
+  
 
   const navToDraft = () => {
     navigate("/draft-sk")
