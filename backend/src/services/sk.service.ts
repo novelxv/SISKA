@@ -162,3 +162,14 @@ export const getDownloadPathService = async (no_sk: string): Promise<string> => 
 
     return filePath;
 };
+
+export const deleteDraftSKService = async (no_sk: string) => {
+    const sk = await prisma.sK.findUnique({ where: { no_sk } });
+    if (!sk) throw new Error("SK tidak ditemukan");
+
+    if (sk.status !== "DRAFT") {
+        throw new Error("Hanya SK dengan status DRAFT yang bisa dihapus");
+    }
+
+    await prisma.sK.delete({ where: { no_sk } });
+};

@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { NextFunction, Request, Response } from "express";
-import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService } from "../services/sk.service";
+import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService } from "../services/sk.service";
 import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import multer from "multer";
@@ -138,5 +138,16 @@ export const getSKDetail = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Error get detail SK:", err);
         res.status(500).json({ message: "Gagal mengambil detail SK" });
+    }
+};
+
+export const deleteDraftSK = async (req: Request, res: Response) => {
+    try {
+        const { no_sk } = req.params;
+        await deleteDraftSKService(no_sk);
+        res.status(200).json({ message: "Draft SK berhasil dihapus" });
+    } catch (err) {
+        console.error("Error delete draft SK:", err);
+        res.status(500).json({ message: "Gagal menghapus draft SK" });
     }
 };

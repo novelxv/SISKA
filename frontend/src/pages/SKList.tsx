@@ -7,7 +7,7 @@ import "../styles/Global.css"
 import "../styles/SK.css"
 import { FaDownload, FaSearch, FaPencilAlt, FaEye, FaArchive, FaTrash } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
-import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF } from "../services/skService"
+import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF, deleteDraftSK } from "../services/skService"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
@@ -138,12 +138,21 @@ const SKList = () => {
     toast.success(`SK "${sk.judul}" berhasil dipulihkan`)
   }
 
-  const handleDeleteDraft = (no_sk: string) => {
-    // Handle deleting draft in frontend
-    const updatedDraftList = draftlist.filter((draft) => draft.no_sk !== no_sk)
-    setDraft(updatedDraftList)
-    toast.success("Draft SK berhasil dihapus")
-  }
+  const handleDeleteDraft = async (no_sk: string) => {
+    const confirmDelete = window.confirm("Apakah Anda yakin ingin menghapus draft SK ini?");
+    if (!confirmDelete) {
+        return;
+    }
+    
+    try {
+        await deleteDraftSK(no_sk);
+        const updatedDraftList = draftlist.filter((draft) => draft.no_sk !== no_sk);
+        setDraft(updatedDraftList);
+        toast.success("Draft SK berhasil dihapus");
+    } catch (err) {
+        toast.error("Gagal menghapus draft SK");
+    }
+  };
 
   const fetchData = async () => {
     try {
