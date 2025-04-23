@@ -6,14 +6,17 @@ interface ButtonWithIconProps {
     text: string;
     onClick: () => void;
     className?: string;
+    hideIcon?: boolean;
 }
 
-const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({ text, onClick, className = "" }) => {
+const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({ text, onClick, className = "", hideIcon = false }) => {
     return (
         <button className={`add-btn ${className}`} onClick={onClick}>
-            <span className="icon-wrapper">
-                <FaPlus />
-            </span>
+            {!hideIcon && (
+                <span className="icon-wrapper">
+                    <FaPlus />
+                </span>
+            )}
             <span>{text}</span>
         </button>
     );

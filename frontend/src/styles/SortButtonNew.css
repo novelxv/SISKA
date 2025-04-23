@@ -1,7 +1,5 @@
 
-.filter-select {
-    width: 150px;
-  }
+
   
   .filter-select select,
   .sort-container select {
@@ -31,9 +29,5 @@
     font-size: 14px;
     color: #555;
     white-space: nowrap;
-  }
-  
-  .sort-container select {
-    width: 150px;
   }
   

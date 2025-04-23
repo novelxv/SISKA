@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 
 import { useEffect, useState } from "react"
@@ -6,11 +8,14 @@ import Sidebar from "../components/Navbar"
 import ConfirmationModal from "../components/ConfirmationModal"
 import "../styles/Global.css"
 import "../styles/SK.css"
-import { FaDownload, FaSearch, FaPencilAlt, FaEye, FaArchive, FaTrash } from "react-icons/fa"
+import { FaDownload, FaPencilAlt, FaEye, FaArchive, FaTrash } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF, deleteDraftSK } from "../services/skService"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import ButtonWithIcon from "../components/Button"
+import Search from "../components/Search"
+import SortButtonNew from "../components/SortButtonNew"
 
 const jenisSKMap: Record<string, string> = {
   PENGAJARAN: "SK Pengajaran",
@@ -45,10 +50,15 @@ const SKList = () => {
   const [activeTab, setActiveTab] = useState<TabType>("published")
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [draftToDelete, setDraftToDelete] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const handleSearch = (query: string) => {
+    setSearchTerm(query)
+  }
+
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log("Current state - query:", query, "jenis:", jenis, "sortOrder:", sortOrder)
+    console.log("Current state - query:", searchTerm, "jenis:", jenis, "sortOrder:", sortOrder)
   }, [query, jenis, sortOrder])
 
   const handleSKFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,17 +90,24 @@ const SKList = () => {
     navigate("/draft-sk")
   }
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setQuery(e.target.value.toLowerCase())
-  }
-
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setJenis(e.target.value)
     console.log("Jenis SK dipilih:", e.target.value)
   }
 
-  const handleSort = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSortOrder(e.target.value as "desc" | "asc")
+  const handleJenisChange = (option: string): void => {
+    if (option === "Semua Jenis") {
+      setJenis("")
+    } else {
+      // Find the key (jenis_sk value) that corresponds to the selected label
+      const selectedKey = Object.entries(jenisSKMap).find(([key, value]) => value === option)?.[0] || ""
+      setJenis(selectedKey)
+      console.log("Jenis SK dipilih:", selectedKey)
+    }
+  }
+
+  const handleSort = (option: string): void => {
+    setSortOrder(option === "Tanggal ↓" ? "desc" : "asc")
   }
 
   const handleDownload = async (no_sk: string) => {
@@ -113,12 +130,10 @@ const SKList = () => {
   }
 
   const handlePreview = (no_sk: string) => {
-    // Open preview in a new tab or modal
     window.open(`/preview-sk/${no_sk}`, "_blank")
   }
 
   const handleArchive = (sk: SK) => {
-    // Handle archiving in frontend
     const updatedPublishedList = sklist.filter((item) => item.no_sk !== sk.no_sk)
     const skToArchive = { ...sk, archived: true }
 
@@ -170,7 +185,6 @@ const SKList = () => {
       const [published, draft] = await Promise.all([getPublishedSK(), getDraftSK()])
       setSK(published)
       setDraft(draft)
-      // Initialize empty archived list (in a real app, you'd fetch this from an API)
       setArchivedList([])
     } catch (err) {
       toast.error("Gagal mengambil data SK")
@@ -198,27 +212,25 @@ const SKList = () => {
         </div>
 
         <div className="skfilters">
-          <div className="search">
-            <input onChange={handleSearch} type="text" className="sk-search" placeholder="Cari..." />
-            <div>
-              <FaSearch />
-            </div>
+          <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
+
+          <div className="sort-filter-select">
+            <SortButtonNew
+              options={["Semua Jenis", ...Object.values(jenisSKMap)]}
+              selectedOption={jenis === "" ? "Semua Jenis" : jenisSKMap[jenis]}
+              onChange={handleJenisChange}
+            />
           </div>
-          <select className="sk-select" onChange={handleSelect}>
-            <option value="">Semua Jenis</option>
-            {Object.entries(jenisSKMap).map(([val, label]) => (
-              <option key={val} value={val}>
-                {label}
-              </option>
-            ))}
-          </select>
           <div></div>
           <div className="sort">
             <p>Sort: </p>
-            <select className="sk-select" onChange={handleSort} value={sortOrder}>
-              <option value="desc">Tanggal ↓</option>
-              <option value="asc">Tanggal ↑</option>
-            </select>
+            <div className="sort-container">
+              <SortButtonNew
+                options={["Tanggal ↓", "Tanggal ↑"]}
+                selectedOption={sortOrder === "desc" ? "Tanggal ↓" : "Tanggal ↑"}
+                onChange={(option) => setSortOrder(option === "Tanggal ↓" ? "desc" : "asc")}
+              />
+            </div>
           </div>
         </div>
 
@@ -253,7 +265,9 @@ const SKList = () => {
               </thead>
               <tbody>
                 {sklist
-                  .filter((sk) => sk.judul.toLowerCase().includes(query) && (jenis === "" || sk.jenis_sk === jenis))
+                  .filter(
+                    (sk) => sk.judul.toLowerCase().includes(searchTerm) && (jenis === "" || sk.jenis_sk === jenis),
+                  )
                   .sort((a, b) => {
                     const dateA = new Date(a.tanggal).getTime()
                     const dateB = new Date(b.tanggal).getTime()
@@ -303,9 +317,7 @@ const SKList = () => {
 
                 <div>{skFileName ? skFileName : "Pilih file SK untuk diterbitkan"}</div>
               </div>
-              <div className="terbit button-blue" onClick={handlePublish}>
-                Submit
-              </div>
+              <ButtonWithIcon text="Submit" onClick={handlePublish} hideIcon />
             </div>
           </>
         )}
