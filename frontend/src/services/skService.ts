@@ -55,3 +55,13 @@ export const deleteDraftSK = async (no_sk: string) => {
     const response = await api.delete(`/sk/draft/${no_sk}`);
     return response.data;
 };
+
+export const getDraftSKDetail = async (no_sk: string) => {
+    const response = await api.get(`/sk/draft/${no_sk}/detail`);
+    return response.data;
+};
+
+export const updateDraftSK = async (no_sk: string, data: any) => {
+    const response = await api.put(`/sk/draft/${no_sk}`, data);
+    return response.data;
+};

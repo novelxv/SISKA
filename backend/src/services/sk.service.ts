@@ -173,3 +173,37 @@ export const deleteDraftSKService = async (no_sk: string) => {
 
     await prisma.sK.delete({ where: { no_sk } });
 };
+
+export const getDraftSKDetailService = async (no_sk: string) => {
+    return await prisma.sK.findUnique({
+        where: { no_sk },
+        include: { Dekan: true },
+    });
+};
+
+export const updateDraftSKService = async (no_sk: string, data: any) => {
+    const existingDekan = await prisma.dekan.findUnique({
+        where: { NIP: data.NIP_dekan },
+    });
+
+    if (!existingDekan) {
+        await prisma.dekan.create({
+            data: {
+                NIP: data.NIP_dekan,
+                nama: data.nama_dekan,
+                ttd_url: data.ttd_dekan,
+            },
+        });
+    }
+
+    return await prisma.sK.update({
+        where: { no_sk },
+        data: {
+            judul: data.judul,
+            jenis_sk: data.jenis_sk,
+            semester: data.semester,
+            tanggal: new Date(data.tanggal),
+            NIP_dekan: data.NIP_dekan,
+        },
+    });
+};

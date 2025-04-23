@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { NextFunction, Request, Response } from "express";
-import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService } from "../services/sk.service";
+import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService, getDraftSKDetailService, updateDraftSKService } from "../services/sk.service";
 import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import multer from "multer";
@@ -149,5 +149,31 @@ export const deleteDraftSK = async (req: Request, res: Response) => {
     } catch (err) {
         console.error("Error delete draft SK:", err);
         res.status(500).json({ message: "Gagal menghapus draft SK" });
+    }
+};
+
+export const getDraftSKDetail = async (req: Request, res: Response) => {
+    try {
+        const { no_sk } = req.params;
+        const draft = await getDraftSKDetailService(no_sk);
+        if (!draft) {
+            res.status(404).json({ message: "Draft SK tidak ditemukan" });
+        }
+        res.status(200).json(draft);
+    } catch (err) {
+        console.error("Error get draft SK detail:", err);
+        res.status(500).json({ message: "Gagal mengambil detail draft SK" });
+    }
+};
+
+export const updateDraftSK = async (req: Request, res: Response) => {
+    try {
+        const { no_sk } = req.params;
+        const data = req.body;
+        const updatedDraft = await updateDraftSKService(no_sk, data);
+        res.status(200).json(updatedDraft);
+    } catch (err) {
+        console.error("Error update draft SK:", err);
+        res.status(500).json({ message: "Gagal memperbarui draft SK" });
     }
 };
