@@ -38,10 +38,15 @@ const SKList = () => {
   const [archivedList, setArchivedList] = useState<SK[]>([])
   const [query, setQuery] = useState("")
   const [jenis, setJenis] = useState("")
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc")
   const [skFile, setSkFile] = useState<File | null>(null)
   const [skFileName, setSkFileName] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabType>("published")
   const navigate = useNavigate()
+
+  useEffect(() => {
+    console.log("Current state - query:", query, "jenis:", jenis, "sortOrder:", sortOrder)
+  }, [query, jenis, sortOrder])
 
   const handleSKFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -80,6 +85,11 @@ const SKList = () => {
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setJenis(e.target.value)
+    console.log("Jenis SK dipilih:", e.target.value)
+  }
+
+  const handleSort = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    setSortOrder(e.target.value as "desc" | "asc")
   }
 
   const handleDownload = async (no_sk: string) => {
@@ -102,7 +112,8 @@ const SKList = () => {
   }
 
   const handlePreview = (no_sk: string) => {
-    // to be implemented: open a modal or new page to preview the SK
+    // Open preview in a new tab or modal
+    window.open(`/preview-sk/${no_sk}`, "_blank")
   }
 
   const handleArchive = (sk: SK) => {
@@ -177,9 +188,9 @@ const SKList = () => {
           <div></div>
           <div className="sort">
             <p>Sort: </p>
-            <select className="sk-select">
-              <option>Tanggal ↓</option>
-              <option>Tanggal ↑</option>
+            <select className="sk-select" onChange={handleSort} value={sortOrder}>
+              <option value="desc">Tanggal ↓</option>
+              <option value="asc">Tanggal ↑</option>
             </select>
           </div>
         </div>
@@ -216,6 +227,11 @@ const SKList = () => {
               <tbody>
                 {sklist
                   .filter((sk) => sk.judul.toLowerCase().includes(query) && (jenis === "" || sk.jenis_sk === jenis))
+                  .sort((a, b) => {
+                    const dateA = new Date(a.tanggal).getTime()
+                    const dateB = new Date(b.tanggal).getTime()
+                    return sortOrder === "desc" ? dateB - dateA : dateA - dateB
+                  })
                   .map((sk) => (
                     <tr key={sk.no_sk}>
                       <td>{sk.no_sk}</td>
@@ -285,25 +301,34 @@ const SKList = () => {
                 </tr>
               </thead>
               <tbody>
-                {draftlist.map((draft) => (
-                  <tr key={draft.no_sk}>
-                    <td>
-                      <div className="td-judul">{draft.judul}</div>
-                    </td>
-                    <td>{draft.created_at ? new Date(draft.created_at).toLocaleDateString("id-ID") : "N/A"}</td>
-                    <td>{draft.updated_at ? new Date(draft.updated_at).toLocaleDateString("id-ID") : "N/A"}</td>
-                    <td>
-                      <div className="action-buttons">
-                        <button className="icon-button" onClick={() => handleEditDraft(draft.no_sk)} title="Edit">
-                          <FaPencilAlt />
-                        </button>
-                        <button className="icon-button" onClick={() => handleDeleteDraft(draft.no_sk)} title="Hapus">
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {draftlist
+                  .filter(
+                    (draft) => draft.judul.toLowerCase().includes(query) && (jenis === "" || draft.jenis_sk === jenis),
+                  )
+                  .sort((a, b) => {
+                    const dateA = a.updated_at ? new Date(a.updated_at).getTime() : 0
+                    const dateB = b.updated_at ? new Date(b.updated_at).getTime() : 0
+                    return sortOrder === "desc" ? dateB - dateA : dateA - dateB
+                  })
+                  .map((draft) => (
+                    <tr key={draft.no_sk}>
+                      <td>
+                        <div className="td-judul">{draft.judul}</div>
+                      </td>
+                      <td>{draft.created_at ? new Date(draft.created_at).toLocaleDateString("id-ID") : "N/A"}</td>
+                      <td>{draft.updated_at ? new Date(draft.updated_at).toLocaleDateString("id-ID") : "N/A"}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <button className="icon-button" onClick={() => handleEditDraft(draft.no_sk)} title="Edit">
+                            <FaPencilAlt />
+                          </button>
+                          <button className="icon-button" onClick={() => handleDeleteDraft(draft.no_sk)} title="Hapus">
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </>
@@ -323,6 +348,11 @@ const SKList = () => {
               <tbody>
                 {archivedList
                   .filter((sk) => sk.judul.toLowerCase().includes(query) && (jenis === "" || sk.jenis_sk === jenis))
+                  .sort((a, b) => {
+                    const dateA = new Date(a.tanggal).getTime()
+                    const dateB = new Date(b.tanggal).getTime()
+                    return sortOrder === "desc" ? dateB - dateA : dateA - dateB
+                  })
                   .map((sk) => (
                     <tr key={sk.no_sk}>
                       <td>{sk.no_sk}</td>
