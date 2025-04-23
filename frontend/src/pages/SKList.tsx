@@ -3,6 +3,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Sidebar from "../components/Navbar"
+import ConfirmationModal from "../components/ConfirmationModal"
 import "../styles/Global.css"
 import "../styles/SK.css"
 import { FaDownload, FaSearch, FaPencilAlt, FaEye, FaArchive, FaTrash } from "react-icons/fa"
@@ -42,6 +43,8 @@ const SKList = () => {
   const [skFile, setSkFile] = useState<File | null>(null)
   const [skFileName, setSkFileName] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabType>("published")
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [draftToDelete, setDraftToDelete] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -58,22 +61,20 @@ const SKList = () => {
 
   const handlePublish = async () => {
     if (!skFile) {
-      toast.warning("Silakan pilih file SK terlebih dahulu");
-      return;
+      toast.warning("Silakan pilih file SK terlebih dahulu")
+      return
     }
     try {
-      const result = await uploadSKPDF(skFile);
-      toast.success("File SK berhasil diterbitkan");
-      setSkFile(null);
-      setSkFileName(null);
-      fetchData();
+      const result = await uploadSKPDF(skFile)
+      toast.success("File SK berhasil diterbitkan")
+      setSkFile(null)
+      setSkFileName(null)
+      fetchData()
     } catch (err: any) {
-      const errorMsg =
-        err.response?.data?.message || "Gagal upload file SK";
-      toast.error(errorMsg);
+      const errorMsg = err.response?.data?.message || "Gagal upload file SK"
+      toast.error(errorMsg)
     }
-  };
-  
+  }
 
   const navToDraft = () => {
     navigate("/draft-sk")
@@ -138,21 +139,31 @@ const SKList = () => {
     toast.success(`SK "${sk.judul}" berhasil dipulihkan`)
   }
 
-  const handleDeleteDraft = async (no_sk: string) => {
-    const confirmDelete = window.confirm("Apakah Anda yakin ingin menghapus draft SK ini?");
-    if (!confirmDelete) {
-        return;
-    }
-    
+  const openDeleteModal = (no_sk: string) => {
+    setDraftToDelete(no_sk)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!draftToDelete) return
+
     try {
-        await deleteDraftSK(no_sk);
-        const updatedDraftList = draftlist.filter((draft) => draft.no_sk !== no_sk);
-        setDraft(updatedDraftList);
-        toast.success("Draft SK berhasil dihapus");
+      await deleteDraftSK(draftToDelete)
+      const updatedDraftList = draftlist.filter((draft) => draft.no_sk !== draftToDelete)
+      setDraft(updatedDraftList)
+      toast.success("Draft SK berhasil dihapus")
     } catch (err) {
-        toast.error("Gagal menghapus draft SK");
+      toast.error("Gagal menghapus draft SK")
+    } finally {
+      setIsDeleteModalOpen(false)
+      setDraftToDelete(null)
     }
-  };
+  }
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false)
+    setDraftToDelete(null)
+  }
 
   const fetchData = async () => {
     try {
@@ -174,6 +185,13 @@ const SKList = () => {
     <div className="sk-container">
       <Sidebar />
       <ToastContainer />
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        title="Konfirmasi Hapus"
+        message="Apakah Anda yakin ingin menghapus draft SK ini?"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
       <div className="sk-content">
         <div className="header">
           <h1>Surat Keputusan</h1>
@@ -331,7 +349,7 @@ const SKList = () => {
                           <button className="icon-button" onClick={() => handleEditDraft(draft.no_sk)} title="Edit">
                             <FaPencilAlt />
                           </button>
-                          <button className="icon-button" onClick={() => handleDeleteDraft(draft.no_sk)} title="Hapus">
+                          <button className="icon-button" onClick={() => openDeleteModal(draft.no_sk)} title="Hapus">
                             <FaTrash />
                           </button>
                         </div>
