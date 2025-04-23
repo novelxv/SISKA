@@ -1,46 +1,53 @@
 import { PrismaClient, JenisSK } from "@prisma/client";
 import { generateSKPreviewService } from "./sk.template.service";
-import { parseSKWaliAktifMetadata } from "../utils/parseUploadedPdfToMetadata";
+// import { parseSKWaliAktifMetadata } from "../utils/parseUploadedPdfToMetadata";
 import fs from "fs";
 import path from "path";
+import { parseSKMetadata } from "../utils/parseSKMetadata";
 
 const prisma = new PrismaClient();
 
 export const uploadSKService = async (filename: string) => {
-    const filePath = path.join(__dirname, "../../public/uploads/sk", filename);
-
-    const metadata = await parseSKWaliAktifMetadata(filePath);
-
-    // Validasi jika nomor SK tidak ditemukan
-    if (!metadata.no_sk || metadata.no_sk.trim() === "") {
-        throw new Error("File yang diunggah bukan SK yang valid (nomor SK tidak ditemukan)");
-    }
-
-    const { NIP_dekan, nama_dekan, ttd_dekan, ...skData } = metadata;
-
-    const existingDekan = await prisma.dekan.findUnique({
+    const filePath = path.join(__dirname, "../../public/uploads/sk", filename)
+  
+    try {
+      const metadata = await parseSKMetadata(filePath)
+  
+      // Validasi jika nomor SK tidak ditemukan
+      if (!metadata.no_sk || metadata.no_sk.trim() === "") {
+        throw new Error("File yang diunggah bukan SK yang valid (nomor SK tidak ditemukan)")
+      }
+  
+      const { NIP_dekan, nama_dekan, ttd_dekan, ...skData } = metadata
+  
+      const existingDekan = await prisma.dekan.findUnique({
         where: { NIP: NIP_dekan },
-    });
-
-    if (!existingDekan) {
+      })
+  
+      if (!existingDekan) {
         await prisma.dekan.create({
-            data: {
-                NIP: NIP_dekan,
-                nama: nama_dekan,
-                ttd_url: ttd_dekan,
-            },
-        });
-    }
-
-    return await prisma.sK.create({
+          data: {
+            NIP: NIP_dekan,
+            nama: nama_dekan,
+            ttd_url: ttd_dekan,
+          },
+        })
+      }
+  
+      return await prisma.sK.create({
         data: {
-            ...skData,
-            NIP_dekan,
-            status: "PUBLISHED",
-            file_sk: `uploads/sk/${filename}`,
+          ...skData,
+          NIP_dekan,
+          status: "PUBLISHED",
+          file_sk: `uploads/sk/${filename}`,
         },
-    });
-};
+      })
+    } catch (error: any) {
+      console.error("Error simpan file SK:", error)
+      throw new Error(error.message || "Gagal menyimpan metadata file SK")
+    }
+  }
+  
 
 
 export const createDraftSKService = async (data: {
