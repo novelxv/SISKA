@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Sidebar from "../components/Navbar"
 import ConfirmationModal from "../components/ConfirmationModal"
 import "../styles/Global.css"
@@ -261,6 +261,7 @@ const SKList = () => {
                   <th>Judul</th>
                   <th>Tanggal</th>
                   <th>Aksi</th>
+                  <th>Lihat Dosen</th>
                 </tr>
               </thead>
               <tbody>
@@ -298,6 +299,9 @@ const SKList = () => {
                             <FaArchive />
                           </button>
                         </div>
+                      </td>
+                      <td>
+                        <ButtonWithIcon text="Data Dosen" onClick={() => navigate(`/sk/${sk.no_sk.replace(/ /g, "_").replace(/\//g, "_")}/dosen`)} hideIcon/>
                       </td>
                     </tr>
                   ))}

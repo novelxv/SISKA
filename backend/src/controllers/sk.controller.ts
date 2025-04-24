@@ -5,8 +5,30 @@ import { NextFunction, Request, Response } from "express";
 import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService, getDraftSKDetailService, updateDraftSKService } from "../services/sk.service";
 import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
+import { extractDosenFromSK } from "../utils/extractDosenFromSK";
 import multer from "multer";
 
+export const getDosenFromSK = async (req: Request, res: Response): Promise<void> => {
+    const { no_sk } = req.params;
+  
+    const skPdfPath = path.join(__dirname, `../../public/uploads/sk/${no_sk}.pdf`);
+  
+    if (!fs.existsSync(skPdfPath)) {
+      res.status(404).json({ message: "File SK tidak ditemukan." });
+      return;
+    }
+  
+    try {
+      const dosens = await extractDosenFromSK(skPdfPath);
+      res.status(200).json(dosens);
+    } catch (error: any) {
+      console.error("Error extracting dosen from SK:", error);
+      res.status(500).json({
+        message: error.message || "Gagal mengekstrak dosen dari SK",
+      });
+    }
+  };
+  
 const storageSK = multer.diskStorage({
     destination: (req, file, cb) => {
       const uploadPath = path.join(__dirname, "../../public/uploads/sk")

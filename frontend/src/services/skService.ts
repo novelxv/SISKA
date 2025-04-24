@@ -1,5 +1,21 @@
 import api from "./api";
 
+export const getDosenFromSK = async (no_sk: string) => {
+    try {
+      // Make sure the SK number is properly formatted for the API call
+      const formattedSK = no_sk.includes(' ') ? no_sk.replace(/\s+/g, '_') : no_sk;
+      
+      const response = await fetch(`/api/sk/${formattedSK}/dosen`)
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`)
+      }
+      return await response.json()
+    } catch (error) {
+      console.error("Failed to fetch dosen data:", error)
+      throw error
+    }
+  }
+
 export const uploadSKPDF = async (file: File) => {
     const formData = new FormData();
     formData.append("sk", file);

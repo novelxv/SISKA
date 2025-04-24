@@ -1,5 +1,5 @@
 import express from "express";
-import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK } from "../controllers/sk.controller";
+import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK } from "../controllers/sk.controller";
 import { authMiddleware, akademikMiddleware } from "../middleware/auth.middleware";
 
 const router = express.Router();
@@ -15,5 +15,6 @@ router.post("/upload/sk", authMiddleware, akademikMiddleware, uploadSKFile);
 router.delete("/draft/:no_sk", authMiddleware, akademikMiddleware, deleteDraftSK);
 router.get("/draft/:no_sk/detail", authMiddleware, akademikMiddleware, getDraftSKDetail);
 router.put("/draft/:no_sk", authMiddleware, akademikMiddleware, updateDraftSK);
+router.get("/:no_sk/dosen", authMiddleware, getDosenFromSK);
 
 export default router;

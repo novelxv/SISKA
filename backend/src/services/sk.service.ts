@@ -4,12 +4,17 @@ import { generateSKPreviewService } from "./sk.template.service";
 import fs from "fs";
 import path from "path";
 import { parseSKMetadata } from "../utils/parseSKMetadata";
+import { extractDosenFromSK } from "../utils/extractDosenFromSK";
 
 const prisma = new PrismaClient();
 
 export const uploadSKService = async (filename: string) => {
     const filePath = path.join(__dirname, "../../public/uploads/sk", filename)
-  
+    console.log("Reading file SK from: ", filePath)
+    const dosens = await extractDosenFromSK(filePath)
+    console.log(`Found ${dosens.length} dosen records:`)
+    // console.log(JSON.stringify(dosens, null, 2))
+    
     try {
       const metadata = await parseSKMetadata(filePath)
   

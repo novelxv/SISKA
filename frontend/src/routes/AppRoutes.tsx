@@ -10,6 +10,7 @@ import TambahAkun from "../pages/TambahAkun";
 import EditAkun from "../pages/EditAkun";
 import DraftSK from "../pages/DraftSK";
 import ProtectedRoute from "./ProtectedRoute";
+import SKDosenView from "../pages/SKDosenView";
 
 const AppRoutes = () => {
     const auth = useContext(AuthContext);
@@ -60,6 +61,15 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <DraftSK />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/sk/:no_sk/dosen"
+                    element={
+                        <ProtectedRoute>
+                            <SKDosenView />
                         </ProtectedRoute>
                     }
                 />

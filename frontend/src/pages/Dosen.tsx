@@ -264,32 +264,6 @@ export default function Dosen() {
         <div className="filter-row">
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           
-          {/* <SortButtonNew 
-            options={["Prodi", ...prodiOptions.slice(1)]} // Display "Prodi" as label
-            selectedOption={prodi} 
-            onChange={setProdi} 
-          />
-
-          <SortButtonNew 
-            options={["KK", ...kkOptions]} 
-            selectedOption={kk} 
-            onChange={setKK} 
-          /> */}
-          {/* <div className="filter-select">
-            <select 
-              value={prodi} 
-              onChange={(e) => setProdi(e.target.value)}
-            >
-              <option value="">Prodi</option>
-              <option value="1">132 - Teknik Elektro</option>
-              <option value="2">135 - Teknik Informatika</option>
-              <option value="3">180 - Teknik Tenaga Listrik</option>
-              <option value='4'>181 - Teknik Telekomunikasi</option>
-              <option value='5'>182 - Sistem dan Teknologi Informasi</option>
-              <option value='6'>183 - Teknik Biomedis</option>
-            </select>
-          </div>
-           */}
           <div className="filter-select">
             <select 
               value={kk} 
