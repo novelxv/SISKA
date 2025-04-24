@@ -114,6 +114,24 @@ model Asisten {
   kode_matkul     String
   jabatan         JabatanAsisten
 
+  status                    String
+  nomorHP                   String
+  email                     String
+  kelas                     String
+  DPK                       String
+  jamKerja                  String
+  namaTabungan              String
+  namaBank                  String
+  nomorRekening             String
+  nomorNikKtp               String
+  alamatKtp                 String 
+  nomorNpwp                 String
+  uploadKtm                 String 
+  uploadKtp                 String
+  uploadHalamanBukuTabungan String 
+  uploadSuratPernyataan     String
+  uploadLogbook             String
+  
   Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
   MataKuliah      MataKuliah @relation(fields: [kode_matkul], references: [kode_matkul])
 
@@ -144,6 +162,7 @@ model MataKuliah {
 model DosenMatkul {
   id_dosen        Int
   kode_matkul     String
+  sks_six         Float
   beban_riil      Float
   jabatan         String
 
