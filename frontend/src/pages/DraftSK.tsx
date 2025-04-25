@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useState, useEffect } from "react"
 import Sidebar from "../components/Navbar"
@@ -9,7 +7,7 @@ import { FaAngleLeft, FaImage, FaRegEye } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { useNavigate, useLocation } from "react-router-dom"
 import { toast, ToastContainer } from "react-toastify"
-import { createDraftSK, uploadTTD, previewSK, publishSK, getDraftSKDetail, updateDraftSK } from "../services/skService"
+import { createDraftSK, uploadTTD, previewSK, publishSK, getDraftSKDetail, updateDraftSK, getTTDPreview } from "../services/skService"
 
 const jenisSKOptions = [
   { label: "SK Pengajaran", value: "PENGAJARAN" },
@@ -58,6 +56,8 @@ const DraftSK = () => {
       try {
         const draftData = await getDraftSKDetail(noSKParam)
 
+        console.log("Draft data fetched:", draftData)
+
         // Populate form with existing data
         setJenisSK(draftData.jenis_sk || "PENGAJARAN")
         setJudul(draftData.judul || "")
@@ -65,11 +65,14 @@ const DraftSK = () => {
         setTanggal(draftData.tanggal ? draftData.tanggal.split("T")[0] : "") // Format date for input
         setSemester(draftData.semester || 1)
         setNipDekan(draftData.NIP_dekan || "")
-        setNamaDekan(draftData.nama_dekan || "")
-
-        if (draftData.ttd_dekan) {
-          setTtdFilename(draftData.ttd_dekan)
-          // to be-implemented: fetch the TTD image from the server and set it as a preview
+        setNamaDekan(draftData.Dekan?.nama || "")
+        
+        if (draftData.Dekan && draftData.Dekan.ttd_url) {
+            const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+            setTtdPreview(apiBase + draftData.Dekan.ttd_url);
+            setTtdFilename(draftData.Dekan.ttd_url);
+          } else {
+            setTtdPreview(null);
         }
 
         toast.success("Data draft SK berhasil dimuat")

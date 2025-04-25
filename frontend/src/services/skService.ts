@@ -81,3 +81,7 @@ export const updateDraftSK = async (no_sk: string, data: any) => {
     const response = await api.put(`/sk/draft/${no_sk}`, data);
     return response.data;
 };
+
+export const getTTDPreview = (nip: string): string => {
+    return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/dekan/${nip}/ttd`;
+};
