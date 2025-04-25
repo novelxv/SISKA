@@ -37,6 +37,14 @@ export const uploadSKService = async (filename: string) => {
             ttd_url: ttd_dekan,
           },
         })
+      } else {   
+            await prisma.dekan.update({
+            where: { NIP: NIP_dekan },
+            data: {
+                nama: nama_dekan,
+                ttd_url: ttd_dekan,
+            },
+            })
       }
   
       return await prisma.sK.create({
@@ -77,7 +85,15 @@ export const createDraftSKService = async (data: {
                 ttd_url: data.ttd_dekan,
             },
         });
-    }
+    } else {
+            await prisma.dekan.update({
+                where: { NIP: data.NIP_dekan },
+                data: {
+                    nama: data.nama_dekan,
+                    ttd_url: data.ttd_dekan,
+                },
+            });
+        }
 
     return await prisma.sK.create({
         data: {
@@ -206,6 +222,14 @@ export const updateDraftSKService = async (no_sk: string, data: any) => {
                 ttd_url: data.ttd_dekan,
             },
         });
+    } else {
+            await prisma.dekan.update({
+                where: { NIP: data.NIP_dekan },
+                data: {
+                    nama: data.nama_dekan,
+                    ttd_url: data.ttd_dekan,
+                },
+            });
     }
 
     return await prisma.sK.update({
