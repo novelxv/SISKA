@@ -2,6 +2,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { FaFileArrowUp } from "react-icons/fa6"
+import { FaDownload } from "react-icons/fa"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import Sidebar from "../components/Navbar"
@@ -9,6 +10,8 @@ import ButtonWithIcon from "../components/Button"
 import "../styles/Global.css"
 import "../styles/SK.css"
 import "../styles/UploadExcelAkademik.css"
+import dosenWaliTemplate from "../assets/template-excel-dosen-wali.xlsx";
+import asistenTemplate from "../assets/template-excel-asisten.xlsx";
 
 const UploadExcelAkademik = () => {
   const [dosenWaliFile, setDosenWaliFile] = useState<File | null>(null)
@@ -16,6 +19,38 @@ const UploadExcelAkademik = () => {
   const [asistenFile, setAsistenFile] = useState<File | null>(null)
   const [asistenFileName, setAsistenFileName] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+
+  const handleDownloadDosenWaliTemplate = () => {
+    try {
+      // Create a link to download the template
+      const link = document.createElement("a")
+      link.href = dosenWaliTemplate
+      link.download = "template-excel-dosen-wali.xlsx"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      toast.info("Template Excel Dosen Wali berhasil diunduh")
+    } catch (error) {
+      toast.error("Gagal mengunduh template Excel Dosen Wali")
+    }
+  }
+
+  const handleDownloadAsistenTemplate = () => {
+    try {
+      // Create a link to download the template
+      const link = document.createElement("a")
+      link.href = asistenTemplate
+      link.download = "template-excel-asisten.xlsx"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      toast.info("Template Excel Asisten Perkuliahan dan Praktikum berhasil diunduh")
+    } catch (error) {
+      toast.error("Gagal mengunduh template Excel Asisten Perkuliahan dan Praktikum")
+    }
+  }
 
   const handleDosenWaliFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -101,12 +136,18 @@ const UploadExcelAkademik = () => {
       <ToastContainer />
       <div className="sk-content">
         <div className="header">
-          <h1>Upload Data SK</h1>
+          <h1>Upload Data Akademik</h1>
         </div>
 
         <div className="section-container">
           <div className="header">
             <h2>Upload Excel Dosen Wali</h2>
+          </div>
+          <div className="template-download">
+            <p>Download template terlebih dahulu:</p>
+            <button className="download-template-btn" onClick={handleDownloadDosenWaliTemplate}>
+              <FaDownload /> Template Excel Dosen Wali
+            </button>
           </div>
           <div className="terbit-sk-row">
             <div className="upload-sk">
@@ -134,6 +175,12 @@ const UploadExcelAkademik = () => {
 
           <div className="header mt-8">
             <h2>Upload Excel Asisten Perkuliahan dan Praktikum</h2>
+          </div>
+          <div className="template-download">
+            <p>Download template terlebih dahulu:</p>
+            <button className="download-template-btn" onClick={handleDownloadAsistenTemplate}>
+              <FaDownload /> Template Excel Asisten Perkuliahan dan Praktikum
+            </button>
           </div>
           <div className="terbit-sk-row">
             <div className="upload-sk">
@@ -163,6 +210,8 @@ const UploadExcelAkademik = () => {
         <div className="info-box mt-8">
           <h3>Petunjuk Upload</h3>
           <ul>
+            <li>Download template Excel terlebih dahulu</li>
+            <li>Isi template sesuai dengan format yang telah ditentukan</li>
             <li>File harus dalam format Excel (.xlsx atau .xls)</li>
             <li>Pastikan format data sesuai dengan template yang telah ditentukan</li>
             <li>Ukuran file maksimal 10MB</li>
