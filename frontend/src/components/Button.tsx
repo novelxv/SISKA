@@ -7,6 +7,7 @@ interface ButtonWithIconProps {
     onClick: () => void;
     className?: string;
     hideIcon?: boolean;
+    disabled?: boolean;
 }
 
 const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({ text, onClick, className = "", hideIcon = false }) => {

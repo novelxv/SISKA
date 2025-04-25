@@ -9,6 +9,7 @@ import KelolaAkun from "../pages/KelolaAkun";
 import TambahAkun from "../pages/TambahAkun";
 import EditAkun from "../pages/EditAkun";
 import DraftSK from "../pages/DraftSK";
+import UploadExcelAkademik from "../pages/UploadExcelAkademik";
 import ProtectedRoute from "./ProtectedRoute";
 import SKDosenView from "../pages/SKDosenView";
 
@@ -97,6 +98,15 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute allowedRoles={["AKADEMIK"]}>
                             <TambahAkun />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/upload-excel-akademik"
+                    element={
+                        <ProtectedRoute allowedRoles={["AKADEMIK"]}>
+                            <UploadExcelAkademik />
                         </ProtectedRoute>
                     }
                 />

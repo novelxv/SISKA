@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { FaUsers, FaFileAlt, FaUserCog, FaSignOutAlt } from "react-icons/fa";
+import { FaUsers, FaFileAlt, FaUserCog, FaSignOutAlt, FaUpload } from "react-icons/fa";
 import "../styles/Navbar.css";
 
 const Sidebar = () => {
@@ -40,6 +40,12 @@ const Sidebar = () => {
             <a href="/kelola-akun">
               <FaUserCog />
               Kelola Akun
+            </a>
+          </li>
+          <li className={location.pathname === "/upload-excel-akademik" ? "active" : ""}>
+            <a href="/upload-excel-akademik">
+              <FaUpload />
+              Upload Excel
             </a>
           </li>
         </ul>
