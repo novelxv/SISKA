@@ -7,11 +7,20 @@ import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
 import multer from "multer";
+import { Console } from "console";
 
 export const getDosenFromSK = async (req: Request, res: Response): Promise<void> => {
     const { no_sk } = req.params;
-  
-    const skPdfPath = path.join(__dirname, `../../public/uploads/sk/${no_sk}.pdf`);
+    console.log("Received SK number:", no_sk);
+    const decodedSK = decodeURIComponent(no_sk);
+    console.log("Decoded SK number:", decodedSK);
+    
+    const safeSK = no_sk.replace(/_/g, "/");
+    const sk = await getSKDetailService(safeSK);
+    const sk_path = sk?.file_sk
+    
+    const skPdfPath = path.join(__dirname, `../../public/${sk_path}`);
+    console.log("Full file path:", skPdfPath);
   
     if (!fs.existsSync(skPdfPath)) {
       res.status(404).json({ message: "File SK tidak ditemukan." });

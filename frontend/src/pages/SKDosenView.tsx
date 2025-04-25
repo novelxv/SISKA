@@ -7,6 +7,7 @@ import "../styles/Global.css"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { RiArrowLeftSLine } from "react-icons/ri"
+import { getDosenFromSK } from "../services/skService"
 
 interface Dosen {
   nama_tanpa_gelar: string
@@ -31,22 +32,9 @@ const SKDosenView: React.FC = () => {
       try {
         setIsLoading(true)
         if (!no_sk) return
-
-        // Decode the SK number from the URL
-        const decodedSK = decodeURIComponent(no_sk)
-        console.log("Fetching dosen for SK:", decodedSK)
+        const data = await getDosenFromSK(no_sk)
         
-        // Make the API call to the correct endpoint
-        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000"
-        console.log("apiURL:", apiUrl) // debug
-        const response = await fetch(`${apiUrl}/sk/${decodedSK}/dosen`);
-
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`)
-        }
-        
-        const data = await response.json()
-        console.log("Dosen data:", data) // debug
+        console.log("Dosen data:", data)
         setDosenList(data)
       } catch (error) {
         console.error("Gagal mengambil data dosen dari SK:", error)
