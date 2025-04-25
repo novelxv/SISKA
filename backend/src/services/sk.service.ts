@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { parseSKMetadata } from "../utils/parseSKMetadata";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 
@@ -57,6 +58,12 @@ export const uploadSKService = async (filename: string) => {
         },
       })
     } catch (error: any) {
+        if (
+            error instanceof PrismaClientKnownRequestError &&
+            error.code === "P2002"
+          ) {
+            throw new Error("Nomor SK sudah ada. File dengan nomor SK ini sudah pernah diunggah.");
+          }
       console.error("Error simpan file SK:", error)
       throw new Error(error.message || "Gagal menyimpan metadata file SK")
     }
