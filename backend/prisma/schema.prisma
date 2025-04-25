@@ -173,16 +173,17 @@ model DosenMatkul {
 }
 
 model SK {
-  no_sk         String   @id
-  judul         String
-  jenis_sk      JenisSK
-  semester      Int
-  tanggal       DateTime
-  status        SKStatus
-  NIP_dekan     String
-  file_sk       String?
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  no_sk             String   @id
+  judul             String
+  jenis_sk          JenisSK
+  semester          Int
+  tahun_akademik    Int
+  tanggal           DateTime
+  status            SKStatus
+  NIP_dekan         String
+  file_sk           String?
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
 
   Dekan         Dekan @relation(fields: [NIP_dekan], references: [NIP])
 }

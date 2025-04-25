@@ -53,6 +53,7 @@ export const uploadSKService = async (filename: string) => {
           NIP_dekan,
           status: "PUBLISHED",
           file_sk: `uploads/sk/${filename}`,
+          tahun_akademik: 0
         },
       })
     } catch (error: any) {
@@ -68,6 +69,7 @@ export const createDraftSKService = async (data: {
     judul: string;
     jenis_sk: JenisSK;
     semester: number;
+    tahun_akademik: number;
     tanggal: string;
     NIP_dekan: string;
     nama_dekan: string;
@@ -101,6 +103,7 @@ export const createDraftSKService = async (data: {
             judul: data.judul,
             jenis_sk: data.jenis_sk,
             semester: data.semester,
+            tahun_akademik: data.tahun_akademik,
             tanggal: new Date(data.tanggal),
             NIP_dekan: data.NIP_dekan,
             status: "DRAFT",
@@ -138,6 +141,7 @@ export const publishSKService = async (no_sk: string): Promise<void> => {
         judul: skData.judul,
         jenis_sk: skData.jenis_sk,
         semester: skData.semester,
+        tahun_akademik: skData.tahun_akademik,
         tanggal: skData.tanggal.toISOString(),
         NIP_dekan: skData.NIP_dekan,
         nama_dekan: skData.Dekan.nama,
@@ -238,6 +242,7 @@ export const updateDraftSKService = async (no_sk: string, data: any) => {
             judul: data.judul,
             jenis_sk: data.jenis_sk,
             semester: data.semester,
+            tahun_akademik: data.tahun_akademik,
             tanggal: new Date(data.tanggal),
             NIP_dekan: data.NIP_dekan,
         },

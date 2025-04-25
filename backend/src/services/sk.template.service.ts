@@ -12,6 +12,7 @@ export const generateSKPreviewService = async (data: {
     judul: string;
     jenis_sk: string;
     semester: number;
+    tahun_akademik: number;
     tanggal: string;
     NIP_dekan: string;
     nama_dekan: string;
@@ -28,6 +29,7 @@ export const generateSKPreviewService = async (data: {
         no_sk: data.no_sk,
         judul: data.judul,
         semester: data.semester,
+        tahun_akademik: data.tahun_akademik,
         tanggal: format(new Date(data.tanggal), "d MMMM yyyy"),
         nama_dekan: data.nama_dekan,
         nip_dekan: data.NIP_dekan,

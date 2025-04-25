@@ -23,6 +23,7 @@ interface DraftSKData {
   judul: string
   jenis_sk: string
   semester: number
+  tahun_akademik: number
   tanggal: string
   NIP_dekan: string
   nama_dekan: string
@@ -41,6 +42,7 @@ const DraftSK = () => {
   const [noSK, setNoSK] = useState("")
   const [tanggal, setTanggal] = useState("")
   const [semester, setSemester] = useState(1)
+  const [tahunAkademik, setTahunAkademik] = useState("");
   const [nipDekan, setNipDekan] = useState("")
   const [namaDekan, setNamaDekan] = useState("")
   const [ttdFile, setTtdFile] = useState<File | null>(null)
@@ -64,6 +66,7 @@ const DraftSK = () => {
         setNoSK(draftData.no_sk || "")
         setTanggal(draftData.tanggal ? draftData.tanggal.split("T")[0] : "") // Format date for input
         setSemester(draftData.semester || 1)
+        setTahunAkademik(draftData.tahun_akademik || 0);
         setNipDekan(draftData.NIP_dekan || "")
         setNamaDekan(draftData.Dekan?.nama || "")
         
@@ -113,6 +116,7 @@ const DraftSK = () => {
       judul,
       jenis_sk: jenisSK,
       semester: Number(semester),
+      tahun_akademik: Number(tahunAkademik),
       tanggal,
       NIP_dekan: nipDekan,
       nama_dekan: namaDekan,
@@ -235,9 +239,27 @@ const DraftSK = () => {
                 type="number"
                 className="sk-input"
                 value={semester}
-                onChange={(e) => setSemester(Number(e.target.value))}
+                onChange={(e) => {
+                    if (e.target.value === "") {
+                      setSemester(null);
+                    } else {
+                      setSemester(Number(e.target.value));
+                    }
+                  }}
+                  min={1}
+                  max={20}
               />
             </div>
+            <div>
+                Tahun Akademik <br />
+                <input
+                    type="text"
+                    className="sk-input"
+                    value={tahunAkademik}
+                    onChange={(e) => setTahunAkademik(e.target.value)}
+                    placeholder="2024/2025"
+                />
+                </div>
           </div>
 
           <div className="inputrow4">
