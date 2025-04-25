@@ -30,3 +30,19 @@ export const akademikMiddleware = (req: AuthenticatedRequest, res: Response, nex
     }
     next();
 };
+
+export const AdminProdiMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    if (!req.user || req.user.role !== "ADMIN_PRODI") {
+        res.status(403).json({ error: "Forbidden: Only ADMIN PRODI can perform this action" });
+        return;
+    }
+    next();
+};
+
+export const AdminKKMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    if (!req.user || req.user.role !== "ADMIN_KK") {
+        res.status(403).json({ error: "Forbidden: Only ADMIN KK can perform this action" });
+        return;
+    }
+    next();
+};
