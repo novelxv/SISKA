@@ -8,6 +8,8 @@ import InputField from "../components/Input";
 import { toast } from "react-toastify";
 import { register } from "../services/authService";
 import { User } from "../services/userService";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TambahAkun: React.FC = () => {
   const navigate = useNavigate();
@@ -20,6 +22,24 @@ const TambahAkun: React.FC = () => {
   });
 
   const handleSimpan = async () => {
+    // Validasi username
+    if (formData.username.length < 5 || formData.username.length > 20) {
+        toast.error("Username harus memiliki panjang antara 5 hingga 20 karakter.");
+        return;
+    }
+
+    // Validasi password
+    if (formData.password.length < 8) {
+        toast.error("Password harus memiliki panjang minimal 8 karakter.");
+        return;
+    }
+
+    // Validasi role
+    if (!formData.role) {
+        toast.error("Role harus dipilih.");
+        return;
+    }
+
     try {
         await register(formData.username, formData.password, formData.role);
         toast.success("Akun berhasil ditambahkan!");
@@ -28,7 +48,7 @@ const TambahAkun: React.FC = () => {
         console.error("Error adding user:", error);
         toast.error(error.message || "Gagal menambahkan akun");
     }
-};
+  };
 
   const handleCancel = () => {
     navigate("/kelola-akun");
@@ -36,23 +56,23 @@ const TambahAkun: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
+
     let cleanedValue = value.trimStart();
-  
+
     if (name === "username") {
-      cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, '');
+        cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, ''); // Hanya izinkan karakter alfanumerik
     }
-  
+
     setFormData((prevState) => ({
-      ...prevState,
-      [name]: cleanedValue,
+        ...prevState,
+        [name]: cleanedValue,
     }));
   };
-  
 
   return (
     <div className="page-container">
       <Sidebar />
+      <ToastContainer />
       <div className="content-area">
         <div className="form-container">
           <div className="formheader">
