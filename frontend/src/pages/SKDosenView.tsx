@@ -37,13 +37,16 @@ const SKDosenView: React.FC = () => {
         console.log("Fetching dosen for SK:", decodedSK)
         
         // Make the API call to the correct endpoint
-        const response = await fetch(`/sk/${decodedSK}/dosen`)
-        
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000"
+        console.log("apiURL:", apiUrl) // debug
+        const response = await fetch(`${apiUrl}/sk/${decodedSK}/dosen`);
+
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`)
         }
         
         const data = await response.json()
+        console.log("Dosen data:", data) // debug
         setDosenList(data)
       } catch (error) {
         console.error("Gagal mengambil data dosen dari SK:", error)

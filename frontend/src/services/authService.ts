@@ -1,5 +1,11 @@
 import api from "./api";
 
+
+export const getLoggedInUser = async () => {
+    const response = await api.get("/auth/me");
+    return response.data;
+};
+
 export const login = async (username: string, password: string): Promise<string> => {
     try {
         const response = await api.post("/auth/login", { username, password });

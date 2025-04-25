@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { getAllUsersService, deleteUserService, updateUserService, getUserByIdService } from "../services/user.service";
 
+interface AuthenticatedRequest extends Request {
+    user?: any;
+}
+
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await getAllUsersService();
@@ -10,9 +14,16 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
     try {
         const id = parseInt(req.params.id);
+
+        // Cek apakah pengguna mencoba menghapus dirinya sendiri
+        if (req.user.id === id) {
+            res.status(400).json({ message: "Anda tidak dapat menghapus diri sendiri" });
+            return;
+        }
+
         await deleteUserService(id);
         res.status(204).send();
     } catch (error) {

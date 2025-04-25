@@ -9,6 +9,7 @@ import SortButtonNew from "../components/SortButtonNew";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { getLoggedInUser } from "../services/authService";
 import { getUsers, deleteUser, User } from "../services/userService";
 
 const KelolaAkun: React.FC = () => {
@@ -17,6 +18,21 @@ const KelolaAkun: React.FC = () => {
     const [selectedSort, setSelectedSort] = useState<string>("");
     const [users, setUsers] = useState<User[]>([]);
     const [allUsers, setAllUsers] = useState<User[]>([]);
+    const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null);
+
+    useEffect(() => {
+        const fetchLoggedInUser = async () => {
+            try {
+                const userData = await getLoggedInUser();
+                setLoggedInUserId(userData.id);
+            } catch (error) {
+                console.error("Error fetching logged-in user:", error);
+                toast.error("Gagal memuat data pengguna login");
+            }
+        };
+
+        fetchLoggedInUser();
+    }, []);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
@@ -170,6 +186,14 @@ const KelolaAkun: React.FC = () => {
     }
     const confirmDelete = async () => {
         if (selectedUser) {
+            // Cek apakah pengguna mencoba menghapus dirinya sendiri
+            if (selectedUser.id === loggedInUserId) {
+                toast.error("Anda tidak dapat menghapus akun Anda sendiri.");
+                setIsModalOpen(false);
+                setSelectedUser(null);
+                return;
+            }
+
             try {
                 await deleteUser(selectedUser.id);
                 setUsers(users.filter(user => user.id !== selectedUser.id));
@@ -182,7 +206,7 @@ const KelolaAkun: React.FC = () => {
                 setSelectedUser(null);
             }
         }
-    };    
+    };
 
     return (
         <div className="container">
@@ -219,8 +243,11 @@ const KelolaAkun: React.FC = () => {
                                 displayedUsers
                                     .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
                                     .map((user, index) => (
-                                        <tr key={user.id}>
-                                            <td>{indexOfFirstItem + index + 1}</td> {/* Correct numbering per page */}
+                                        <tr
+                                            key={user.id}
+                                            className={user.id === loggedInUserId ? "highlight-row" : ""} // Tambahkan kelas CSS
+                                        >
+                                            <td>{indexOfFirstItem + index + 1}</td>
                                             <td>{user.username}</td>
                                             <td>{user.password}</td>
                                             <td>{user.role.replace(/_/g, " ")}</td>
@@ -238,8 +265,6 @@ const KelolaAkun: React.FC = () => {
                                 </tr>
                             )}
                         </tbody>
-
-
                     </table>
                 </div>
 
