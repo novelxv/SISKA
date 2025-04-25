@@ -79,28 +79,33 @@ enum JabatanFungsional {
 }
 
 model Pembimbing {
-  id_dosen        Int @id
+  id_dosen        Int
   NIM             String
   jabatan         String
   tanggal_sidang  DateTime
 
   Dosen           Dosen   @relation(fields: [id_dosen], references: [id_dosen])
   Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
+
+  @@id([id_dosen, NIM])
 }
 
 model Penguji {
-  id_dosen        Int @id
+  id_dosen        Int
   NIM             String
   jabatan         String
   tanggal_sidang  DateTime
 
   Dosen           Dosen   @relation(fields: [id_dosen], references: [id_dosen])
   Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
+
+  @@id([id_dosen, NIM])
 }
 
 model Mahasiswa {
   NIM             String    @id
   nama            String
+  kelas           String?
   jurusan         String
   NIP_doswal      String
 
@@ -177,7 +182,7 @@ model SK {
   judul             String
   jenis_sk          JenisSK
   semester          Int
-  tahun_akademik    Int
+  tahun_akademik    Int?
   tanggal           DateTime
   status            SKStatus
   NIP_dekan         String
@@ -207,4 +212,15 @@ model Dekan {
   nama          String
   ttd_url       String?
   SKs           SK[]
+}
+
+model UploadStatus {
+  templateType    String   @id
+  uploaded        Boolean  @default(false)
+  processed       Boolean  @default(false)
+  uploadedAt      DateTime?
+  processedAt     DateTime?
+  filePath        String?  // Menyimpan path file untuk diproses nanti
+  
+  @@map("upload_status")
 }
