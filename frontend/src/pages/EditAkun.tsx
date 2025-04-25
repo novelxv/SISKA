@@ -5,7 +5,8 @@ import "../styles/Global.css";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import "../styles/EditAkun.css";
 import InputField from "../components/Input";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { User, getUserById, updateUser } from "../services/userService";
 import { AuthContext } from "../context/AuthContext";
 
@@ -51,6 +52,24 @@ const EditAkun: React.FC = () => {
     }, [id]);
 
     const handleSimpan = async () => {
+        // Validasi username
+        if (formData.username.length < 5 || formData.username.length > 20) {
+            toast.error("Username harus memiliki panjang antara 5 hingga 20 karakter.");
+            return;
+        }
+
+        // Validasi password (jika diubah)
+        if (formData.password && formData.password.length < 8) {
+            toast.error("Password harus memiliki panjang minimal 8 karakter.");
+            return;
+        }
+
+        // Validasi role
+        if (!formData.role) {
+            toast.error("Role harus dipilih.");
+            return;
+        }
+
         try {
             if (id) {
                 await updateUser(parseInt(id), formData);
@@ -72,7 +91,7 @@ const EditAkun: React.FC = () => {
 
         let cleanedValue = value.trimStart();
         if (name === "username") {
-            cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, '');
+            cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, ""); // Hanya izinkan karakter alfanumerik
         }
 
         setFormData((prevState) => ({
@@ -84,13 +103,14 @@ const EditAkun: React.FC = () => {
     return (
         <div className="page-container">
             <Sidebar />
+            <ToastContainer />
             <div className="content-area">
                 <div className="form-container">
                     <div className="formheader">
                         <button className="back-button" onClick={handleCancel}>
                             <RiArrowLeftSLine size={24} />
                         </button>
-                        <h1 className="page-title" id="title-tambah-akun">Edit Akun</h1>
+                        <h1 className="page-title" id="title-edit-akun">Edit Akun</h1>
                     </div>
 
                     <form
@@ -113,7 +133,6 @@ const EditAkun: React.FC = () => {
                                 type={showPassword ? "text" : "password"}
                                 value={formData.password}
                                 onChange={handleChange}
-                                required
                             />
                             <button
                                 type="button"
@@ -153,7 +172,6 @@ const EditAkun: React.FC = () => {
                                     </svg>
                                 )}
                             </button>
-
                         </div>
 
                         <select
