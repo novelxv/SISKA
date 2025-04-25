@@ -296,11 +296,11 @@ const DraftSK = () => {
             </div>
             <div className="signpreview">
               {ttdPreview ? (
-                <img src={ttdPreview || "/placeholder.svg"} alt="Preview TTD" style={{ height: 80 }} />
+                <img className="previewimg" src={ttdPreview || "/placeholder.svg"} alt="Preview TTD" />
               ) : ttdFilename ? (
                 <div className="ttd-filename">File TTD tersimpan: {ttdFilename}</div>
               ) : (
-                <FaImage />
+                <FaImage className="previewimg"/>
               )}
             </div>
           </div>
