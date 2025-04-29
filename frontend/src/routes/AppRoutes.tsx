@@ -12,6 +12,7 @@ import DraftSK from "../pages/DraftSK";
 import UploadExcelAkademik from "../pages/UploadExcelAkademik";
 import ProtectedRoute from "./ProtectedRoute";
 import SKDosenView from "../pages/SKDosenView";
+import AdminProdi from "../pages/AdminProdi";
 
 const AppRoutes = () => {
     const auth = useContext(AuthContext);
@@ -107,6 +108,15 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute allowedRoles={["AKADEMIK"]}>
                             <UploadExcelAkademik />
+                        </ProtectedRoute>
+                    }
+                />
+                
+                <Route
+                    path="/upload-excel-prodi"
+                    element={
+                        <ProtectedRoute>
+                            <AdminProdi />
                         </ProtectedRoute>
                     }
                 />
