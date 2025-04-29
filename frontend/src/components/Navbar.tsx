@@ -14,6 +14,10 @@ const Sidebar = () => {
     navigate("/login");
   };
 
+  const isAkademik = auth?.role === 'AKADEMIK';
+  const isAdminProdi = auth?.role === 'ADMIN_PRODI';
+  const isAdminKK = auth?.role === 'ADMIN_KK';
+
   return (
     <aside className="sidebar">
       {/* Logo */}
@@ -24,30 +28,50 @@ const Sidebar = () => {
       {/* Navigation Menu */}
       <nav>
         <ul>
-          <li className={location.pathname === "/dosen" ? "active" : ""}>
-            <a href="/dosen">
-              <FaUsers />
-              Dosen
-            </a>
-          </li>
-          <li className={location.pathname === "/sk" ? "active" : ""}>
-            <a href="/sk">
-              <FaFileAlt />
-              Surat Keputusan (SK)
-            </a>
-          </li>
-          <li className={location.pathname === "/kelola-akun" ? "active" : ""}>
-            <a href="/kelola-akun">
-              <FaUserCog />
-              Kelola Akun
-            </a>
-          </li>
-          <li className={location.pathname === "/upload-excel-akademik" ? "active" : ""}>
-            <a href="/upload-excel-akademik">
-              <FaUpload />
-              Upload Excel
-            </a>
-          </li>
+          {isAkademik && (
+            <li className={location.pathname === "/dosen" ? "active" : ""}>
+              <a href="/dosen">
+                <FaUsers />
+                Dosen
+              </a>
+            </li>            
+          )}
+
+          {isAkademik && (
+            <li className={location.pathname === "/sk" ? "active" : ""}>
+              <a href="/sk">
+                <FaFileAlt />
+                Surat Keputusan (SK)
+              </a>
+            </li>
+          )}
+
+          {isAkademik && (
+            <li className={location.pathname === "/kelola-akun" ? "active" : ""}>
+              <a href="/kelola-akun">
+                <FaUserCog />
+                Kelola Akun
+              </a>
+            </li>
+          )}
+
+          {isAkademik && (
+            <li className={location.pathname === "/upload-excel-akademik" ? "active" : ""}>
+              <a href="/upload-excel-akademik">
+                <FaUpload />
+                Upload Excel
+              </a>
+            </li>            
+          )}
+
+          {isAdminProdi && (
+            <li className={location.pathname === "/upload-excel-prodi" ? "active" : ""}>
+              <a href="/upload-excel-prodi">
+                <FaUpload />
+                Upload Excel
+              </a>
+            </li>            
+          )}
         </ul>
       </nav>
 
