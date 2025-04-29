@@ -7,7 +7,6 @@ import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
 import multer from "multer";
-import { Console } from "console";
 
 export const getDosenFromSK = async (req: Request, res: Response): Promise<void> => {
     const { no_sk } = req.params;

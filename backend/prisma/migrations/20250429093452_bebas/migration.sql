@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "JenisSK" ADD VALUE 'LUAR_PRODI';

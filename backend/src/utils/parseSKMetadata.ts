@@ -5,6 +5,7 @@ import { parseSKWaliAktifMetadata } from "./parseSKWaliAktifMetadata"
 import { parseSKPengajaranMetadata } from "./parseSKPengajaranMetadata"
 import { parseSKPembimbingPengujiMetadata } from "./parseSKPembimbingPengujiMetadata"
 import { parseSKDosenPembimbingMetadata } from "./parseSKDosenPembimbingMetadata"
+import { parseSKLuarProdi } from "./parseSKLuarProdi"
 interface ParsedSKMetadata {
   no_sk: string
   judul: string
@@ -49,8 +50,11 @@ export const parseSKMetadata = async (filePath: string): Promise<ParsedSKMetadat
     return await parseSKDosenPembimbingMetadata(filePath)
   }
   
+  if (/BOARD OF REVIEWER/i.test(text) && /Lampiran Keputusan/i.test(text)) {
+    console.log("Identified as LUAR_PRODI")
+    return await parseSKLuarProdi(filePath)
+  }
 
   console.log("Could not identify SK type, defaulting to WALI_MHS_AKTIF")
   throw new Error("File upload bukan SK");
-//   return await parseSKWaliAktifMetadata(filePath)
 }

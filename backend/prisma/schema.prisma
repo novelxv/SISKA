@@ -200,6 +200,7 @@ enum JenisSK {
   WALI_TPB
   WALI_MHS_AKTIF
   ASISTEN_PRAKTIKUM
+  LUAR_PRODI
 }
 
 enum SKStatus {
