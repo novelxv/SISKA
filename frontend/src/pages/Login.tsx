@@ -21,12 +21,16 @@ const Login = () => {
         setError("");
 
         try {
+            await auth?.login(username, password);
             if (auth?.role === "AKADEMIK") {
                 toast.success("Login berhasil!");
-                setTimeout(() => navigate("/dosen"), 1500); // Arahkan ke halaman khusus akademik
-            } else {
+                setTimeout(() => navigate("/dosen"), 1500);
+            } else if (auth?.role == "ADMIN_PRODI") {
                 toast.success("Login berhasil!");
-                setTimeout(() => navigate("/"), 1500); // Arahkan ke halaman dosen (default)
+                setTimeout(() => navigate("/upload-excel-prodi"), 1500);
+            } else if (auth?.role == "ADMIN_KK") {
+                toast.success("Login berhasil!");
+                setTimeout(() => navigate("/"), 1500); // ntar sesuaikan saja  
             }
         } catch (err) {
             const errorMessage = typeof err === "string" ? err : "Login gagal. Silakan coba lagi.";
