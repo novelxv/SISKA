@@ -21,9 +21,13 @@ const Login = () => {
         setError("");
 
         try {
-            await auth?.login(username, password);
-            toast.success("Login berhasil!");
-            setTimeout(() => navigate("/dosen"), 1500);
+            if (auth?.role === "AKADEMIK") {
+                toast.success("Login berhasil!");
+                setTimeout(() => navigate("/dosen"), 1500); // Arahkan ke halaman khusus akademik
+            } else {
+                toast.success("Login berhasil!");
+                setTimeout(() => navigate("/"), 1500); // Arahkan ke halaman dosen (default)
+            }
         } catch (err) {
             const errorMessage = typeof err === "string" ? err : "Login gagal. Silakan coba lagi.";
             setError(errorMessage);
