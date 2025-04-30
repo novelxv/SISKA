@@ -1,5 +1,9 @@
-import type { KelompokKeahlian, JenisKepegawaian, StatusKepegawaian, JabatanFungsional } from "@prisma/client"
-import { removeGelar } from "./extractDosenUtils"
+import {
+  KelompokKeahlian,
+  JenisKepegawaian,
+  StatusKepegawaian,
+  JabatanFungsional,
+} from "@prisma/client";import { mapToKelompokKeahlian, removeGelar } from "./extractDosenUtils"
 
 // Extract dosen from SK Pengajaran
 export interface ExtractedDosen {
@@ -17,51 +21,99 @@ export interface ExtractedDosen {
 
 // Extract dosen from SK Pembimbing dan Penguji
 export const extractDosenFromSKPembimbingPenguji = (text: string): ExtractedDosen[] => {
-  const dosens: ExtractedDosen[] = []
-
-  // Find the section with the list of supervisors and examiners
-  const pembimbingSection = text.match(/DOSEN PEMBIMBING\/PROMOTOR DAN PENGUJI(?:\s|\n)+([\s\S]+?)(?=DEKAN|$)/i)
-
-  if (pembimbingSection && pembimbingSection[1]) {
-    const entries = pembimbingSection[1].split(/\d+\s+(?=[A-Z][a-z]+\.?\s+[A-Z])/g)
-
-    for (const entry of entries) {
-      // Extract NIP
-      const nipMatch = entry.match(/(\d{8}\s+\d{6}\s+\d+\s+\d+)/i)
-      const nip = nipMatch ? nipMatch[1].replace(/\s+/g, "") : null
-
-      // Extract name with titles
-      const nameMatch = entry.match(/([A-Z][a-z]+\.?\s+[^0-9]+?)(?=\d{8}|\s+\d+\s+\d+|$)/i)
-      const namaGelar = nameMatch ? nameMatch[1].trim() : ""
-
-      // Extract name without titles
-      const namaTanpaGelar = removeGelar(namaGelar)
-
-      // Extract institution for external lecturers
-      const instansiMatch = entry.match(/(?:Instansi\s+Asal)\s*(?:\n|\r|\s)+([A-Za-z\s]+)/i)
-      const instansiAsal = instansiMatch ? instansiMatch[1].trim() : null
-
-      // Determine employment type
-      let jenisKepegawaian: JenisKepegawaian | null = null
-      if (instansiAsal) {
-        jenisKepegawaian = instansiAsal.includes("ITB") ? "DOSEN_LUAR_STEI" : "DOSEN_LUAR_ITB"
-      } else {
-        jenisKepegawaian = "DOSEN_TETAP"
+  const dosens: ExtractedDosen[] = [];
+    const uniqueNames = new Set<string>();
+  
+    // Ambil semua bagian lampiran
+    const attachmentMatch = text.match(/LAMPIRAN KEPUTUSAN DEKAN[\s\S]+/i);
+    if (!attachmentMatch) {
+      console.log("Could not find attachment section");
+      return dosens;
+    }
+  
+    const attachmentText = attachmentMatch[0];
+    const lines = attachmentText.split("\n").map(line => line.trim()).filter(Boolean);
+  
+    let currentKK: string | null = null;
+    let currentJenisKepegawaian: JenisKepegawaian = JenisKepegawaian.DOSEN_TETAP;
+  
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+  
+      const kkMatch = line.match(/^KK\s+(.+)$/i);
+      if (kkMatch) {
+        currentKK = kkMatch[1].trim();
+        continue;
       }
-
-      // Add dosen to the list if we have at least a name
-      if (namaGelar) {
+  
+      if (/Dosen\s+Tidak\s+Tetap\s+Peneliti/i.test(line)) {
+        currentJenisKepegawaian = JenisKepegawaian.DOSEN_TAK_TETAP_PENELITI;
+        currentKK = null;
+        continue;
+      }
+      if (/Dosen\s+Tidak\s+Tetap/i.test(line)) {
+        currentJenisKepegawaian = JenisKepegawaian.DOSEN_TAK_TETAP_PENGAJAR;
+        currentKK = null;
+        continue;
+      }
+      if (/Pembimbing\s+Luar\s+STEI|Dosen\s+Luar\s+STEI/i.test(line)) {
+        currentJenisKepegawaian = JenisKepegawaian.DOSEN_LUAR_STEI;
+        currentKK = null;
+        continue;
+      }
+      if (/Pembimbing\s+Luar\s+ITB|Dosen\s+Luar\s+ITB/i.test(line)) {
+        currentJenisKepegawaian = JenisKepegawaian.DOSEN_LUAR_ITB;
+        currentKK = null;
+        continue;
+      }
+  
+      // Format: No Nama NIM ... Instansi
+      const externalWithInstansi = line.match(/^\d+\s+(.+?)\s+\d{5,}\s+.+?\s+Pemb\.\s+\S+\s+(.+)$/);
+      if (externalWithInstansi) {
+        const namaGelar = externalWithInstansi[1].trim();
+        const namaTanpaGelar = removeGelar(namaGelar);
+        const instansi = externalWithInstansi[2].trim();
+        if (uniqueNames.has(namaTanpaGelar)) continue;
+  
         dosens.push({
           nama_tanpa_gelar: namaTanpaGelar,
           nama_plus_gelar: namaGelar,
-          NIP: nip,
-          jenis_kepegawaian: jenisKepegawaian,
-          status_kepegawaian: "AKTIF", // Assuming active status for all lecturers in the SK
-          instansi_asal: instansiAsal,
-        })
+          NIP: null,
+          KK: null,
+          jenis_kepegawaian: currentJenisKepegawaian,
+          status_kepegawaian: StatusKepegawaian.AKTIF,
+          instansi_asal: instansi,
+        });
+        uniqueNames.add(namaTanpaGelar);
+        continue;
+      }
+  
+      // Tangkap nama baris pembimbing: "1 Elvayandri, S.Si., M.T." atau "3 Nur Ahmadi"
+      const pembimbingLine = line.match(/^\d+\s+([^\d]+?)\s+(?:\d{5,}|$)/);
+      if (pembimbingLine) {
+        const namaGelar = pembimbingLine[1].trim();
+        const namaTanpaGelar = removeGelar(namaGelar);
+        if (uniqueNames.has(namaTanpaGelar)) continue;
+  
+        // Cari kemungkinan NIP di baris berikut
+        const nipLine = lines[i + 1];
+        const nipCandidate = nipLine?.match(/\d{18}/)?.[0] ?? null;
+  
+        dosens.push({
+          nama_tanpa_gelar: namaTanpaGelar,
+          nama_plus_gelar: namaGelar,
+          NIP: nipCandidate,
+          KK: mapToKelompokKeahlian(currentKK),
+          jenis_kepegawaian: currentJenisKepegawaian,
+          status_kepegawaian: StatusKepegawaian.AKTIF,
+          instansi_asal: null,
+        });
+  
+        uniqueNames.add(namaTanpaGelar);
       }
     }
-  }
-
-  return dosens
-}
+  
+    console.log(`Extracted ${dosens.length} faculty members`);
+    return dosens;
+  };
+  
