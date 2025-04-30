@@ -16,7 +16,7 @@ export interface ExtractedDosen {
 
 export const extractDosenFromSKPengajaran = (text: string): ExtractedDosen[] => {
   const dosens: ExtractedDosen[] = [];
-  const uniqueNames = new Set<string>(); // To avoid duplicates
+  const uniqueNames = new Set<string>();
   
   // Find all program study sections
   const programStudySections = text.split(
@@ -87,7 +87,6 @@ export const extractDosenFromSKPengajaran = (text: string): ExtractedDosen[] => 
           }
         }
         
-        // Extract institution for external lecturers
         let instansiAsal: string | null = null;
         for (let i = 0; i < Math.min(10, lines.length); i++) {
           if (lines[i].includes("Instansi Asal")) {
@@ -99,8 +98,6 @@ export const extractDosenFromSKPengajaran = (text: string): ExtractedDosen[] => 
           }
         }
         
-        // Skip entries that are likely not faculty names
-        // These are common keywords that might appear in course names or other non-faculty entries
         const skipKeywords = [
           "material teknik", "sistem digital", "praktikum", "rangkaian", "elektronika",
           "probabilitas", "statistika", "matematika", "pengantar", "analisis", "struktur",
@@ -118,7 +115,6 @@ export const extractDosenFromSKPengajaran = (text: string): ExtractedDosen[] => 
           continue;
         }
         
-        // Determine employment type
         let jenisKepegawaian: JenisKepegawaian | null = defaultJenisKepegawaian;
             if (instansiAsal) {
                 if (instansiAsal.includes("ITB") && !instansiAsal.includes("STEI ITB")) {
@@ -136,7 +132,7 @@ export const extractDosenFromSKPengajaran = (text: string): ExtractedDosen[] => 
           NIP: nip,
           KK: kk,
           jenis_kepegawaian: jenisKepegawaian,
-          status_kepegawaian: StatusKepegawaian.AKTIF, // Assuming active status for all lecturers in the SK
+          status_kepegawaian: StatusKepegawaian.AKTIF,
           instansi_asal: instansiAsal,
         });
       }

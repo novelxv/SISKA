@@ -38,7 +38,7 @@ export const extractDosenFromSK = async (filePath: string): Promise<ExtractedDos
   } else if (/Asisten Kuliah dan Praktikum/i.test(text)) {
     return extractDosenFromSKAsistenPraktikum(text)
   } else if (/BOARD OF REVIEWER/i.test(text) && /Lampiran Keputusan/i.test(text)) {
-    return extractDosenFromSKLuarProdi(text)
+        return extractDosenFromSKLuarProdi(text)
   }
 
   console.log("Could not identify SK type for dosen extraction")

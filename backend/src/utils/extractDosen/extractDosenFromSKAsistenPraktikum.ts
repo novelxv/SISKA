@@ -19,37 +19,6 @@ export interface ExtractedDosen {
 // Extract dosen from SK Asisten Praktikum
 export const extractDosenFromSKAsistenPraktikum = (text: string): ExtractedDosen[] => {
     const dosens: ExtractedDosen[] = []
-  
-    // // Find the section with the list of lab assistants
-    // const asistenSection = text.match(/ASISTEN PRAKTIKUM(?:\s|\n)+([\s\S]+?)(?=DEKAN|$)/i)
-  
-    // if (asistenSection && asistenSection[1]) {
-    //   const entries = asistenSection[1].split(/\d+\s+(?=[A-Z][a-z]+\.?\s+[A-Z])/g)
-  
-    //   for (const entry of entries) {
-    //     // Extract NIP/NIM
-    //     const nipMatch = entry.match(/(\d{8}\s+\d{6}\s+\d+\s+\d+)/i)
-    //     const nip = nipMatch ? nipMatch[1].replace(/\s+/g, "") : null
-  
-    //     // Extract name with titles
-    //     const nameMatch = entry.match(/([A-Z][a-z]+\.?\s+[^0-9]+?)(?=\d{8}|\s+\d+\s+\d+|$)/i)
-    //     const namaGelar = nameMatch ? nameMatch[1].trim() : ""
-  
-    //     // Extract name without titles
-    //     const namaTanpaGelar = removeGelar(namaGelar)
-  
-    //     // Add dosen to the list if we have at least a name
-    //     if (namaGelar) {
-    //       dosens.push({
-    //         nama_tanpa_gelar: namaTanpaGelar,
-    //         nama_plus_gelar: namaGelar,
-    //         NIP: nip,
-    //         jenis_kepegawaian: "ASISTEN_AKADEMIK",
-    //         status_kepegawaian: "AKTIF",
-    //       })
-    //     }
-    //   }
-    // }
-  
+    // Asumsi tidak dosen di SK Asisten
     return dosens
   }

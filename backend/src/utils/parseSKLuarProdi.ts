@@ -53,7 +53,7 @@ export const parseSKLuarProdi = async (filePath: string): Promise<ParsedSKMetada
     judul,
     tanggal,
     semester,
-    jenis_sk: "PEMBIMBING_AKTIF",
+    jenis_sk: "LUAR_PRODI",
     NIP_dekan: nip,
     nama_dekan: namaDekan,
   }
