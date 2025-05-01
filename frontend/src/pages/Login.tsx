@@ -30,7 +30,7 @@ const Login = () => {
                 setTimeout(() => navigate("/upload-excel-prodi"), 1500);
             } else if (auth?.role == "ADMIN_KK") {
                 toast.success("Login berhasil!");
-                setTimeout(() => navigate("/"), 1500); // ntar sesuaikan saja  
+                setTimeout(() => navigate("/admin-kk"), 1500); // ntar sesuaikan saja  
             }
         } catch (err) {
             const errorMessage = typeof err === "string" ? err : "Login gagal. Silakan coba lagi.";

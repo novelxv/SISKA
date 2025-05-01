@@ -72,6 +72,15 @@ const Sidebar = () => {
               </a>
             </li>            
           )}
+
+          {isAdminKK && (
+            <li className={location.pathname === "/admin-kk" ? "active" : ""}>
+              <a href="/admin-kk">
+                <FaFileAlt />
+                Surat Keputusan (SK)
+              </a>
+            </li>
+          )}
         </ul>
       </nav>
 

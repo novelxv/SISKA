@@ -14,6 +14,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import SKDosenView from "../pages/SKDosenView";
 import AdminProdi from "../pages/AdminProdi";
 import EditDosen from "../pages/EditDosen";
+import AdminKK from "../pages/AdminKK";
 
 const AppRoutes = () => {
     const auth = useContext(AuthContext);
@@ -127,6 +128,15 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <AdminProdi />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin-kk"
+                    element={
+                        <ProtectedRoute allowedRoles={["ADMIN_KK"]}>
+                            <AdminKK />
                         </ProtectedRoute>
                     }
                 />
