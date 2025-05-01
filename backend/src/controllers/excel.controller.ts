@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import path from "path";
+import fs from "fs";
 import {
     saveFileToDisk,
     updateUploadStatus,
@@ -95,4 +97,42 @@ export const resetStatus = async (req: Request, res: Response): Promise<void> =>
       error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
+};
+
+const ALLOWED_TYPES = ["pengajaran", "pembimbing-penguji", "dosen-wali", "asisten"];
+
+export const uploadExcel = async (req: Request, res: Response): Promise<void> => {
+  const { jenis } = req.params;
+
+  if (!ALLOWED_TYPES.includes(jenis)) {
+    res.status(400).json({ message: "Jenis SK tidak valid" });
+    return;
+  }
+
+  if (!req.file) {
+    res.status(400).json({ message: "File tidak ditemukan" });
+    return;
+  }
+
+  const folderMap: Record<string, string> = {
+    pengajaran: "excel_pengajaran",
+    "pembimbing-penguji": "excel_pembimbing_penguji",
+    "dosen-wali": "excel_dosen_wali",
+    asisten: "excel_asisten",
+  };
+
+  const destDir = path.join(__dirname, "../../public/uploads/excel", folderMap[jenis]);
+
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir, { recursive: true });
+  }
+
+  const destPath = path.join(destDir, req.file.originalname);
+  fs.renameSync(req.file.path, destPath);
+
+  res.status(200).json({
+    message: `File berhasil diunggah ke ${folderMap[jenis]}`,
+    filename: req.file.originalname,
+  });
+  return;
 };
