@@ -193,9 +193,66 @@ export default function Dosen() {
   };
 
   const cancelDelete = () => {
-    setIsModalOpen(false); // Close the modal without deleting
+    setIsModalOpen(false);
   };
 
+  // adjust format untuk Kelompok Keahlian
+  const formatKK = (kk: string) => {
+    if (kk === "INFORMATIKA") {
+      return "Informatika";
+    } else if (kk === "ELEKTRONIKA") {
+      return "Elektronika";
+    } else if (kk === "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN") {
+      return "Rekayasa Perangkat Lunak dan Pengetahuan";
+    } else if (kk === "SISTEM_KENDALI_DAN_KOMPUTER") {
+      return "Sistem Kendali dan Komputer";
+    } else if (kk === "TEKNIK_TELEKOMUNIKASI") {
+      return "Teknik Telekomunikasi";
+    } else if (kk === "TEKNIK_KETENAGALISTRIKAN") {
+      return "Teknik Ketenagalistrikan";
+    } else if (kk === "TEKNIK_KOMPUTER") {
+      return "Teknik Komputer";
+    } else if (kk === "TEKNOLOGI_INFORMASI") {
+      return "Teknologi Informasi";
+    }
+    return kk;
+  };
+
+  // adjust format untuk jenis kepegawaian
+  const formatJK = (jk: string) => {
+    if (jk === "DOSEN_TETAP") {
+      return "Dosen Tetap";
+    } else if (jk === "DOSEN_TAK_TETAP_PENGAJAR") {
+      return "Dosen Tak Tetap Pengajar";
+    } else if (jk === "DOSEN_TAK_TETAP_PENELITI") {
+      return "Dosen Tak Tetap Peneliti";
+    } else if (jk === "DOSEN_LUAR_STEI") {
+      return "Dosen Luar STEI";
+    } else if (jk === "DOSEN_LUAR_ITB") {
+      return "Dosen Luar ITB";
+    } else if (jk === "DOSEN_INDUSTRI") {
+      return "Dosen Industri";
+    } else if (jk === "ASISTEN_AKADEMIK") {
+      return "Asisten Akademik";
+    } else if (jk === "TUTOR") {
+      return "Tutor";
+    }
+    return jk;
+  };
+  
+  const formatJF = (jf: string) => {
+    if (jf === "ASISTEN_AHLI") {
+      return "Asisten Ahli";
+    } else if (jf === "LEKTOR") {
+      return "Lektor";
+    } else if (jf === "LEKTOR_KEPALA") {
+      return "Lektor Kepala";
+    } else if (jf === "GURU_BESAR") {
+      return "Guru Besar";
+    }
+    return jf;
+  };
+  
   return (
     <div className="dosen-page">
       <Sidebar />
@@ -250,12 +307,12 @@ export default function Dosen() {
                 <tr key={dosen.id}>
                   <td>{indexOfFirstItem + index + 1}</td>
                   <td>{dosen.nama_tanpa_gelar}</td>
-                  <td>{dosen.NIDN}</td>
-                  <td>{dosen.NIP}</td>
-                  <td>{dosen.KK}</td>
-                  <td>{dosen.jenis_kepegawaian}</td>
+                  <td>{dosen.NIDN === "undefined" ? '' : dosen.NIDN}</td>
+                  <td>{dosen.NIP === "undefined" ? '' : dosen.NIP}</td> 
+                  <td>{formatKK(dosen.KK)}</td>
+                  <td>{formatJK(dosen.jenis_kepegawaian)}</td>
                   <td>{dosen.pangkat}</td>
-                  <td>{dosen.jabatan_fungsional}</td>
+                  <td>{formatJF(dosen.jabatan_fungsional)}</td>
                   <td>{dosen.status_kepegawaian}</td>
                   <td>{dosen.aktif_mulai}</td>
                   <td>{dosen.aktif_sampai}</td>
