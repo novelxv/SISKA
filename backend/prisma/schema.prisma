@@ -221,7 +221,7 @@ model UploadStatus {
   processed       Boolean  @default(false)
   uploadedAt      DateTime?
   processedAt     DateTime?
-  filePath        String?  // Menyimpan path file untuk diproses nanti
+  filePath        String?
   
   @@map("upload_status")
 }

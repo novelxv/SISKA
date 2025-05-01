@@ -7,6 +7,7 @@ import userRoutes from './routes/user.routes';
 import skRoutes from "./routes/sk.routes";
 import dekanRoutes from "./routes/dekan.routes";
 import dosenRoutes from "./routes/dosen.routes";
+import excelRoutes from "./routes/excel.routes";
 
 dotenv.config();
 
@@ -21,5 +22,6 @@ app.use('/api/users', userRoutes);
 app.use("/api/sk", skRoutes);
 app.use("/api/dekan", dekanRoutes);
 app.use("/api/dosen", dosenRoutes);
+app.use("/api/excel", excelRoutes);
 
 export default app;

@@ -1,6 +1,6 @@
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { FaDownload } from "react-icons/fa"
 import { toast, ToastContainer } from "react-toastify"
@@ -12,6 +12,7 @@ import "../styles/SK.css"
 import "../styles/UploadExcelAkademik.css"
 import dosenWaliTemplate from "../assets/template-excel-dosen-wali.xlsx";
 import asistenTemplate from "../assets/template-excel-asisten.xlsx";
+import excelService from "../services/excelService"
 
 const UploadExcelAkademik = () => {
   const [dosenWaliFile, setDosenWaliFile] = useState<File | null>(null)
@@ -19,6 +20,18 @@ const UploadExcelAkademik = () => {
   const [asistenFile, setAsistenFile] = useState<File | null>(null)
   const [asistenFileName, setAsistenFileName] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadStatus, setUploadStatus] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchUploadStatus = async () => {
+      const response = await excelService.getUploadStatus();
+      if (response.success) {
+        setUploadStatus(response.data);
+      }
+    };
+
+    fetchUploadStatus();
+  }, []);
 
   const handleDownloadDosenWaliTemplate = () => {
     try {
@@ -84,22 +97,26 @@ const UploadExcelAkademik = () => {
 
     setIsUploading(true)
     try {
-      // Simulate API call - replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const response = await excelService.uploadAkademikExcel(dosenWaliFile, "dosen-wali");
 
-      // Example API call:
-      // const formData = new FormData()
-      // formData.append('file', dosenWaliFile)
-      // await uploadDosenWaliExcel(formData)
-
-      toast.success("File Excel Dosen Wali berhasil diunggah")
-      setDosenWaliFile(null)
-      setDosenWaliFileName(null)
+      if (response.success) {
+        toast.success(response.message || "File Excel Dosen Wali berhasil diunggah");
+        setDosenWaliFile(null);
+        setDosenWaliFileName(null);
+        
+        // Refresh upload status
+        const statusResponse = await excelService.getUploadStatus();
+        if (statusResponse.success) {
+          setUploadStatus(statusResponse.data);
+        }
+      } else {
+        toast.error(response.message || "Gagal mengunggah file Excel Dosen Wali");
+      }
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Wali"
-      toast.error(errorMsg)
+      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Wali";
+      toast.error(errorMsg);
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
   }
 
@@ -111,23 +128,49 @@ const UploadExcelAkademik = () => {
 
     setIsUploading(true)
     try {
-      // Simulate API call - replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Check if pengajaran and dosen-wali have been processed
+      const statusResponse = await excelService.getUploadStatus();
+      if (statusResponse.success && statusResponse.data) {
+        const pengajaranStatus = statusResponse.data.find((s: any) => s.templateType === "pengajaran");
+        const dosenWaliStatus = statusResponse.data.find((s: any) => s.templateType === "dosen-wali");
+        
+        if (!pengajaranStatus?.processed || !dosenWaliStatus?.processed) {
+          toast.warning("File Excel Pengajaran dan Dosen Wali harus diupload dan diproses terlebih dahulu");
+          setIsUploading(false);
+          return;
+        }
+      }
 
-      // Example API call:
-      // const formData = new FormData()
-      // formData.append('file', asistenFile)
-      // await uploadAsistenExcel(formData)
+      const response = await excelService.uploadAkademikExcel(asistenFile, "asisten-perkuliahan");
 
-      toast.success("File Excel Asisten Perkuliahan dan Praktikum berhasil diunggah")
-      setAsistenFile(null)
-      setAsistenFileName(null)
+      if (response.success) {
+        toast.success(response.message || "File Excel Asisten Perkuliahan dan Praktikum berhasil diunggah");
+        setAsistenFile(null);
+        setAsistenFileName(null);
+        
+        // Refresh upload status
+        const statusResponse = await excelService.getUploadStatus();
+        if (statusResponse.success) {
+          setUploadStatus(statusResponse.data);
+        }
+      } else {
+        toast.error(response.message || "Gagal mengunggah file Excel Asisten Perkuliahan dan Praktikum");
+      }
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Asisten Perkuliahan dan Praktikum"
-      toast.error(errorMsg)
+      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Asisten Perkuliahan dan Praktikum";
+      toast.error(errorMsg);
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
+  }
+
+  const canUploadAsisten = () => {
+    if (!uploadStatus) return false;
+    
+    const pengajaranStatus = uploadStatus.find((s: any) => s.templateType === "pengajaran");
+    const dosenWaliStatus = uploadStatus.find((s: any) => s.templateType === "dosen-wali");
+    
+    return pengajaranStatus?.processed && dosenWaliStatus?.processed;
   }
 
   return (
@@ -142,6 +185,12 @@ const UploadExcelAkademik = () => {
         <div className="section-container">
           <div className="header">
             <h2>Upload Excel Dosen Wali</h2>
+            <div className="status-badge">
+              {uploadStatus && uploadStatus.find((s: any) => s.templateType === "dosen-wali")?.processed 
+                ? <span className="badge-success">Sudah Diproses</span>
+                : <span className="badge-pending">Belum Diproses</span>
+              }
+            </div>
           </div>
           <div className="template-download">
             <p>Download template terlebih dahulu:</p>
@@ -175,6 +224,12 @@ const UploadExcelAkademik = () => {
 
           <div className="header mt-8">
             <h2>Upload Excel Asisten Perkuliahan dan Praktikum</h2>
+            <div className="status-badge">
+              {uploadStatus && uploadStatus.find((s: any) => s.templateType === "asisten-perkuliahan")?.processed 
+                ? <span className="badge-success">Sudah Diproses</span>
+                : <span className="badge-pending">Belum Diproses</span>
+              }
+            </div>
           </div>
           <div className="template-download">
             <p>Download template terlebih dahulu:</p>
@@ -190,9 +245,9 @@ const UploadExcelAkademik = () => {
                 onChange={handleAsistenFileChange}
                 hidden
                 id="asistenInput"
-                disabled={isUploading}
+                disabled={isUploading || !canUploadAsisten()}
               />
-              <label htmlFor="asistenInput" className="button-white">
+              <label htmlFor="asistenInput" className={`button-white ${!canUploadAsisten() ? 'disabled' : ''}`}>
                 <FaFileArrowUp />
                 Pilih file
               </label>
@@ -202,9 +257,14 @@ const UploadExcelAkademik = () => {
               text={isUploading ? "Mengunggah..." : "Upload"}
               onClick={handleUploadAsisten}
               hideIcon
-              disabled={isUploading || !asistenFile}
+              disabled={isUploading || !asistenFile || !canUploadAsisten()}
             />
           </div>
+          {!canUploadAsisten() && (
+            <div className="warning-message">
+              File Excel Pengajaran dan Dosen Wali harus diupload dan diproses terlebih dahulu
+            </div>
+          )}
         </div>
 
         <div className="info-box mt-8">
@@ -215,7 +275,7 @@ const UploadExcelAkademik = () => {
             <li>File harus dalam format Excel (.xlsx atau .xls)</li>
             <li>Pastikan format data sesuai dengan template yang telah ditentukan</li>
             <li>Ukuran file maksimal 10MB</li>
-            <li>Data yang sudah diupload akan menggantikan data yang sudah ada sebelumnya</li>
+            <li><strong>Penting:</strong> File Excel Pengajaran dan Dosen Wali harus diupload dan diproses terlebih dahulu sebelum mengupload file Excel Asisten Perkuliahan dan Praktikum</li>
           </ul>
         </div>
       </div>
