@@ -55,6 +55,7 @@ export const generateSKPreviewService = async (data: {
     if (data.jenis_sk == "PENGAJARAN") {
         tabel = {
             teknik_elektro: {
+                kk_informatika: [],
                 kk_elektronika: [
                     {
                         no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
@@ -63,32 +64,315 @@ export const generateSKPreviewService = async (data: {
                         no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
                     },
                 ],
-                kk_sistem_kendali: [],
-                kk_ketenagalistrikan: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
                 kk_teknologi_informasi: [],
-                teknik_biomedika: [],
-                teknik_komputer: [],
+                kk_biomedika: [],
+                kk_komputer: [],
                 dosen_peneliti: [
                     {
                         no: 1, nama_dosen: "Indra Sihar, S.T., M.Sc., Ph.D.", nip_dosen: "223121011", sks_six: ["2,9"], sks_riil: ["2,9"], kode: ["EL3010"], matkul: ["Pengolahan Sinyal Digital"], sks: ["3"], kelas: ["3"], peserta: ["43"], jabatan: ["Dosen 2"], keterangan: ["STEI ITB"]
                     },
                 ],
-                dosen_kontrak: [],
+                dosen_pengajar: [
+                    {
+                        no: 1, nama_dosen: "Indra Sihar, S.T., M.Sc., Ph.D.", nip_dosen: "223121011", sks_six: ["2,9"], sks_riil: ["2,9"], kode: ["EL3010"], matkul: ["Pengolahan Sinyal Digital"], sks: ["3"], kelas: ["3"], peserta: ["43"], jabatan: ["Dosen 2"], keterangan: ["STEI ITB"]
+                    },
+                ],
                 tutor: [],
                 dosen_luar_stei: [],
                 dosen_luar_itb: [],
                 dosen_industri: [],
+                asisten_akademik: []
             },
-            teknik_informatika: {},
-            teknik_tenaga_listrik: {},
-            teknik_telekomunikasi: {},
-            sistem_teknologi_informasi: {},
-            teknik_biomedis: {},
-            magister_teknik_elektro: {},
-            magister_informatika: {},
-            doktor_elektro_informatika: {},
-            ppi_elektro: {},
-            ppi_informatika: {}
+            teknik_informatika: {
+                kk_informatika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_elektronika: [],
+                kk_rplp: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [
+                    {
+                        no: 1, nama_dosen: "Indra Sihar, S.T., M.Sc., Ph.D.", nip_dosen: "223121011", sks_six: ["2,9"], sks_riil: ["2,9"], kode: ["EL3010"], matkul: ["Pengolahan Sinyal Digital"], sks: ["3"], kelas: ["3"], peserta: ["43"], jabatan: ["Dosen 2"], keterangan: ["STEI ITB"]
+                    },
+                ],
+                tutor: [],
+                dosen_luar_stei: [
+                    {
+                        no: 1, nama_dosen: "Indra Sihar, S.T., M.Sc., Ph.D.", nip_dosen: "223121011", sks_six: ["2,9"], sks_riil: ["2,9"], kode: ["EL3010"], matkul: ["Pengolahan Sinyal Digital"], sks: ["3"], kelas: ["3"], peserta: ["43"], jabatan: ["Dosen 2"], keterangan: ["STEI ITB"]
+                    },
+                ],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            teknik_tenaga_listrik: {
+                kk_informatika: [],
+                kk_elektronika: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            teknik_telekomunikasi: {
+                kk_informatika: [],
+                kk_elektronika: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            sistem_teknologi_informasi: {
+                kk_informatika: [],
+                kk_elektronika: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            teknik_biomedis: {
+                kk_informatika: [],
+                kk_elektronika: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            magister_teknik_elektro: {
+                kk_informatika: [],
+                kk_elektronika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            magister_teknik_informatika: {
+                kk_informatika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_elektronika: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            doktor_elektro_informatika: {
+                kk_informatika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_elektronika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            ppi_elektro: {
+                kk_informatika: [],
+                kk_elektronika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            },
+            ppi_informatika: {
+                kk_informatika: [
+                    {
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
+                    },
+                    {
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
+                    },
+                ],
+                kk_elektronika: [],
+                kk_rplp: [],
+                kk_sistem_kendali: [],
+                kk_telekomunikasi: [],
+                kk_ketenagalistrikan: [],
+                kk_teknologi_informasi: [],
+                kk_biomedika: [],
+                kk_komputer: [],
+                dosen_peneliti: [],
+                dosen_pengajar: [],
+                tutor: [],
+                dosen_luar_stei: [],
+                dosen_luar_itb: [],
+                dosen_industri: [],
+                asisten_akademik: []
+            }
         
         }
     }

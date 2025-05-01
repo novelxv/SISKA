@@ -158,6 +158,7 @@ const DraftSK = () => {
         no_sk: noSK,
         judul,
         jenis_sk: jenisSK,
+        tahun_akademik: tahunAkademik,
         semester: Number(semester),
         tanggal,
         NIP_dekan: nipDekan,
