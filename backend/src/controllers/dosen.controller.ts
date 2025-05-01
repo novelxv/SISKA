@@ -8,9 +8,12 @@ import {
 } from "../services/dosen.service";
 
 export const createDosen = async (req: Request, res: Response) => {
+    console.log("nyampe di sini")
     try {
         const data = req.body;
+        console.log("data", req.body);
         const dosen = await createDosenService(data);
+        console.log("Data dosen yang dikirim:", dosen);
         res.status(201).json(dosen);
     } catch (err) {
         console.error("Error create dosen:", err);
@@ -46,6 +49,7 @@ export const updateDosen = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
         const data = req.body;
+        console.log("Data yang diterima untuk diupdate:", data);
         const updated = await updateDosenService(id, data);
         res.status(200).json(updated);
     } catch (err) {
@@ -57,6 +61,7 @@ export const updateDosen = async (req: Request, res: Response) => {
 export const deleteDosen = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
+        console.log("ID yang diterima untuk dihapus:", id);
         await deleteDosenService(id);
         res.status(200).json({ message: "Data dosen berhasil dihapus" });
     } catch (err) {

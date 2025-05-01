@@ -13,6 +13,7 @@ import UploadExcelAkademik from "../pages/UploadExcelAkademik";
 import ProtectedRoute from "./ProtectedRoute";
 import SKDosenView from "../pages/SKDosenView";
 import AdminProdi from "../pages/AdminProdi";
+import EditDosen from "../pages/EditDosen";
 
 const AppRoutes = () => {
     const auth = useContext(AuthContext);
@@ -45,6 +46,15 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <AddDosen />
+                        </ProtectedRoute>
+                    }
+                />
+                
+                <Route
+                    path="/edit-dosen/:id"
+                    element={
+                        <ProtectedRoute>
+                            <EditDosen />
                         </ProtectedRoute>
                     }
                 />

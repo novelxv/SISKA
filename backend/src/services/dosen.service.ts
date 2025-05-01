@@ -4,15 +4,15 @@ const prisma = new PrismaClient();
 export const createDosenService = async (data: any) => {
     return await prisma.dosen.create({
         data: {
-            nama_tanpa_gelar: data.nama_tanpa_gelar,
-            nama_plus_gelar: data.nama_plus_gelar,
-            NIDN: data.NIDN,
-            NIP: data.NIP,
-            KK: data.KK,
-            jenis_kepegawaian: data.jenis_kepegawaian,
+            nama_tanpa_gelar: data.namaTanpaGelar,
+            nama_plus_gelar: data.namaDenganGelar,
+            NIDN: data.nidn,
+            NIP: data.nomorPegawai,
+            KK: data.kelompokKeahlian,
+            jenis_kepegawaian: data.jenisKepegawaian,
             pangkat: data.pangkat,
-            jabatan_fungsional: data.jabatan_fungsional,
-            status_kepegawaian: data.status_kepegawaian,
+            jabatan_fungsional: data.jabatanFungsional,
+            status_kepegawaian: data.statusKepegawaian,
             aktif_mulai: data.aktif_mulai ? new Date(data.aktif_mulai) : undefined,
             aktif_sampai: data.aktif_sampai ? new Date(data.aktif_sampai) : undefined,
             instansi_asal: data.instansi_asal,
