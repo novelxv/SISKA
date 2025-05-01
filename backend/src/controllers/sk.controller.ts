@@ -7,6 +7,14 @@ import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
 import multer from "multer";
+import {
+    checkPengajaranExcel,
+    checkPembimbingPengujiExcel,
+    checkPembimbingAktifExcel,
+    checkWaliTPBExcel,
+    checkWaliAktifExcel,
+    checkAsistenExcel,
+} from "../services/sk.service";
 
 export const getDosenFromSK = async (req: Request, res: Response): Promise<void> => {
     const { no_sk } = req.params;
@@ -20,73 +28,73 @@ export const getDosenFromSK = async (req: Request, res: Response): Promise<void>
     
     const skPdfPath = path.join(__dirname, `../../public/${sk_path}`);
     console.log("Full file path:", skPdfPath);
-  
+    
     if (!fs.existsSync(skPdfPath)) {
-      res.status(404).json({ message: "File SK tidak ditemukan." });
-      return;
+        res.status(404).json({ message: "File SK tidak ditemukan." });
+        return;
     }
-  
+    
     try {
-      const dosens = await extractDosenFromSK(skPdfPath);
-      res.status(200).json(dosens);
+        const dosens = await extractDosenFromSK(skPdfPath);
+        res.status(200).json(dosens);
     } catch (error: any) {
-      console.error("Error extracting dosen from SK:", error);
-      res.status(500).json({
-        message: error.message || "Gagal mengekstrak dosen dari SK",
-      });
+        console.error("Error extracting dosen from SK:", error);
+        res.status(500).json({
+            message: error.message || "Gagal mengekstrak dosen dari SK",
+        });
     }
-  };
-  
+};
+
 const storageSK = multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadPath = path.join(__dirname, "../../public/uploads/sk")
-      fs.mkdirSync(uploadPath, { recursive: true })
-      cb(null, uploadPath)
+        const uploadPath = path.join(__dirname, "../../public/uploads/sk")
+        fs.mkdirSync(uploadPath, { recursive: true })
+        cb(null, uploadPath)
     },
     filename: (req, file, cb) => {
-      const originalName = path.parse(file.originalname).name
-      const ext = path.extname(file.originalname)
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
-      const newFilename = `${originalName}-${uniqueSuffix}${ext}`
-      cb(null, newFilename)
+        const originalName = path.parse(file.originalname).name
+        const ext = path.extname(file.originalname)
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
+        const newFilename = `${originalName}-${uniqueSuffix}${ext}`
+        cb(null, newFilename)
     },
-  })
-  
-  const uploadSK = multer({ storage: storageSK })
-  
-  export const uploadSKFile = [
+})
+
+const uploadSK = multer({ storage: storageSK })
+
+export const uploadSKFile = [
     uploadSK.single("sk"),
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const file = req.file;
-  
-      if (!file) {
-        res.status(400).json({ message: "File SK tidak ditemukan" });
-        return;
-      }
-  
-      try {
-        const savedSK = await uploadSKService(file.filename);
-        res.status(200).json({
-          message: "File SK berhasil diunggah",
-          fileName: file.filename,
-          sk: savedSK,
-        });
-      } catch (err: any) {
-        console.error("Error simpan file SK:", err);
-  
-        try {
-          fs.unlinkSync(file.path);
-        } catch (fsErr) {
-          console.warn("Gagal menghapus file duplikat:", fsErr);
+        const file = req.file;
+        
+        if (!file) {
+            res.status(400).json({ message: "File SK tidak ditemukan" });
+            return;
         }
-  
-        res.status(400).json({
-          message: err.message || "Gagal menyimpan metadata file SK",
-        });
-      }
+        
+        try {
+            const savedSK = await uploadSKService(file.filename);
+            res.status(200).json({
+                message: "File SK berhasil diunggah",
+                fileName: file.filename,
+                sk: savedSK,
+            });
+        } catch (err: any) {
+            console.error("Error simpan file SK:", err);
+            
+            try {
+                fs.unlinkSync(file.path);
+            } catch (fsErr) {
+                console.warn("Gagal menghapus file duplikat:", fsErr);
+            }
+            
+            res.status(400).json({
+                message: err.message || "Gagal menyimpan metadata file SK",
+            });
+        }
     },
-  ];
-  
+];
+
 
 export const createDraftSK = async (req: Request, res: Response) => {
     try {
@@ -133,19 +141,19 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
     try {
         const data = req.body;
         const docBuffer = await generateSKPreviewService(data);
-
+        
         const tmpDir = os.tmpdir();
         const tempDocxPath = path.join(tmpDir, `preview-${Date.now()}.docx`);
         const tempPdfPath = tempDocxPath.replace(".docx", ".pdf");
-
+        
         fs.writeFileSync(tempDocxPath, docBuffer);
         const pdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
-
+        
         const pdfBuffer = fs.readFileSync(pdfPath);
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader("Content-Disposition", `inline; filename=preview.pdf`);
         res.send(pdfBuffer);
-
+        
         fs.unlinkSync(tempDocxPath);
         fs.unlinkSync(tempPdfPath);
     } catch (err) {
@@ -170,7 +178,7 @@ export const getSKDetail = async (req: Request, res: Response) => {
         const { no_sk } = req.params;
         const sk = await getSKDetailService(no_sk);
         if (!sk) res.status(404).json({ message: "SK tidak ditemukan" });
-
+        
         res.status(200).json(sk);
     } catch (err) {
         console.error("Error get detail SK:", err);
@@ -213,4 +221,28 @@ export const updateDraftSK = async (req: Request, res: Response) => {
         console.error("Error update draft SK:", err);
         res.status(500).json({ message: "Gagal memperbarui draft SK" });
     }
+};
+
+export const validatePengajaranExcel = (req: Request, res: Response) => {
+    res.json({ complete: checkPengajaranExcel() });
+};
+
+export const validatePembimbingPengujiExcel = (req: Request, res: Response) => {
+    res.json({ complete: checkPembimbingPengujiExcel() });
+};
+
+export const validatePembimbingAktifExcel = (req: Request, res: Response) => {
+    res.json({ complete: checkPembimbingAktifExcel() });
+};
+
+export const validateWaliTPBExcel = (req: Request, res: Response) => {
+    res.json({ complete: checkWaliTPBExcel() });
+};
+
+export const validateWaliAktifExcel = (req: Request, res: Response) => {
+    res.json({ complete: checkWaliAktifExcel() });
+};
+
+export const validateAsistenExcel = (req: Request, res: Response) => {
+    res.json({ complete: checkAsistenExcel() });
 };

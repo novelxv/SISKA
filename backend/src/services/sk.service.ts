@@ -252,3 +252,40 @@ export const updateDraftSKService = async (no_sk: string, data: any) => {
         },
     });
 };
+
+const PRODI_CODES = ["IF", "II", "EL", "EP", "ET", "EB"];
+
+function checkExcelByProdi(dirPath: string): boolean {
+  if (!fs.existsSync(dirPath)) return false;
+  const files = fs.readdirSync(dirPath);
+  const foundCodes = new Set<string>();
+  files.forEach((f) => {
+    const match = f.match(/^([A-Z]{2})_.+\.xlsx$/);
+    if (match) foundCodes.add(match[1]);
+  });
+  return PRODI_CODES.every((code) => foundCodes.has(code));
+}
+
+function checkSingleExcel(dirPath: string): boolean {
+  if (!fs.existsSync(dirPath)) return false;
+  const files = fs.readdirSync(dirPath);
+  return files.some((f) => f.endsWith(".xlsx"));
+}
+
+export const checkPengajaranExcel = () =>
+  checkExcelByProdi(path.join(__dirname, "../../../public/uploads/excel/excel_pengajaran"));
+
+export const checkPembimbingPengujiExcel = () =>
+  checkExcelByProdi(path.join(__dirname, "../../../public/uploads/excel/excel_pembimbing_penguji"));
+
+export const checkPembimbingAktifExcel = () =>
+  checkExcelByProdi(path.join(__dirname, "../../../public/uploads/excel/excel_pembimbing_penguji"));
+
+export const checkWaliTPBExcel = () =>
+  checkSingleExcel(path.join(__dirname, "../../../public/uploads/excel/excel_dosen_wali"));
+
+export const checkWaliAktifExcel = () =>
+  checkSingleExcel(path.join(__dirname, "../../../public/uploads/excel/excel_dosen_wali"));
+
+export const checkAsistenExcel = () =>
+  checkSingleExcel(path.join(__dirname, "../../../public/uploads/excel/excel_asisten"));
