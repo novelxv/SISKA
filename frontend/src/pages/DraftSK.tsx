@@ -10,6 +10,7 @@ import { toast, ToastContainer } from "react-toastify"
 import { createDraftSK, uploadTTD, previewSK, publishSK, getDraftSKDetail, updateDraftSK, getTTDPreview } from "../services/skService"
 
 const jenisSKOptions = [
+  { label: "SK Luar Prodi", value: "LUAR_PRODI" },
   { label: "SK Pengajaran", value: "PENGAJARAN" },
   { label: "SK Pembimbing dan Penguji", value: "PEMBIMBING_PENGUJI" },
   { label: "SK Pembimbing Mahasiswa Aktif", value: "PEMBIMBING_AKTIF" },

@@ -16,6 +16,7 @@ import Search from "../components/Search"
 import SortButtonNew from "../components/SortButtonNew"
 
 const jenisSKMap: Record<string, string> = {
+  LUAR_PRODI : "SK Luar Prodi",
   PENGAJARAN: "SK Pengajaran",
   PEMBIMBING_PENGUJI: "SK Pembimbing dan Penguji",
   PEMBIMBING_AKTIF: "SK Pembimbing Mahasiswa Aktif",
@@ -258,6 +259,7 @@ const SKList = () => {
                   <th>No</th>
                   <th>Judul</th>
                   <th>Tanggal</th>
+                  <th>Jenis SK</th>
                   <th>Aksi</th>
                   <th>Lihat Dosen</th>
                 </tr>
@@ -285,6 +287,7 @@ const SKList = () => {
                           year: "numeric",
                         })}
                       </td>
+                      <td>{sk.jenis_sk}</td>
                       <td>
                         <div className="action-buttons">
                           <button className="icon-button" onClick={() => handlePreview(sk.no_sk)} title="Preview">
