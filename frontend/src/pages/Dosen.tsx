@@ -8,9 +8,12 @@ import SortButtonNew from '../components/SortButtonNew';
 import Search from '../components/Search';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface DosenData {
   id: number;
+  id_dosen: number;
   nama_tanpa_gelar: string;
   NIDN: string;
   NIP: string;
@@ -49,7 +52,7 @@ export default function Dosen() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,  // Add the token here
+        'Authorization': `Bearer ${token}`,
       }
     })
     .then(response => {
@@ -253,6 +256,107 @@ export default function Dosen() {
     return jf;
   };
   
+  const handleDownloadPDF = () => {
+    // Buat dokumen PDF dengan orientasi landscape
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+  
+    doc.setFontSize(16);
+    doc.text("Daftar Dosen", 14, 10);
+    
+    // Gunakan filteredData (semua data yang difilter) bukan hanya currentItems (halaman saat ini)
+    const tableData = filteredData.map((dosen, index) => [
+      index + 1, // Nomor urut
+      dosen.nama_tanpa_gelar,
+      dosen.NIDN === "undefined" ? '' : dosen.NIDN,
+      dosen.NIP === "undefined" ? '' : dosen.NIP,
+      formatKK(dosen.KK),
+      formatJK(dosen.jenis_kepegawaian), 
+      dosen.pangkat,
+      formatJF(dosen.jabatan_fungsional),
+      dosen.status_kepegawaian,
+      dosen.aktif_mulai,
+      dosen.aktif_sampai,
+      dosen.instansi_asal
+    ]);
+  
+    const columns = [
+      "No", "Nama Dosen Tanpa Gelar", "NIDN", "Nopeg", "KK", "Jenis Kepegawaian", "Pangkat", 
+      "Jabatan Fungsional", "Status Kepegawaian", "Aktif Mulai", "Aktif Sampai", "Instansi Asal"
+    ];
+  
+    // Tambahkan informasi filter yang digunakan
+    let filterInfo = "Filter: ";
+    if (searchTerm) filterInfo += `Pencarian: "${searchTerm}" | `;
+    if (kk) filterInfo += `KK: ${kk} | `;
+    if (sortBy) filterInfo += `Urutan: ${sortBy}`;
+    
+    if (filterInfo !== "Filter: ") {
+      doc.setFontSize(10);
+      doc.text(filterInfo, 14, 16);
+    }
+    
+    // Tambahkan informasi jumlah data
+    doc.setFontSize(10);
+    doc.text(`Total data: ${filteredData.length} dosen`, 14, 20);
+  
+    // Menambahkan tabel ke dalam PDF dengan pengaturan yang lebih baik untuk landscape
+    autoTable(doc, {
+      head: [columns],
+      body: tableData,
+      startY: 25,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 1,
+        overflow: 'linebreak',
+        halign: 'left',
+        valign: 'middle'
+      },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontStyle: 'bold',
+        halign: 'center'
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240]
+      },
+      columnStyles: {
+        0: { cellWidth: 10 }, // No
+        1: { cellWidth: 40 }, // Nama
+        2: { cellWidth: 20 }, // NIDN
+        3: { cellWidth: 20 }, // NIP
+        4: { cellWidth: 25 }, // KK
+        5: { cellWidth: 25 }, // Jenis Kepegawaian
+        6: { cellWidth: 20 }, // Pangkat
+        7: { cellWidth: 25 }, // Jabatan Fungsional
+        8: { cellWidth: 20 }, // Status Kepegawaian
+        9: { cellWidth: 20 }, // Aktif Mulai
+        10: { cellWidth: 20 }, // Aktif Sampai
+        11: { cellWidth: 25 }  // Instansi Asal
+      }
+    });
+  
+    // Tambahkan footer dengan tanggal cetak
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.text(
+        `Dicetak pada: ${new Date().toLocaleString('id-ID')} | Halaman ${i} dari ${pageCount}`,
+        doc.internal.pageSize.width / 2,
+        doc.internal.pageSize.height - 10,
+        { align: 'center' }
+      );
+    }
+  
+    doc.save("daftar_dosen.pdf");
+  };
+
   return (
     <div className="dosen-page">
       <Sidebar />
@@ -335,7 +439,7 @@ export default function Dosen() {
           <div className="pagination">
             {renderPaginationItems()}
           </div>
-          <button className="download-btn">
+          <button className="download-btn" onClick={handleDownloadPDF}>
             <span className="icon-wrapper"><FaDownload /></span>
             <span>Download</span>
           </button>
