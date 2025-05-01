@@ -35,8 +35,8 @@ export const parseSKDosenPembimbingMetadata = async (filePath: string): Promise<
   }
 
   // Extract semester
-  const semesterMatch = text.match(/SEMESTER\s+([IV]+)\s*[-–]\s*(\d{4})\/(\d{4})/i)
-  let semester = 0
+  const semesterMatch = text.match(/SEMESTER\s+([IV]+)\s+TAHUN\s+AKADEMIK\s+(\d{4})\/(\d{4})/i)
+  let semester = 1
   if (semesterMatch) {
     const romawi = semesterMatch[1].trim()
     semester = romawi === "I" ? 1 : 2
