@@ -9,11 +9,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { User, getUserById, updateUser } from "../services/userService";
 import { AuthContext } from "../context/AuthContext";
+import SortButtonNew from "../components/SortButtonNew";
 
 const EditAkun: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const auth = useContext(AuthContext);
+    const roleOptions = [ "AKADEMIK", "ADMIN_KK", "ADMIN_PRODI"];
 
     const [formData, setFormData] = useState({
         username: "",
@@ -174,19 +176,15 @@ const EditAkun: React.FC = () => {
                             </button>
                         </div>
 
-                        <select
-                            name="role"
-                            value={formData.role}
-                            onChange={(e) =>
-                                setFormData({ ...formData, role: e.target.value as User["role"] })
-                            }
-                            required
-                        >
-                            <option value="">Pilih Role</option>
-                            <option value="AKADEMIK">AKADEMIK</option>
-                            <option value="ADMIN_KK">ADMIN KK</option>
-                            <option value="ADMIN_PRODI">ADMIN PRODI</option>
-                        </select>
+                                    
+                        <div className="akun-sort-filter-select">
+                        <SortButtonNew
+                            options={roleOptions}
+                            selectedOption={formData.role}
+                            placeholder="Pilih role"
+                            onChange={(value) => setFormData({ ...formData, role: value as User["role"] })}
+                        />
+                        </div>
 
                         <div className="button-group">
                             <button type="button" onClick={handleCancel} className="btn-cancel">

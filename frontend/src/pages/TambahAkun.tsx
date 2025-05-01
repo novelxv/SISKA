@@ -10,6 +10,7 @@ import { register } from "../services/authService";
 import { User } from "../services/userService";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SortButtonNew from "../components/SortButtonNew"; // Import komponen SortButtonNew
 
 const TambahAkun: React.FC = () => {
   const navigate = useNavigate();
@@ -68,6 +69,8 @@ const TambahAkun: React.FC = () => {
         [name]: cleanedValue,
     }));
   };
+
+  const roleOptions = [ "AKADEMIK", "ADMIN_KK", "ADMIN_PRODI"];
 
   return (
     <div className="page-container">
@@ -144,18 +147,14 @@ const TambahAkun: React.FC = () => {
               </button>
             </div>
 
-
-            <select
-            name="role"
-            value={formData.role}
-            onChange={(e) => setFormData({ ...formData, role: e.target.value as User["role"] })}
-            required
-            >
-            <option value="">Pilih Role</option>
-            <option value="AKADEMIK">AKADEMIK</option>
-            <option value="ADMIN_KK">ADMIN KK</option>
-            <option value="ADMIN_PRODI">ADMIN PRODI</option>
-            </select>
+            <div className="akun-sort-filter-select">
+              <SortButtonNew
+                options={roleOptions}
+                selectedOption={formData.role}
+                placeholder="Pilih role"
+                onChange={(value) => setFormData({ ...formData, role: value as User["role"] })}
+              />
+            </div>
 
             <div className="button-group">
               <button type="button" onClick={handleCancel} className="btn-cancel">
