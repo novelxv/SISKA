@@ -12,8 +12,6 @@ const prisma = new PrismaClient();
 export const uploadSKService = async (filename: string) => {
     const filePath = path.join(__dirname, "../../public/uploads/sk", filename)
     console.log("Reading file SK from: ", filePath)
-    const dosens = await extractDosenFromSK(filePath)
-    console.log(`Found ${dosens.length} dosen records:`)
     // console.log(JSON.stringify(dosens, null, 2))
     
     try {

@@ -311,7 +311,7 @@ const SKList = () => {
             </div>
             <div className="terbit-sk-row">
               <div className="upload-sk">
-                <input type="file" accept=".pdf" onChange={handleSKFileChange} hidden id="fileInput" />
+                <input type="file" accept=".pdf" key={skFileName} onChange={handleSKFileChange} hidden id="fileInput" />
                 <label htmlFor="fileInput" className="button-white">
                   <FaFileArrowUp />
                   Pilih file

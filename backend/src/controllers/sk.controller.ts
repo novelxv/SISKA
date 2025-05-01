@@ -57,28 +57,36 @@ const storageSK = multer.diskStorage({
   export const uploadSKFile = [
     uploadSK.single("sk"),
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const file = req.file
+      const file = req.file;
   
       if (!file) {
-        res.status(400).json({ message: "File SK tidak ditemukan" })
-        return
+        res.status(400).json({ message: "File SK tidak ditemukan" });
+        return;
       }
   
       try {
-        const savedSK = await uploadSKService(file.filename)
+        const savedSK = await uploadSKService(file.filename);
         res.status(200).json({
           message: "File SK berhasil diunggah",
           fileName: file.filename,
           sk: savedSK,
-        })
+        });
       } catch (err: any) {
-        console.error("Error simpan file SK:", err)
+        console.error("Error simpan file SK:", err);
+  
+        try {
+          fs.unlinkSync(file.path);
+        } catch (fsErr) {
+          console.warn("Gagal menghapus file duplikat:", fsErr);
+        }
+  
         res.status(400).json({
           message: err.message || "Gagal menyimpan metadata file SK",
-        })
+        });
       }
     },
-  ]
+  ];
+  
 
 export const createDraftSK = async (req: Request, res: Response) => {
     try {
