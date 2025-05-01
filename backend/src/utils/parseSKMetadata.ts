@@ -11,6 +11,7 @@ interface ParsedSKMetadata {
   judul: string
   tanggal: Date
   semester: number
+  tahun_akademik: number
   jenis_sk: JenisSK
   NIP_dekan: string
   nama_dekan: string

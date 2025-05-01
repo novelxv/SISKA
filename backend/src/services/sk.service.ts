@@ -52,7 +52,6 @@ export const uploadSKService = async (filename: string) => {
           NIP_dekan,
           status: "PUBLISHED",
           file_sk: `uploads/sk/${filename}`,
-          tahun_akademik: 0
         },
       })
     } catch (error: any) {

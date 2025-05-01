@@ -8,6 +8,7 @@ interface ParsedSKMetadata {
   judul: string
   tanggal: Date
   semester: number
+  tahun_akademik: number
   jenis_sk: JenisSK
   NIP_dekan: string
   nama_dekan: string
@@ -26,6 +27,8 @@ export const parseSKDosenWaliAktifMetadata = async (filePath: string): Promise<P
   if (!tanggal || isNaN(tanggal.getTime())) {
     throw new Error("Tanggal tidak valid")
   }
+  const tahunAkademikMatch = text.match(/TAHUN AKADEMIK\s+(\d{4})\/\d{4}/i)
+  const tahun_akademik = tahunAkademikMatch ? parseInt(tahunAkademikMatch[1], 10) : 0
 
   const semester = /Semester\s+I/i.test(text) ? 1 : /Semester\s+II/i.test(text) ? 2 : 0
   const rawNIPMatch = text.match(/NIP[.\s]*((?:\d{8}\s*\d{6}\s*\d\s*\d{3}))/i)
@@ -37,6 +40,7 @@ export const parseSKDosenWaliAktifMetadata = async (filePath: string): Promise<P
     judul,
     tanggal,
     semester,
+    tahun_akademik,
     jenis_sk: "WALI_MHS_AKTIF",
     NIP_dekan: nip,
     nama_dekan: namaDekan,

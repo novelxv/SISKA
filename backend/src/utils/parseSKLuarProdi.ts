@@ -6,6 +6,7 @@ interface ParsedSKMetadata {
   judul: string
   tanggal: Date
   semester: number
+  tahun_akademik: number
   jenis_sk: JenisSK
   NIP_dekan: string
   nama_dekan: string
@@ -42,6 +43,9 @@ export const parseSKLuarProdi = async (filePath: string): Promise<ParsedSKMetada
     semester = romawi === "I" ? 1 : 2
   }
 
+  const tahunAkademikMatch = text.match(/PERIODE\s+TAHUN\s+(\d{4})/i)
+  const tahun_akademik = tahunAkademikMatch ? parseInt(tahunAkademikMatch[1]) : 0
+  
   // Extract dekan information
   const namaDekan = text.match(/DEKAN[,\s]*([\w\s.,'-]+)\s+NIP/i)?.[1].trim() || ""
   const rawNIPMatch = text.match(/NIP[.\s]*((?:\d{8}\s*\d{6}\s*\d\s*\d{3}))/i)
@@ -53,6 +57,7 @@ export const parseSKLuarProdi = async (filePath: string): Promise<ParsedSKMetada
     judul,
     tanggal,
     semester,
+    tahun_akademik,
     jenis_sk: "LUAR_PRODI",
     NIP_dekan: nip,
     nama_dekan: namaDekan,
