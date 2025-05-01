@@ -54,6 +54,8 @@ const SKList = () => {
     setSearchTerm(query)
   }
 
+
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -287,7 +289,7 @@ const SKList = () => {
                           year: "numeric",
                         })}
                       </td>
-                      <td>{sk.jenis_sk}</td>
+                      <td>{sk.jenis_sk?.replace(/_/g, " ")}</td>
                       <td>
                         <div className="action-buttons">
                           <button className="icon-button" onClick={() => handlePreview(sk.no_sk)} title="Preview">

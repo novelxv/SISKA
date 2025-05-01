@@ -26,6 +26,9 @@ const SKDosenView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
   const itemsPerPage = 10
+  const formatNoSk = (no_sk: string | undefined) => {
+    return no_sk ? no_sk.replace(/_/g, " ") : ""
+  }
 
   useEffect(() => {
     const fetchDosen = async () => {
@@ -75,7 +78,7 @@ const SKDosenView: React.FC = () => {
           <button className="back-button" onClick={handleCancel}>
             <RiArrowLeftSLine size={24} />
           </button>
-          <h1>Daftar Dosen dari SK {decodeURIComponent(no_sk || "")}</h1>
+          <h1>Daftar Dosen dari SK {formatNoSk(no_sk)}</h1>
         </div>
 
         {isLoading ? (
