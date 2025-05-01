@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useState, useEffect } from "react"
 import Sidebar from "../components/Navbar"
@@ -7,10 +9,23 @@ import { FaAngleLeft, FaImage, FaRegEye } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { useNavigate, useLocation } from "react-router-dom"
 import { toast, ToastContainer } from "react-toastify"
-import { createDraftSK, uploadTTD, previewSK, publishSK, getDraftSKDetail, updateDraftSK, getTTDPreview } from "../services/skService"
+import {
+  createDraftSK,
+  uploadTTD,
+  previewSK,
+  publishSK,
+  getDraftSKDetail,
+  updateDraftSK,
+  checkPengajaranExcel,
+  checkPembimbingPengujiExcel,
+  checkPembimbingAktifExcel,
+  checkWaliTPBExcel,
+  checkWaliAktifExcel,
+  checkAsistenExcel,
+} from "../services/skService"
 
 const jenisSKOptions = [
-  { label: "SK Luar Prodi", value: "LUAR_PRODI" },
+//   { label: "SK Luar Prodi", value: "LUAR_PRODI" },
   { label: "SK Pengajaran", value: "PENGAJARAN" },
   { label: "SK Pembimbing dan Penguji", value: "PEMBIMBING_PENGUJI" },
   { label: "SK Pembimbing Mahasiswa Aktif", value: "PEMBIMBING_AKTIF" },
@@ -31,6 +46,10 @@ interface DraftSKData {
   ttd_dekan?: string
 }
 
+interface ExcelCheckResult {
+  complete: boolean
+}
+
 const DraftSK = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -43,13 +62,15 @@ const DraftSK = () => {
   const [noSK, setNoSK] = useState("")
   const [tanggal, setTanggal] = useState("")
   const [semester, setSemester] = useState(1)
-  const [tahunAkademik, setTahunAkademik] = useState("");
+  const [tahunAkademik, setTahunAkademik] = useState("")
   const [nipDekan, setNipDekan] = useState("")
   const [namaDekan, setNamaDekan] = useState("")
   const [ttdFile, setTtdFile] = useState<File | null>(null)
   const [ttdFilename, setTtdFilename] = useState<string | null>(null)
   const [ttdPreview, setTtdPreview] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [excelComplete, setExcelComplete] = useState<boolean | null>(null)
+  const [checkingExcel, setCheckingExcel] = useState(false)
 
   useEffect(() => {
     const fetchDraftData = async () => {
@@ -67,16 +88,16 @@ const DraftSK = () => {
         setNoSK(draftData.no_sk || "")
         setTanggal(draftData.tanggal ? draftData.tanggal.split("T")[0] : "") // Format date for input
         setSemester(draftData.semester || 1)
-        setTahunAkademik(draftData.tahun_akademik || 0);
+        setTahunAkademik(draftData.tahun_akademik || 0)
         setNipDekan(draftData.NIP_dekan || "")
         setNamaDekan(draftData.Dekan?.nama || "")
-        
+
         if (draftData.Dekan && draftData.Dekan.ttd_url) {
-            const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
-            setTtdPreview(apiBase + draftData.Dekan.ttd_url);
-            setTtdFilename(draftData.Dekan.ttd_url);
-          } else {
-            setTtdPreview(null);
+          const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000"
+          setTtdPreview(apiBase + draftData.Dekan.ttd_url)
+          setTtdFilename(draftData.Dekan.ttd_url)
+        } else {
+          setTtdPreview(null)
         }
 
         toast.success("Data draft SK berhasil dimuat")
@@ -90,6 +111,50 @@ const DraftSK = () => {
 
     fetchDraftData()
   }, [noSKParam])
+
+  // Check Excel completeness when jenisSK changes or on initial load
+  useEffect(() => {
+    checkExcelCompleteness(jenisSK)
+  }, [jenisSK])
+
+  const checkExcelCompleteness = async (skType: string) => {
+    setCheckingExcel(true)
+    try {
+      let result: ExcelCheckResult | null = null
+
+      switch (skType) {
+        case "PENGAJARAN":
+          result = await checkPengajaranExcel()
+          break
+        case "PEMBIMBING_PENGUJI":
+          result = await checkPembimbingPengujiExcel()
+          break
+        case "PEMBIMBING_AKTIF":
+          result = await checkPembimbingAktifExcel()
+          break
+        case "WALI_TPB":
+          result = await checkWaliTPBExcel()
+          break
+        case "WALI_MHS_AKTIF":
+          result = await checkWaliAktifExcel()
+          break
+        case "ASISTEN_PRAKTIKUM":
+          result = await checkAsistenExcel()
+          break
+        default:
+          setExcelComplete(null)
+          setCheckingExcel(false)
+          return
+      }
+
+      setExcelComplete(result?.complete || false)
+    } catch (error) {
+      console.error(`Error checking Excel completeness for ${skType}:`, error)
+      setExcelComplete(false)
+    } finally {
+      setCheckingExcel(false)
+    }
+  }
 
   const navToSK = () => {
     navigate("/sk")
@@ -173,6 +238,29 @@ const DraftSK = () => {
     }
   }
 
+  const handleJenisSKChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newJenisSK = e.target.value
+    setJenisSK(newJenisSK)
+    checkExcelCompleteness(newJenisSK)
+  }
+
+  // Function to get Excel status message
+  const getExcelStatusMessage = () => {
+    if (excelComplete === null) {
+      return null // No message for SK types without Excel check
+    }
+
+    if (checkingExcel) {
+      return <div className="excel-status checking">Memeriksa kelengkapan data...</div>
+    }
+
+    return excelComplete ? (
+      <div className="excel-status complete">Data Excel lengkap</div>
+    ) : (
+      <div className="excel-status incomplete">Data Excel belum lengkap</div>
+    )
+  }
+
   if (isLoading) {
     return (
       <div className="container">
@@ -199,13 +287,14 @@ const DraftSK = () => {
           <div className="inputrow1">
             <div className="template">
               <div>Template: </div>
-              <select name="jenisSK" className="sk-select" value={jenisSK} onChange={(e) => setJenisSK(e.target.value)}>
+              <select name="jenisSK" className="sk-select" value={jenisSK} onChange={handleJenisSKChange}>
                 {jenisSKOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
               </select>
+              {getExcelStatusMessage()}
             </div>
             <div className="button-blue" onClick={handlePreview}>
               <FaRegEye />
@@ -242,26 +331,26 @@ const DraftSK = () => {
                 className="sk-input"
                 value={semester}
                 onChange={(e) => {
-                    if (e.target.value === "") {
-                      setSemester(null);
-                    } else {
-                      setSemester(Number(e.target.value));
-                    }
-                  }}
-                  min={1}
-                  max={20}
+                  if (e.target.value === "") {
+                    setSemester(null)
+                  } else {
+                    setSemester(Number(e.target.value))
+                  }
+                }}
+                min={1}
+                max={20}
               />
             </div>
             <div>
-                Tahun Akademik <br />
-                <input
-                    type="text"
-                    className="sk-input"
-                    value={tahunAkademik}
-                    onChange={(e) => setTahunAkademik(e.target.value)}
-                    placeholder="2024/2025"
-                />
-                </div>
+              Tahun Akademik <br />
+              <input
+                type="text"
+                className="sk-input"
+                value={tahunAkademik}
+                onChange={(e) => setTahunAkademik(e.target.value)}
+                placeholder="2024/2025"
+              />
+            </div>
           </div>
 
           <div className="inputrow4">
@@ -302,7 +391,7 @@ const DraftSK = () => {
               ) : ttdFilename ? (
                 <div className="ttd-filename">File TTD tersimpan: {ttdFilename}</div>
               ) : (
-                <FaImage className="previewimg"/>
+                <FaImage className="previewimg" />
               )}
             </div>
           </div>

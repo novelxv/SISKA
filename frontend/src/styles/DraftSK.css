@@ -136,3 +136,37 @@
     font-size: 14px;
     color: #666;
   }  
+
+.excel-status {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .excel-status.complete {
+    color: #22c55e;
+    background-color: rgba(34, 197, 94, 0.1);
+  }
+  
+  .excel-status.incomplete {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+  .excel-status.checking {
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.1);
+  }
+  
+  .template {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .template > div:first-child {
+    margin-bottom: 4px;
+  }
+  

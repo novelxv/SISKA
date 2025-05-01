@@ -2,27 +2,27 @@ import api from "./api";
 
 export const getDosenFromSK = async (no_sk: string) => {
     try {
-      const decodedSK = decodeURIComponent(no_sk)
-      console.log("Fetching dosen for SK:", decodedSK)
-  
-      const response = await api.get(`/sk/${decodedSK}/dosen`)
-      return response.data
+        const decodedSK = decodeURIComponent(no_sk)
+        console.log("Fetching dosen for SK:", decodedSK)
+        
+        const response = await api.get(`/sk/${decodedSK}/dosen`)
+        return response.data
     } catch (error) {
-      console.error("Failed to fetch dosen data:", error)
-      throw error
+        console.error("Failed to fetch dosen data:", error)
+        throw error
     }
 } 
 
 export const uploadSKPDF = async (file: File) => {
     const formData = new FormData();
     formData.append("sk", file);
-  
+    
     const response = await api.post(`/sk/upload/sk`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
-  };
-  
+};
+
 
 export const createDraftSK = async (data: any) => {
     const response = await api.post("/sk", data);
@@ -81,4 +81,34 @@ export const updateDraftSK = async (no_sk: string, data: any) => {
 
 export const getTTDPreview = (nip: string): string => {
     return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/dekan/${nip}/ttd`;
+};
+
+export const checkPengajaranExcel = async () => {
+    const response = await api.get("/sk/validate/pengajaran");
+    return response.data;
+};
+
+export const checkPembimbingPengujiExcel = async () => {
+    const response = await api.get("/sk/validate/pembimbing-penguji");
+    return response.data;
+};
+
+export const checkPembimbingAktifExcel = async () => {
+    const response = await api.get("/sk/validate/pembimbing-aktif");
+    return response.data;
+};
+
+export const checkWaliTPBExcel = async () => {
+    const response = await api.get("/sk/validate/wali-tpb");
+    return response.data;
+};
+
+export const checkWaliAktifExcel = async () => {
+    const response = await api.get("/sk/validate/wali-aktif");
+    return response.data;
+};
+
+export const checkAsistenExcel = async () => {
+    const response = await api.get("/sk/validate/asisten");
+    return response.data;
 };
