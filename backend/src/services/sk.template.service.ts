@@ -3,7 +3,6 @@ import path from "path";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { PrismaClient } from "@prisma/client";
-import { format } from "date-fns";
 
 const prisma = new PrismaClient();
 
@@ -33,9 +32,22 @@ export const generateSKPreviewService = async (data: {
         return fs.readFileSync(tagValue);
       },
       getSize: function () {
-        return [150, 80];
+        return [120, 80];
       }
     });
+
+    function convertDate(dateStr: string) {
+        const months = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        const date = new Date(dateStr);
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+    
+        return `${day} ${month} ${year}`;
+    }
 
     const ttdPath = fs.existsSync(`./public/uploads/ttd/${data.NIP_dekan}.png`) ? `./public/uploads/ttd/${data.NIP_dekan}.png` : `./public/uploads/ttd/placeholder_ttd.png`;
 
@@ -45,32 +57,10 @@ export const generateSKPreviewService = async (data: {
             teknik_elektro: {
                 kk_elektronika: [
                     {
-                        no: 1,
-                        nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.",
-                        nip_dosen: "118110068",
-                        sks_six: ["3", "3", "3", "1,5"],
-                        sks_riil: ["3", "3", "3", "1,5"],
-                        kode: ["EL2006", "EL4021", "EL4060", "EL4090"],
-                        matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"],
-                        sks: ["3", "3", "3", "3"],
-                        kelas: ["3", "1", "1", "2"],
-                        peserta: ["37", "42", "7", "39"],
-                        jabatan: ["", "", "", "Dosen 1"],
-                        keterangan: ["", "", "", ""]
+                        no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", sks_six: ["3", "3", "3", "1,5"], sks_riil: ["3", "3", "3", "1,5"], kode: ["EL2006", "EL4021", "EL4060", "EL4090"], matkul: ["Material Teknik Elektro", "Devais Semikonduktor", "Pengembangan Keprofesian dan Komunitas", "Proposal Proyek Akhir"], sks: ["3", "3", "3", "3"], kelas: ["3", "1", "1", "2"], peserta: ["37", "42", "7", "39"], jabatan: ["", "", "", "Dosen 1"], keterangan: ["", "", "", ""]
                     },
                     {
-                        no: 2,
-                        nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.",
-                        nip_dosen: "19761025 200604 1 001",
-                        sks_six: ["1", "4", "1", "1"],
-                        sks_riil: ["1", "4", "1", "1"],
-                        kode: ["EL1200", "EL2002", "EL2102", "EL2102"],
-                        matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"],
-                        sks: ["2", "4", "1", "1"],
-                        kelas: ["1", "1", "1", "2"],
-                        peserta: ["27", "40", "62", "62"],
-                        jabatan: ["Dosen 1", "", "", ""],
-                        keterangan: ["", "", "", ""]
+                        no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", sks_six: ["1", "4", "1", "1"], sks_riil: ["1", "4", "1", "1"], kode: ["EL1200", "EL2002", "EL2102", "EL2102"], matkul: ["Pengantar Analisis Rangkaian", "Sistem Digital", "Praktikum Sistem Digital", "Praktikum Sistem Digital"], sks: ["2", "4", "1", "1"], kelas: ["1", "1", "1", "2"], peserta: ["27", "40", "62", "62"], jabatan: ["Dosen 1", "", "", ""], keterangan: ["", "", "", ""]
                     },
                 ],
                 kk_sistem_kendali: [],
@@ -80,18 +70,7 @@ export const generateSKPreviewService = async (data: {
                 teknik_komputer: [],
                 dosen_peneliti: [
                     {
-                        no: 1,
-                        nama_dosen: "Indra Sihar, S.T., M.Sc., Ph.D.",
-                        nip_dosen: "223121011",
-                        sks_six: ["2,9"],
-                        sks_riil: ["2,9"],
-                        kode: ["EL3010"],
-                        matkul: ["Pengolahan Sinyal Digital"],
-                        sks: ["3"],
-                        kelas: ["3"],
-                        peserta: ["43"],
-                        jabatan: ["Dosen 2"],
-                        keterangan: ["STEI ITB"]
+                        no: 1, nama_dosen: "Indra Sihar, S.T., M.Sc., Ph.D.", nip_dosen: "223121011", sks_six: ["2,9"], sks_riil: ["2,9"], kode: ["EL3010"], matkul: ["Pengolahan Sinyal Digital"], sks: ["3"], kelas: ["3"], peserta: ["43"], jabatan: ["Dosen 2"], keterangan: ["STEI ITB"]
                     },
                 ],
                 dosen_kontrak: [],
@@ -120,12 +99,12 @@ export const generateSKPreviewService = async (data: {
             {
                 no_sk: data.no_sk,
                 judul: data.judul,
-                semester: data.semester,
+                semester: "I".repeat(data.semester),
                 tahun_akademik: data.tahun_akademik,
-                tanggal: format(new Date(data.tanggal), "d MMMM yyyy"),
+                tanggal: convertDate(data.tanggal),
                 nama_dekan: data.nama_dekan,
                 nip_dekan: data.NIP_dekan,
-                ttd_base64: ttdPath,
+                ttd: ttdPath,
                 tabel: tabel
             }
         );
