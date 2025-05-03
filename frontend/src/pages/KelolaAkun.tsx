@@ -135,8 +135,12 @@ const KelolaAkun: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-    const roleOptions = ["AKADEMIK", "ADMIN KK", "ADMIN PRODI"];
-
+    const roleOptions = [
+        { label: "Akademik", value: "AKADEMIK" },
+        { label: "Admin KK", value: "ADMIN_KK" },
+        { label: "Admin Prodi", value: "ADMIN_PRODI" },
+      ];      
+      
     // Fetch users from API
     useEffect(() => {
         const fetchUsers = async () => {
@@ -153,18 +157,20 @@ const KelolaAkun: React.FC = () => {
         fetchUsers();
     }, []);
 
-    const handleSort = (role: string) => {
-        console.log("INI ISI DARI ROLE", role);
-        setSelectedSort(role);
-        const normalizeRole = (r: string) => r.replace(/_/g, " ");
-    
-        if (role === "" || role === "Semua Role") {
-            console.log("MASUK SINI");
+    const handleSort = (label: string) => {
+        console.log("INI ISI DARI ROLE", label);
+        if (label === "Semua Role") {
+            setSelectedSort(""); 
             setUsers(allUsers);
-        } else {
-            const filteredUsers = allUsers.filter(user => normalizeRole(user.role) === role);
-            setUsers(filteredUsers);
-        }
+            return;
+          }
+        
+          const selectedRoleValue = roleOptions.find((r) => r.label === label)?.value;
+          if (!selectedRoleValue) return;
+        
+          setSelectedSort(selectedRoleValue);
+          const filteredUsers = allUsers.filter(user => user.role === selectedRoleValue);
+          setUsers(filteredUsers);
     };
     
 
@@ -219,10 +225,16 @@ const KelolaAkun: React.FC = () => {
                 <div className="kelola-filtercontainer">
                     <Search searchTerm={searchTerm} setSearchTerm={handleSearch} />
                     <SortButtonNew 
-                        options={["Semua Role", ...roleOptions]} 
-                        selectedOption={selectedSort} 
-                        onChange={handleSort} 
-                    />
+                        options={["Semua Role", ...roleOptions.map((r) => r.label)]}
+                        selectedOption={
+                            selectedSort === ""
+                            ? "Semua Role"
+                            : roleOptions.find((r) => r.value === selectedSort)?.label || ""
+                        }
+                        onChange={handleSort}
+                        />
+
+
                 </div>
 
                 <div className="table-container">

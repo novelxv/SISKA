@@ -9,6 +9,8 @@ import { FaAngleLeft, FaImage, FaRegEye } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { useNavigate, useLocation } from "react-router-dom"
 import { toast, ToastContainer } from "react-toastify"
+import InputField from "../components/Input";
+import SortButtonNew from "../components/SortButtonNew"
 import {
   createDraftSK,
   uploadTTD,
@@ -24,15 +26,15 @@ import {
   checkAsistenExcel,
 } from "../services/skService"
 
-const jenisSKOptions = [
-//   { label: "SK Luar Prodi", value: "LUAR_PRODI" },
-  { label: "SK Pengajaran", value: "PENGAJARAN" },
-  { label: "SK Pembimbing dan Penguji", value: "PEMBIMBING_PENGUJI" },
-  { label: "SK Pembimbing Mahasiswa Aktif", value: "PEMBIMBING_AKTIF" },
-  { label: "SK Dosen Wali TPB", value: "WALI_TPB" },
-  { label: "SK Dosen Wali Mahasiswa Aktif", value: "WALI_MHS_AKTIF" },
-  { label: "SK Asisten Perkuliahan dan Praktikum", value: "ASISTEN_PRAKTIKUM" },
-]
+const jenisSKMap: Record<string, string> = {
+  PENGAJARAN: "SK Pengajaran",
+  PEMBIMBING_PENGUJI: "SK Pembimbing dan Penguji",
+  PEMBIMBING_AKTIF: "SK Pembimbing Mahasiswa Aktif",
+  WALI_TPB: "SK Dosen Wali TPB",
+  WALI_MHS_AKTIF: "SK Dosen Wali Mahasiswa Aktif",
+  ASISTEN_PRAKTIKUM: "SK Asisten Perkuliahan dan Praktikum",
+}
+const jenisSKOptions = Object.keys(jenisSKMap);
 
 interface DraftSKData {
   no_sk: string
@@ -57,7 +59,6 @@ const DraftSK = () => {
   const noSKParam = queryParams.get("no_sk")
   const isEditMode = !!noSKParam
 
-  const [jenisSK, setJenisSK] = useState("PENGAJARAN")
   const [judul, setJudul] = useState("")
   const [noSK, setNoSK] = useState("")
   const [tanggal, setTanggal] = useState("")
@@ -71,6 +72,7 @@ const DraftSK = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [excelComplete, setExcelComplete] = useState<boolean | null>(null)
   const [checkingExcel, setCheckingExcel] = useState(false)
+  const [selectedJenisSK, setSelectedJenisSK] = useState('');
 
   useEffect(() => {
     const fetchDraftData = async () => {
@@ -83,7 +85,7 @@ const DraftSK = () => {
         console.log("Draft data fetched:", draftData)
 
         // Populate form with existing data
-        setJenisSK(draftData.jenis_sk || "PENGAJARAN")
+        setSelectedJenisSK(draftData.jenis_sk || "PENGAJARAN")
         setJudul(draftData.judul || "")
         setNoSK(draftData.no_sk || "")
         setTanggal(draftData.tanggal ? draftData.tanggal.split("T")[0] : "") // Format date for input
@@ -114,8 +116,8 @@ const DraftSK = () => {
 
   // Check Excel completeness when jenisSK changes or on initial load
   useEffect(() => {
-    checkExcelCompleteness(jenisSK)
-  }, [jenisSK])
+    checkExcelCompleteness(selectedJenisSK)
+  }, [selectedJenisSK])
 
   const checkExcelCompleteness = async (skType: string) => {
     setCheckingExcel(true)
@@ -180,7 +182,7 @@ const DraftSK = () => {
     const skData: DraftSKData = {
       no_sk: noSK,
       judul,
-      jenis_sk: jenisSK,
+      jenis_sk: selectedJenisSK,
       semester: Number(semester),
       tahun_akademik: Number(tahunAkademik),
       tanggal,
@@ -222,7 +224,7 @@ const DraftSK = () => {
       const payload = {
         no_sk: noSK,
         judul,
-        jenis_sk: jenisSK,
+        jenis_sk: selectedJenisSK,
         tahun_akademik: tahunAkademik,
         semester: Number(semester),
         tanggal,
@@ -238,10 +240,10 @@ const DraftSK = () => {
     }
   }
 
-  const handleJenisSKChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newJenisSK = e.target.value
-    setJenisSK(newJenisSK)
-    checkExcelCompleteness(newJenisSK)
+  const handleJenisSKChange = (value: string) => {
+    // const newJenisSK = e.target.value
+    setSelectedJenisSK(value);
+    checkExcelCompleteness(value)
   }
 
   // Function to get Excel status message
@@ -287,13 +289,16 @@ const DraftSK = () => {
           <div className="inputrow1">
             <div className="template">
               <div>Template: </div>
-              <select name="jenisSK" className="sk-select" value={jenisSK} onChange={handleJenisSKChange}>
-                {jenisSKOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <SortButtonNew
+                options={jenisSKOptions.map((key) => jenisSKMap[key])}
+                selectedOption={jenisSKMap[selectedJenisSK] ?? ""}
+                onChange={(selectedLabel) => {
+                  const key = Object.entries(jenisSKMap).find(([_, label]) => label === selectedLabel)?.[0] || "";
+                  handleJenisSKChange(key);
+                }}
+                placeholder="Pilih Jenis SK"
+              />
+
               {getExcelStatusMessage()}
             </div>
             <div className="button-blue" onClick={handlePreview}>
@@ -332,7 +337,7 @@ const DraftSK = () => {
                 value={semester}
                 onChange={(e) => {
                   if (e.target.value === "") {
-                    setSemester(null)
+                    setSemester(0)
                   } else {
                     setSemester(Number(e.target.value))
                   }

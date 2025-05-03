@@ -15,8 +15,12 @@ const EditAkun: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const auth = useContext(AuthContext);
-    const roleOptions = [ "AKADEMIK", "ADMIN_KK", "ADMIN_PRODI"];
-
+    const roleOptions = [
+        { label: "Akademik", value: "AKADEMIK" },
+        { label: "Admin KK", value: "ADMIN_KK" },
+        { label: "Admin Prodi", value: "ADMIN_PRODI" },
+      ];
+      
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -179,11 +183,15 @@ const EditAkun: React.FC = () => {
                                     
                         <div className="akun-sort-filter-select">
                         <SortButtonNew
-                            options={roleOptions}
-                            selectedOption={formData.role}
+                            options={roleOptions.map((r) => r.label)}
+                            selectedOption={roleOptions.find((r) => r.value === formData.role)?.label || ""}
                             placeholder="Pilih role"
-                            onChange={(value) => setFormData({ ...formData, role: value as User["role"] })}
+                            onChange={(label) => {
+                                const value = roleOptions.find((r) => r.label === label)?.value || "";
+                                setFormData({ ...formData, role: value as User["role"] });
+                            }}
                         />
+
                         </div>
 
                         <div className="button-group">

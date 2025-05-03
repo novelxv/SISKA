@@ -66,6 +66,8 @@
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 1rem;
+    background-color: white;
+    color: black;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
