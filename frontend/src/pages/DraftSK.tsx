@@ -9,7 +9,7 @@ import { FaAngleLeft, FaImage, FaRegEye } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { useNavigate, useLocation } from "react-router-dom"
 import { toast, ToastContainer } from "react-toastify"
-import InputField from "../components/Input";
+import InputField from "../components/Input"
 import SortButtonNew from "../components/SortButtonNew"
 import {
   createDraftSK,
@@ -34,7 +34,7 @@ const jenisSKMap: Record<string, string> = {
   WALI_MHS_AKTIF: "SK Dosen Wali Mahasiswa Aktif",
   ASISTEN_PRAKTIKUM: "SK Asisten Perkuliahan dan Praktikum",
 }
-const jenisSKOptions = Object.keys(jenisSKMap);
+const jenisSKOptions = Object.keys(jenisSKMap)
 
 interface DraftSKData {
   no_sk: string
@@ -72,7 +72,7 @@ const DraftSK = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [excelComplete, setExcelComplete] = useState<boolean | null>(null)
   const [checkingExcel, setCheckingExcel] = useState(false)
-  const [selectedJenisSK, setSelectedJenisSK] = useState('');
+  const [selectedJenisSK, setSelectedJenisSK] = useState("")
 
   useEffect(() => {
     const fetchDraftData = async () => {
@@ -242,7 +242,7 @@ const DraftSK = () => {
 
   const handleJenisSKChange = (value: string) => {
     // const newJenisSK = e.target.value
-    setSelectedJenisSK(value);
+    setSelectedJenisSK(value)
     checkExcelCompleteness(value)
   }
 
@@ -293,8 +293,8 @@ const DraftSK = () => {
                 options={jenisSKOptions.map((key) => jenisSKMap[key])}
                 selectedOption={jenisSKMap[selectedJenisSK] ?? ""}
                 onChange={(selectedLabel) => {
-                  const key = Object.entries(jenisSKMap).find(([_, label]) => label === selectedLabel)?.[0] || "";
-                  handleJenisSKChange(key);
+                  const key = Object.entries(jenisSKMap).find(([_, label]) => label === selectedLabel)?.[0] || ""
+                  handleJenisSKChange(key)
                 }}
                 placeholder="Pilih Jenis SK"
               />
@@ -308,70 +308,71 @@ const DraftSK = () => {
           </div>
 
           <div className="inputrow2">
-            <div>
-              Judul SK <br />
-              <input type="text" className="sk-input" value={judul} onChange={(e) => setJudul(e.target.value)} />
-            </div>
+            <InputField
+              label="Judul SK"
+              name="judul"
+              value={judul}
+              onChange={(e) => setJudul(e.target.value)}
+              required={true}
+            />
           </div>
 
           <div className="inputrow3">
-            <div>
-              Nomor SK <br />
-              <input
-                type="text"
-                className="sk-input"
-                value={noSK}
-                onChange={(e) => setNoSK(e.target.value)}
-                readOnly={isEditMode} // Make read-only if editing
-              />
-            </div>
-            <div>
-              Tanggal <br />
-              <input type="date" className="sk-input" value={tanggal} onChange={(e) => setTanggal(e.target.value)} />
-            </div>
-            <div>
-              Semester <br />
-              <input
-                type="number"
-                className="sk-input"
-                value={semester}
-                onChange={(e) => {
-                  if (e.target.value === "") {
-                    setSemester(0)
-                  } else {
-                    setSemester(Number(e.target.value))
-                  }
-                }}
-                min={1}
-                max={20}
-              />
-            </div>
-            <div>
-              Tahun Akademik <br />
-              <input
-                type="text"
-                className="sk-input"
-                value={tahunAkademik}
-                onChange={(e) => setTahunAkademik(e.target.value)}
-                placeholder="2024/2025"
-              />
-            </div>
+            <InputField
+              label="Nomor SK"
+              name="noSK"
+              value={noSK}
+              onChange={(e) => setNoSK(e.target.value)}
+              required={true}
+              placeholder="Contoh: 123/SK/2024"
+            />
+            <InputField
+              label="Tanggal"
+              name="tanggal"
+              type="date"
+              value={tanggal}
+              onChange={(e) => setTanggal(e.target.value)}
+              required={true}
+            />
+            <InputField
+              label="Semester"
+              name="semester"
+              type="number"
+              value={semester.toString()}
+              onChange={(e) => {
+                if (e.target.value === "") {
+                  setSemester(0)
+                } else {
+                  setSemester(Number(e.target.value))
+                }
+              }}
+              required={true}
+            />
+            <InputField
+              label="Tahun Akademik"
+              name="tahunAkademik"
+              value={tahunAkademik}
+              onChange={(e) => setTahunAkademik(e.target.value)}
+              required={true}
+              placeholder="2024/2025"
+            />
           </div>
 
           <div className="inputrow4">
-            <div>
-              Nama Dekan <br />
-              <input
-                type="text"
-                className="sk-input"
-                value={namaDekan}
-                onChange={(e) => setNamaDekan(e.target.value)}
-              />
-            </div>
-            <div>
-              NIP Dekan <br />
-              <input type="text" className="sk-input" value={nipDekan} onChange={(e) => setNipDekan(e.target.value)} />
-            </div>
+            <InputField
+              label="Nama Dekan"
+              name="namaDekan"
+              value={namaDekan}
+              onChange={(e) => setNamaDekan(e.target.value)}
+              required={true}
+            />
+            <InputField
+              label="NIP Dekan"
+              name="nipDekan"
+              value={nipDekan}
+              onChange={(e) => setNipDekan(e.target.value)}
+              required={true}
+            />
           </div>
 
           <div className="inputrow5">
