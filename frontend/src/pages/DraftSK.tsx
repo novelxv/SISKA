@@ -286,9 +286,9 @@ const DraftSK = () => {
           <h1 className="title">{isEditMode ? "Edit Draft SK" : "Draft SK Baru"}</h1>
         </div>
         <form>
+          <div>Template: </div>
           <div className="inputrow1">
             <div className="template">
-              <div>Template: </div>
               <SortButtonNew
                 options={jenisSKOptions.map((key) => jenisSKMap[key])}
                 selectedOption={jenisSKMap[selectedJenisSK] ?? ""}
@@ -298,14 +298,13 @@ const DraftSK = () => {
                 }}
                 placeholder="Pilih Jenis SK"
               />
-
-              {getExcelStatusMessage()}
             </div>
             <div className="button-blue" onClick={handlePreview}>
               <FaRegEye />
               Preview
             </div>
           </div>
+          {getExcelStatusMessage()}
 
           <div className="inputrow2">
             <InputField

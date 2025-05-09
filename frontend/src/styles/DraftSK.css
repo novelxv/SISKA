@@ -55,6 +55,7 @@
     display: flex;
     gap: 1vw;
     align-items: center;
+    flex-direction: row;
 }
 
 .inputrow1 {
