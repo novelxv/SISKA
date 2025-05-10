@@ -126,6 +126,18 @@ const UploadExcelAkademik = () => {
           <h1>Upload Data Akademik</h1>
         </div>
 
+        <div className="info-box mt-8">
+          <h3>Petunjuk Upload</h3>
+          <ul>
+            <li>Download template Excel terlebih dahulu</li>
+            <li>Isi template sesuai dengan format yang telah ditentukan</li>
+            <li>File harus dalam format Excel (.xlsx atau .xls)</li>
+            <li>Pastikan format data sesuai dengan template yang telah ditentukan</li>
+            <li>Ukuran file maksimal 10MB</li>
+            <li>Data yang sudah diupload akan menggantikan data yang sudah ada sebelumnya</li>
+          </ul>
+        </div>
+
         <div className="section-container">
           <div className="header">
             <h2>Upload Excel Dosen Wali</h2>
@@ -192,18 +204,6 @@ const UploadExcelAkademik = () => {
               disabled={isUploading || !asistenFile}
             />
           </div>
-        </div>
-
-        <div className="info-box mt-8">
-          <h3>Petunjuk Upload</h3>
-          <ul>
-            <li>Download template Excel terlebih dahulu</li>
-            <li>Isi template sesuai dengan format yang telah ditentukan</li>
-            <li>File harus dalam format Excel (.xlsx atau .xls)</li>
-            <li>Pastikan format data sesuai dengan template yang telah ditentukan</li>
-            <li>Ukuran file maksimal 10MB</li>
-            <li>Data yang sudah diupload akan menggantikan data yang sudah ada sebelumnya</li>
-          </ul>
         </div>
       </div>
     </div>

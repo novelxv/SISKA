@@ -8,10 +8,12 @@ datasource db {
 }
 
 model User {
-    id       Int     @id @default(autoincrement())
-    username String  @unique
-    password String
-    role     Role
+    id         Int     @id @default(autoincrement())
+    username   String  @unique
+    password   String
+    role       Role
+    jenisKK    KelompokKeahlian?
+    jenisProdi Prodi?
 }
 
 enum Role {
@@ -40,14 +42,15 @@ model Dosen {
 }
 
 enum KelompokKeahlian {
-    INFORMATIKA
-    ELEKTRONIKA
-    REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN
-    SISTEM_KENDALI_DAN_KOMPUTER
-    TEKNIK_TELEKOMUNIKASI
-    TEKNIK_KETENAGALISTRIKAN
+    TEKNIK_BIOMEDIS
     TEKNIK_KOMPUTER
+    SISTEM_KENDALI_DAN_KOMPUTER
+    TEKNIK_KETENAGALISTRIKAN
+    ELEKTRONIKA
+    INFORMATIKA
     TEKNOLOGI_INFORMASI
+    TEKNIK_TELEKOMUNIKASI
+    REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN
 }
 
 enum JenisKepegawaian {
@@ -224,4 +227,13 @@ model UploadStatus {
   filePath        String?
   
   @@map("upload_status")
+}
+
+enum Prodi {
+  IF
+  II
+  EL
+  ET
+  EP
+  EB
 }
