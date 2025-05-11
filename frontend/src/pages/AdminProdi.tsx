@@ -87,6 +87,7 @@ const AdminProdi = () => {
       toast.success(response.message || "File Excel Dosen Pembimbing dan Penguji berhasil diunggah");
       setDosenPPFile(null);
       setDosenPPFileName(null);
+      (document.getElementById("dosenPPInput") as HTMLInputElement).value = ""; // Reset input file
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Pembimbing dan Penguji";
       toast.error(errorMsg);
@@ -107,6 +108,7 @@ const AdminProdi = () => {
       toast.success(response.message || "File Excel Pengajaran berhasil diunggah");
       setPengajaranFile(null);
       setPengajaranFileName(null);
+      (document.getElementById("pengajaranInput") as HTMLInputElement).value = ""; // Reset input file
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Pengajaran";
       toast.error(errorMsg);

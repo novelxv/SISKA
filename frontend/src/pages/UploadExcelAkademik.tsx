@@ -89,6 +89,7 @@ const UploadExcelAkademik = () => {
       toast.success(response.message || "File Excel Dosen Wali berhasil diunggah")
       setDosenWaliFile(null)
       setDosenWaliFileName(null)
+      ;(document.getElementById("dosenWaliInput") as HTMLInputElement).value = ""
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Wali"
       toast.error(errorMsg)
@@ -99,23 +100,24 @@ const UploadExcelAkademik = () => {
 
   const handleUploadAsisten = async () => {
     if (!asistenFile) {
-      toast.warning("Silakan pilih file Excel Asisten Perkuliahan dan Praktikum terlebih dahulu")
-      return
+      toast.warning("Silakan pilih file Excel Asisten Perkuliahan dan Praktikum terlebih dahulu");
+      return;
     }
 
-    setIsUploading(true)
+    setIsUploading(true);
     try {
-      const response = await uploadExcelAsisten(asistenFile)
-      toast.success(response.message || "File Excel Asisten Perkuliahan dan Praktikum berhasil diunggah")
-      setAsistenFile(null)
-      setAsistenFileName(null)
+      const response = await uploadExcelAsisten(asistenFile);
+      toast.success(response.message || "File Excel Asisten Perkuliahan dan Praktikum berhasil diunggah");
+      setAsistenFile(null);
+      setAsistenFileName(null);
+      (document.getElementById("asistenInput") as HTMLInputElement).value = ""; // Reset input file
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Asisten Perkuliahan dan Praktikum"
-      toast.error(errorMsg)
+      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Asisten Perkuliahan dan Praktikum";
+      toast.error(errorMsg);
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
   return (
     <div className="sk-container">
