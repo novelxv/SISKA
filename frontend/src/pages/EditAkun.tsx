@@ -231,7 +231,7 @@ const EditAkun: React.FC = () => {
                                 placeholder="Pilih Kelompok Keahlian"
                                 onChange={(label) => {
                                     const value = kkOptions.find((kk) => kk.label === label)?.value || "";
-                                    setFormData({ ...formData, jenisKK: value, jenisProdi: null });
+                                    setFormData({ ...formData, jenisKK: value, jenisProdi: null }); // jangan diubah, biarin aja error
                                 }}
                                 />
                             </div>
@@ -243,7 +243,7 @@ const EditAkun: React.FC = () => {
                                     options={prodiOptions}
                                     selectedOption={formData.jenisProdi || ""}
                                     placeholder="Pilih Program Studi"
-                                    onChange={(value) => setFormData({ ...formData, jenisKK: null, jenisProdi: value })}
+                                    onChange={(value) => setFormData({ ...formData, jenisKK: null, jenisProdi: value })} // jangan diubah, biarin aja error
                                 />
                             </div>
                         )}

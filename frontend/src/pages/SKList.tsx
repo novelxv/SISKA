@@ -8,7 +8,7 @@ import "../styles/Global.css"
 import "../styles/SK.css"
 import { FaDownload, FaPencilAlt, FaEye, FaArchive, FaTrash } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
-import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF, deleteDraftSK } from "../services/skService"
+import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF, deleteDraftSK, archiveSK, unarchiveSK, getArchivedSK } from "../services/skService"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import ButtonWithIcon from "../components/Button"
@@ -134,26 +134,35 @@ const SKList = () => {
     window.open(`/preview-sk/${no_sk}`, "_blank")
   }
 
-  const handleArchive = (sk: SK) => {
-    const updatedPublishedList = sklist.filter((item) => item.no_sk !== sk.no_sk)
-    const skToArchive = { ...sk, archived: true }
+  const handleArchive = async (sk: SK) => {
+    try {
+      await archiveSK(sk.no_sk);
+      const updatedPublishedList = sklist.filter((item) => item.no_sk !== sk.no_sk);
+      const skToArchive = { ...sk, archived: true };
 
-    setSK(updatedPublishedList)
-    setArchivedList((prev) => [...prev, skToArchive])
+      setSK(updatedPublishedList);
+      setArchivedList((prev) => [...prev, skToArchive]);
 
-    toast.success(`SK "${sk.judul}" berhasil diarsipkan`)
-  }
+      toast.success(`SK "${sk.judul}" berhasil diarsipkan`);
+    } catch (err) {
+      toast.error("Gagal mengarsipkan SK");
+    }
+  };
 
-  const handleUnarchive = (sk: SK) => {
-    // Handle unarchiving in frontend
-    const updatedArchivedList = archivedList.filter((item) => item.no_sk !== sk.no_sk)
-    const skToUnarchive = { ...sk, archived: false }
+  const handleUnarchive = async (sk: SK) => {
+    try {
+      await unarchiveSK(sk.no_sk); 
+      const updatedArchivedList = archivedList.filter((item) => item.no_sk !== sk.no_sk);
+      const skToUnarchive = { ...sk, archived: false };
 
-    setArchivedList(updatedArchivedList)
-    setSK((prev) => [...prev, skToUnarchive])
+      setArchivedList(updatedArchivedList);
+      setSK((prev) => [...prev, skToUnarchive]);
 
-    toast.success(`SK "${sk.judul}" berhasil dipulihkan`)
-  }
+      toast.success(`SK "${sk.judul}" berhasil dipulihkan`);
+    } catch (err) {
+      toast.error("Gagal memulihkan SK");
+    }
+  };
 
   const openDeleteModal = (no_sk: string) => {
     setDraftToDelete(no_sk)
@@ -183,14 +192,22 @@ const SKList = () => {
 
   const fetchData = async () => {
     try {
-      const [published, draft] = await Promise.all([getPublishedSK(), getDraftSK()])
-      setSK(published)
-      setDraft(draft)
-      setArchivedList([])
+      const [published, draft, archived] = await Promise.all([
+        getPublishedSK(),
+        getDraftSK(),
+        getArchivedSK(),
+      ]);
+
+      // Filter SK yang tidak diarsipkan
+    const nonArchivedPublished: SK[] = published.filter((sk: SK) => !sk.archived);
+
+      setSK(nonArchivedPublished); // Set SK Terbit tanpa arsip
+      setDraft(draft);
+      setArchivedList(archived);
     } catch (err) {
-      toast.error("Gagal mengambil data SK")
+      toast.error("Gagal mengambil data SK");
     }
-  }
+  };
 
   useEffect(() => {
     fetchData()
@@ -269,7 +286,10 @@ const SKList = () => {
               <tbody>
                 {sklist
                   .filter(
-                    (sk) => sk.judul.toLowerCase().includes(searchTerm) && (jenis === "" || sk.jenis_sk === jenis),
+                    (sk) =>
+                      !sk.archived &&
+                      sk.judul.toLowerCase().includes(searchTerm) &&
+                      (jenis === "" || sk.jenis_sk === jenis),
                   )
                   .sort((a, b) => {
                     const dateA = new Date(a.tanggal).getTime()
@@ -304,7 +324,11 @@ const SKList = () => {
                         </div>
                       </td>
                       <td>
-                        <ButtonWithIcon text="Data Dosen" onClick={() => navigate(`/sk/${sk.no_sk.replace(/ /g, "_").replace(/\//g, "_")}/dosen`)} hideIcon/>
+                        <ButtonWithIcon
+                          text="Data Dosen"
+                          onClick={() => navigate(`/sk/${sk.no_sk.replace(/ /g, "_").replace(/\//g, "_")}/dosen`)}
+                          hideIcon
+                        />
                       </td>
                     </tr>
                   ))}

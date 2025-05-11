@@ -112,3 +112,18 @@ export const checkAsistenExcel = async () => {
     const response = await api.get("/sk/validate/asisten");
     return response.data;
 };
+
+export const archiveSK = async (no_sk: string) => {
+  const response = await api.put(`/sk/${encodeURIComponent(no_sk)}/archive`);
+  return response.data;
+};
+
+export const unarchiveSK = async (no_sk: string) => {
+  const response = await api.put(`/sk/${encodeURIComponent(no_sk)}/unarchive`);
+  return response.data;
+};
+
+export const getArchivedSK = async () => {
+  const res = await api.get("/sk/archived");
+  return res.data;
+};
