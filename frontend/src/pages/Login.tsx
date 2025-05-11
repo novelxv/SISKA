@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -22,16 +22,7 @@ const Login = () => {
 
         try {
             await auth?.login(username, password);
-            if (auth?.role === "AKADEMIK") {
-                toast.success("Login berhasil!");
-                setTimeout(() => navigate("/dosen"), 1500);
-            } else if (auth?.role == "ADMIN_PRODI") {
-                toast.success("Login berhasil!");
-                setTimeout(() => navigate("/upload-excel-prodi"), 1500);
-            } else if (auth?.role == "ADMIN_KK") {
-                toast.success("Login berhasil!");
-                setTimeout(() => navigate("/admin-kk"), 1500); // ntar sesuaikan saja  
-            }
+            toast.success("Login berhasil!");
         } catch (err) {
             const errorMessage = typeof err === "string" ? err : "Login gagal. Silakan coba lagi.";
             setError(errorMessage);
@@ -40,6 +31,16 @@ const Login = () => {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (auth?.role === "AKADEMIK") {
+            navigate("/dosen");
+        } else if (auth?.role === "ADMIN_PRODI") {
+            navigate("/upload-excel-prodi");
+        } else if (auth?.role === "ADMIN_KK") {
+            navigate("/admin-kk");
+        }
+    }, [auth?.role, navigate]);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
