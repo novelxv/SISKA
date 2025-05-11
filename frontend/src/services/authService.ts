@@ -21,9 +21,15 @@ export const login = async (username: string, password: string): Promise<string>
     }
 };
 
-export const register = async (username: string, password: string, role: "AKADEMIK" | "ADMIN_KK" | "ADMIN_PRODI"): Promise<any> => {
+export const register = async (
+    username: string,
+    password: string,
+    role: "AKADEMIK" | "ADMIN_KK" | "ADMIN_PRODI",
+    jenisKK?: string,
+    jenisProdi?: string
+): Promise<any> => {
     try {
-        const response = await api.post("/auth/register", { username, password, role });
+        const response = await api.post("/auth/register", { username, password, role, jenisKK, jenisProdi });
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data?.error || "Registration failed");

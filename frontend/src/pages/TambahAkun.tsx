@@ -20,34 +20,54 @@ const TambahAkun: React.FC = () => {
     username: "",
     password: "",
     role: "" as User["role"],
+    jenisKK: "",
+    jenisProdi: "",
   });
 
   const handleSimpan = async () => {
     // Validasi username
     if (formData.username.length < 5 || formData.username.length > 20) {
-        toast.error("Username harus memiliki panjang antara 5 hingga 20 karakter.");
-        return;
+      toast.error("Username harus memiliki panjang antara 5 hingga 20 karakter.");
+      return;
     }
 
     // Validasi password
     if (formData.password.length < 8) {
-        toast.error("Password harus memiliki panjang minimal 8 karakter.");
-        return;
+      toast.error("Password harus memiliki panjang minimal 8 karakter.");
+      return;
     }
 
     // Validasi role
     if (!formData.role) {
-        toast.error("Role harus dipilih.");
-        return;
+      toast.error("Role harus dipilih.");
+      return;
+    }
+
+    // Validasi jenisKK untuk ADMIN_KK
+    if (formData.role === "ADMIN_KK" && !formData.jenisKK) {
+      toast.error("Jenis KK harus dipilih untuk role Admin KK.");
+      return;
+    }
+
+    // Validasi jenisProdi untuk ADMIN_PRODI
+    if (formData.role === "ADMIN_PRODI" && !formData.jenisProdi) {
+      toast.error("Jenis Prodi harus dipilih untuk role Admin Prodi.");
+      return;
     }
 
     try {
-        await register(formData.username, formData.password, formData.role);
-        toast.success("Akun berhasil ditambahkan!");
-        navigate("/kelola-akun");
+      await register(
+        formData.username,
+        formData.password,
+        formData.role,
+        formData.jenisKK || undefined,
+        formData.jenisProdi || undefined
+      );
+      toast.success("Akun berhasil ditambahkan!");
+      navigate("/kelola-akun");
     } catch (error: any) {
-        console.error("Error adding user:", error);
-        toast.error(error.message || "Gagal menambahkan akun");
+      console.error("Error adding user:", error);
+      toast.error(error.message || "Gagal menambahkan akun");
     }
   };
 
@@ -61,12 +81,12 @@ const TambahAkun: React.FC = () => {
     let cleanedValue = value.trimStart();
 
     if (name === "username") {
-        cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, ''); // Hanya izinkan karakter alfanumerik
+      cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, ""); // Hanya izinkan karakter alfanumerik
     }
 
     setFormData((prevState) => ({
-        ...prevState,
-        [name]: cleanedValue,
+      ...prevState,
+      [name]: cleanedValue,
     }));
   };
 
@@ -74,8 +94,22 @@ const TambahAkun: React.FC = () => {
     { label: "Akademik", value: "AKADEMIK" },
     { label: "Admin KK", value: "ADMIN_KK" },
     { label: "Admin Prodi", value: "ADMIN_PRODI" },
-  ];   
-  
+  ];
+
+  const kkOptions = [
+    { label: "Teknik Biomedis", value: "TEKNIK_BIOMEDIS" },
+    { label: "Teknik Komputer", value: "TEKNIK_KOMPUTER" },
+    { label: "Sistem Kendali dan Komputer", value: "SISTEM_KENDALI_DAN_KOMPUTER" },
+    { label: "Teknik Ketenagalistrikan", value: "TEKNIK_KETENAGALISTRIKAN" },
+    { label: "Elektronika", value: "ELEKTRONIKA" },
+    { label: "Informatika", value: "INFORMATIKA" },
+    { label: "Teknologi Informasi", value: "TEKNOLOGI_INFORMASI" },
+    { label: "Teknik Telekomunikasi", value: "TEKNIK_TELEKOMUNIKASI" },
+    { label: "Rekayasa Perangkat Lunak dan Pengetahuan", value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN" },
+  ];
+
+  const prodiOptions = ["IF", "II", "EL", "ET", "EP", "EB"];
+
   return (
     <div className="page-container">
       <Sidebar />
@@ -152,16 +186,41 @@ const TambahAkun: React.FC = () => {
             </div>
 
             <div className="akun-sort-filter-select">
-            <SortButtonNew
+              <SortButtonNew
                 options={roleOptions.map((r) => r.label)}
                 selectedOption={roleOptions.find((r) => r.value === formData.role)?.label || ""}
                 placeholder="Pilih role"
                 onChange={(label) => {
-                    const value = roleOptions.find((r) => r.label === label)?.value || "";
-                    setFormData({ ...formData, role: value as User["role"] });
+                  const value = roleOptions.find((r) => r.label === label)?.value || "";
+                  setFormData({ ...formData, role: value as User["role"], jenisKK: "", jenisProdi: "" });
                 }}
               />
             </div>
+
+            {formData.role === "ADMIN_KK" && (
+              <div className="akun-sort-filter-select">
+                <SortButtonNew
+                  options={kkOptions.map((kk) => kk.label)}
+                  selectedOption={kkOptions.find((kk) => kk.value === formData.jenisKK)?.label || ""}
+                  placeholder="Pilih Kelompok Keahlian"
+                  onChange={(label) => {
+                    const value = kkOptions.find((kk) => kk.label === label)?.value || "";
+                    setFormData({ ...formData, jenisKK: value });
+                  }}
+                />
+              </div>
+            )}
+
+            {formData.role === "ADMIN_PRODI" && (
+              <div className="akun-sort-filter-select">
+                <SortButtonNew
+                  options={prodiOptions}
+                  selectedOption={formData.jenisProdi || ""}
+                  placeholder="Pilih Program Studi"
+                  onChange={(value) => setFormData({ ...formData, jenisProdi: value })}
+                />
+              </div>
+            )}
 
             <div className="button-group">
               <button type="button" onClick={handleCancel} className="btn-cancel">

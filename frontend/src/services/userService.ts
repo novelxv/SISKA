@@ -5,6 +5,8 @@ export interface User {
     username: string;
     password: string;
     role: "AKADEMIK" | "ADMIN_KK" | "ADMIN_PRODI";
+    jenisKK?: string;
+    jenisProdi?: string;
 }
 
 export const getUsers = async (): Promise<User[]> => {

@@ -15,16 +15,33 @@ const EditAkun: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const auth = useContext(AuthContext);
+
     const roleOptions = [
         { label: "Akademik", value: "AKADEMIK" },
         { label: "Admin KK", value: "ADMIN_KK" },
         { label: "Admin Prodi", value: "ADMIN_PRODI" },
-      ];
-      
+    ];
+
+    const kkOptions = [
+        { label: "Teknik Biomedis", value: "TEKNIK_BIOMEDIS" },
+        { label: "Teknik Komputer", value: "TEKNIK_KOMPUTER" },
+        { label: "Sistem Kendali dan Komputer", value: "SISTEM_KENDALI_DAN_KOMPUTER" },
+        { label: "Teknik Ketenagalistrikan", value: "TEKNIK_KETENAGALISTRIKAN" },
+        { label: "Elektronika", value: "ELEKTRONIKA" },
+        { label: "Informatika", value: "INFORMATIKA" },
+        { label: "Teknologi Informasi", value: "TEKNOLOGI_INFORMASI" },
+        { label: "Teknik Telekomunikasi", value: "TEKNIK_TELEKOMUNIKASI" },
+        { label: "Rekayasa Perangkat Lunak dan Pengetahuan", value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN" },
+    ];
+
+    const prodiOptions = ["IF", "II", "EL", "ET", "EP", "EB"];
+
     const [formData, setFormData] = useState({
         username: "",
         password: "",
         role: "" as User["role"],
+        jenisKK: "",
+        jenisProdi: "",
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -47,6 +64,8 @@ const EditAkun: React.FC = () => {
                         username: userData.username,
                         password: "",
                         role: userData.role,
+                        jenisKK: userData.jenisKK || "",
+                        jenisProdi: userData.jenisProdi || "",
                     });
                 } catch (error) {
                     toast.error("Gagal mengambil data user");
@@ -73,6 +92,18 @@ const EditAkun: React.FC = () => {
         // Validasi role
         if (!formData.role) {
             toast.error("Role harus dipilih.");
+            return;
+        }
+
+        // Validasi jenisKK untuk ADMIN_KK
+        if (formData.role === "ADMIN_KK" && !formData.jenisKK) {
+            toast.error("Jenis KK harus dipilih untuk role Admin KK.");
+            return;
+        }
+
+        // Validasi jenisProdi untuk ADMIN_PRODI
+        if (formData.role === "ADMIN_PRODI" && !formData.jenisProdi) {
+            toast.error("Jenis Prodi harus dipilih untuk role Admin Prodi.");
             return;
         }
 
@@ -180,19 +211,42 @@ const EditAkun: React.FC = () => {
                             </button>
                         </div>
 
-                                    
                         <div className="akun-sort-filter-select">
-                        <SortButtonNew
-                            options={roleOptions.map((r) => r.label)}
-                            selectedOption={roleOptions.find((r) => r.value === formData.role)?.label || ""}
-                            placeholder="Pilih role"
-                            onChange={(label) => {
-                                const value = roleOptions.find((r) => r.label === label)?.value || "";
-                                setFormData({ ...formData, role: value as User["role"] });
-                            }}
-                        />
-
+                            <SortButtonNew
+                                options={roleOptions.map((r) => r.label)}
+                                selectedOption={roleOptions.find((r) => r.value === formData.role)?.label || ""}
+                                placeholder="Pilih role"
+                                onChange={(label) => {
+                                    const value = roleOptions.find((r) => r.label === label)?.value || "";
+                                    setFormData({ ...formData, role: value as User["role"], jenisKK: "", jenisProdi: "" });
+                                }}
+                            />
                         </div>
+
+                        {formData.role === "ADMIN_KK" && (
+                            <div className="akun-sort-filter-select">
+                                <SortButtonNew
+                                options={kkOptions.map((kk) => kk.label)}
+                                selectedOption={kkOptions.find((kk) => kk.value === formData.jenisKK)?.label || ""}
+                                placeholder="Pilih Kelompok Keahlian"
+                                onChange={(label) => {
+                                    const value = kkOptions.find((kk) => kk.label === label)?.value || "";
+                                    setFormData({ ...formData, jenisKK: value, jenisProdi: null });
+                                }}
+                                />
+                            </div>
+                        )}
+
+                        {formData.role === "ADMIN_PRODI" && (
+                            <div className="akun-sort-filter-select">
+                                <SortButtonNew
+                                    options={prodiOptions}
+                                    selectedOption={formData.jenisProdi || ""}
+                                    placeholder="Pilih Program Studi"
+                                    onChange={(value) => setFormData({ ...formData, jenisKK: null, jenisProdi: value })}
+                                />
+                            </div>
+                        )}
 
                         <div className="button-group">
                             <button type="button" onClick={handleCancel} className="btn-cancel">
