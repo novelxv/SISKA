@@ -10,6 +10,10 @@ import {
     resetUploadStatus
 } from '../services/excel.service';
 
+interface AuthenticatedRequest extends Request {
+    user?: any;
+}
+
 export const uploadFile = async (req: Request, res: Response): Promise<void> => {
   try {
     const { file } = req;
@@ -101,7 +105,7 @@ export const resetStatus = async (req: Request, res: Response): Promise<void> =>
 
 const ALLOWED_TYPES = ["pengajaran", "pembimbing-penguji", "dosen-wali", "asisten"];
 
-export const uploadExcel = async (req: Request, res: Response): Promise<void> => {
+export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { jenis } = req.params;
 
   if (!ALLOWED_TYPES.includes(jenis)) {
@@ -127,12 +131,22 @@ export const uploadExcel = async (req: Request, res: Response): Promise<void> =>
     fs.mkdirSync(destDir, { recursive: true });
   }
 
-  const destPath = path.join(destDir, req.file.originalname);
+  const kodeProdi = req.user?.kodeProdi || "UNKNOWN";
+
+  let fileName: string;
+  if (jenis === "dosen-wali") {
+    fileName = "excel-dosen-wali.xlsx";
+  } else if (jenis === "asisten") {
+    fileName = "excel-asisten.xlsx";
+  } else {
+    fileName = `${kodeProdi}-excel-${jenis}.xlsx`;
+  }
+
+  const destPath = path.join(destDir, fileName);
   fs.renameSync(req.file.path, destPath);
 
   res.status(200).json({
     message: `File berhasil diunggah ke ${folderMap[jenis]}`,
-    filename: req.file.originalname,
+    filename: fileName,
   });
-  return;
 };

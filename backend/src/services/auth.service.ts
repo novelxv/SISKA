@@ -33,5 +33,13 @@ export const loginUser = async (username: string, password: string): Promise<str
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return null;
 
-    return jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
+    const payload: any = { id: user.id, role: user.role };
+
+    if (user.role === "ADMIN_PRODI") {
+        payload.kodeProdi = user.jenisProdi;
+    } else if (user.role === "ADMIN_KK") {
+        payload.kelompokKeahlian = user.jenisKK;
+    }
+
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 };

@@ -83,6 +83,6 @@ const upload2 = multer({
     },
 });
 
-router.post("/upload/:jenis", upload2.single("file"), uploadExcel);
+router.post("/upload/:jenis", authMiddleware, upload2.single("file"), uploadExcel);
 
 export default router;
