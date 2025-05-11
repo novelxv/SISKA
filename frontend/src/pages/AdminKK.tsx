@@ -21,6 +21,7 @@ const jenisSKMap: Record<string, string> = {
     WALI_TPB: "SK Dosen Wali TPB",
     WALI_MHS_AKTIF: "SK Dosen Wali Mahasiswa Aktif",
     ASISTEN_PRAKTIKUM: "SK Asisten Perkuliahan dan Praktikum",
+    LUAR_PRODI: "SK Luar Prodi",
 }
 
 interface SK {
@@ -72,10 +73,11 @@ const AdminKK = () => {
   
     const fetchData = async () => {
       try {
-        const published = await getPublishedSK()
-        setSK(published)
+        const published = await getPublishedSK();
+        const nonArchivedSK = published.filter((sk: { archived: boolean }) => !sk.archived); // Filter SK yang tidak diarsipkan
+        setSK(nonArchivedSK);
       } catch {
-        toast.error("Gagal mengambil data SK")
+        toast.error("Gagal mengambil data SK");
       }
     }
   
@@ -125,7 +127,11 @@ const AdminKK = () => {
             </thead>
             <tbody>
               {sklist
-                .filter((sk) => sk.judul.toLowerCase().includes(searchTerm.toLowerCase()) && (jenis === "" || sk.jenis_sk === jenis))
+                .filter(
+                  (sk) =>
+                    sk.judul.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                    (jenis === "" || sk.jenis_sk === jenis) // Filter berdasarkan jenis SK
+                )
                 .sort((a, b) => {
                   const dateA = new Date(a.tanggal).getTime()
                   const dateB = new Date(b.tanggal).getTime()
@@ -157,7 +163,9 @@ const AdminKK = () => {
                     <td>
                       <ButtonWithIcon
                         text="Data Dosen"
-                        onClick={() => navigate(`/sk/${sk.no_sk.replace(/ /g, "_").replace(/\//g, "_")}/dosen`)}
+                        onClick={() => navigate(`/sk/${sk.no_sk.replace(/ /g, "_").replace(/\//g, "_")}/dosen`, {
+                            state: { from: location.pathname },
+                        })}
                         hideIcon
                       />
                     </td>

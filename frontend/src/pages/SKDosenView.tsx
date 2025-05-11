@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import Sidebar from "../components/Navbar"
-import { FaChevronLeft, FaChevronRight, FaArrowLeft } from "react-icons/fa"
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import "../styles/Dosen.css"
 import "../styles/Global.css"
 import { toast, ToastContainer } from "react-toastify"
@@ -25,6 +25,7 @@ const SKDosenView: React.FC = () => {
   const [dosenList, setDosenList] = useState<Dosen[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
+  const location = useLocation();
   const itemsPerPage = 10
   const formatNoSk = (no_sk: string | undefined) => {
     return no_sk ? no_sk.replace(/_/g, " ") : ""
@@ -66,7 +67,7 @@ const SKDosenView: React.FC = () => {
   }
 
   const handleCancel = () => {
-    navigate("/sk");
+    navigate(location.state?.from || "/sk");
   };
 
   return (

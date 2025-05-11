@@ -16,13 +16,13 @@ import Search from "../components/Search"
 import SortButtonNew from "../components/SortButtonNew"
 
 const jenisSKMap: Record<string, string> = {
-  LUAR_PRODI : "SK Luar Prodi",
   PENGAJARAN: "SK Pengajaran",
   PEMBIMBING_PENGUJI: "SK Pembimbing dan Penguji",
   PEMBIMBING_AKTIF: "SK Pembimbing Mahasiswa Aktif",
   WALI_TPB: "SK Dosen Wali TPB",
   WALI_MHS_AKTIF: "SK Dosen Wali Mahasiswa Aktif",
   ASISTEN_PRAKTIKUM: "SK Asisten Perkuliahan dan Praktikum",
+  LUAR_PRODI : "SK Luar Prodi",
 }
 
 type TabType = "published" | "draft" | "archived"
