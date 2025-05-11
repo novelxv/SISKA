@@ -130,17 +130,39 @@ const excelService = {
 };
 
 export const uploadExcelPengajaran = async (file: File) => {
+  try {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await api.post("/excel/upload/pengajaran", formData);
+
+    const response = await api.post("/excel/upload/pengajaran", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     return response.data;
+  } catch (error: any) {
+    console.error("Error uploading Pengajaran file:", error);
+    throw error.response?.data || { message: "Gagal mengunggah file Excel Pengajaran" };
+  }
 };
 
 export const uploadExcelPembimbingPenguji = async (file: File) => {
+  try {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await api.post("/excel/upload/pembimbing-penguji", formData);
+
+    const response = await api.post("/excel/upload/pembimbing-penguji", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     return response.data;
+  } catch (error: any) {
+    console.error("Error uploading Pembimbing Penguji file:", error);
+    throw error.response?.data || { message: "Gagal mengunggah file Excel Pembimbing Penguji" };
+  }
 };
 
 export const uploadExcelDosenWali = async (file: File) => {
