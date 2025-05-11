@@ -192,6 +192,7 @@ model SK {
   file_sk           String?
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
+  archived          Boolean  @default(false)
 
   Dekan         Dekan @relation(fields: [NIP_dekan], references: [NIP])
 }

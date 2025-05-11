@@ -289,3 +289,24 @@ export const checkWaliAktifExcel = () =>
 
 export const checkAsistenExcel = () =>
   checkSingleExcel(path.join(__dirname, "../../../public/uploads/excel/excel_asisten"));
+
+export const archiveSKService = async (no_sk: string): Promise<void> => {
+  await prisma.sK.update({
+    where: { no_sk },
+    data: { archived: true },
+  });
+};
+
+export const unarchiveSKService = async (no_sk: string): Promise<void> => {
+  await prisma.sK.update({
+    where: { no_sk },
+    data: { archived: false },
+  });
+};
+
+export const getArchivedSKsService = async () => {
+  return await prisma.sK.findMany({
+    where: { archived: true },
+    include: { Dekan: true },
+  });
+};

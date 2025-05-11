@@ -1,5 +1,5 @@
 import express from "express";
-import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK } from "../controllers/sk.controller";
+import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK, getArchivedSKs } from "../controllers/sk.controller";
 import { authMiddleware, akademikMiddleware } from "../middleware/auth.middleware";
 import {
     validatePengajaranExcel,
@@ -8,6 +8,8 @@ import {
     validateWaliTPBExcel,
     validateWaliAktifExcel,
     validateAsistenExcel,
+    archiveSK,
+    unarchiveSK,
 } from "../controllers/sk.controller";
 
 const router = express.Router();
@@ -30,5 +32,8 @@ router.get("/validate/pembimbing-aktif", authMiddleware, akademikMiddleware, val
 router.get("/validate/wali-tpb", authMiddleware, akademikMiddleware, validateWaliTPBExcel);
 router.get("/validate/wali-aktif", authMiddleware, akademikMiddleware, validateWaliAktifExcel);
 router.get("/validate/asisten", authMiddleware, akademikMiddleware, validateAsistenExcel);
+router.put("/:no_sk/archive", authMiddleware, akademikMiddleware, archiveSK);
+router.put("/:no_sk/unarchive", authMiddleware, akademikMiddleware, unarchiveSK);
+router.get("/archived", authMiddleware, akademikMiddleware, getArchivedSKs);
 
 export default router;

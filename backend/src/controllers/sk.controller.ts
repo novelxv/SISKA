@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { NextFunction, Request, Response } from "express";
-import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService, getDraftSKDetailService, updateDraftSKService } from "../services/sk.service";
+import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService, getDraftSKDetailService, updateDraftSKService, archiveSKService, unarchiveSKService, getArchivedSKsService } from "../services/sk.service";
 import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
@@ -245,4 +245,36 @@ export const validateWaliAktifExcel = (req: Request, res: Response) => {
 
 export const validateAsistenExcel = (req: Request, res: Response) => {
     res.json({ complete: checkAsistenExcel() });
+};
+
+export const archiveSK = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { no_sk } = req.params;
+    await archiveSKService(no_sk);
+    res.status(200).json({ message: "SK berhasil diarsipkan" });
+  } catch (err) {
+    console.error("Error mengarsipkan SK:", err);
+    res.status(500).json({ message: "Gagal mengarsipkan SK" });
+  }
+};
+
+export const unarchiveSK = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { no_sk } = req.params;
+    await unarchiveSKService(no_sk);
+    res.status(200).json({ message: "SK berhasil dipulihkan" });
+  } catch (err) {
+    console.error("Error memulihkan SK:", err);
+    res.status(500).json({ message: "Gagal memulihkan SK" });
+  }
+};
+
+export const getArchivedSKs = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const archivedSKs = await getArchivedSKsService();
+    res.status(200).json(archivedSKs);
+  } catch (err) {
+    console.error("Error fetching archived SKs:", err);
+    res.status(500).json({ message: "Gagal mengambil data SK yang diarsipkan" });
+  }
 };
