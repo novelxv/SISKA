@@ -34,6 +34,18 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
+        const { role, jenisKK, jenisProdi } = req.body;
+
+        if (role === "ADMIN_KK" && !jenisKK) {
+            res.status(400).json({ message: "Jenis KK harus diisi untuk role ADMIN_KK" });
+            return;
+        }
+
+        if (role === "ADMIN_PRODI" && !jenisProdi) {
+            res.status(400).json({ message: "Jenis Prodi harus diisi untuk role ADMIN_PRODI" });
+            return;
+        }
+
         const updated = await updateUserService(id, req.body);
         res.status(200).json(updated);
     } catch (error) {

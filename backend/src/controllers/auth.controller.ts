@@ -8,15 +8,26 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         res.status(400).json({ errors: errors.array() });
         return;
     }
-    
-    const { username, password, role } = req.body;
+
+    const { username, password, role, jenisKK, jenisProdi } = req.body;
+
     if (!["AKADEMIK", "ADMIN_KK", "ADMIN_PRODI"].includes(role)) {
         res.status(400).json({ error: "Invalid role" });
         return;
     }
-    
+
+    if (role === "ADMIN_KK" && !jenisKK) {
+        res.status(400).json({ error: "Jenis KK harus diisi untuk role ADMIN_KK" });
+        return;
+    }
+
+    if (role === "ADMIN_PRODI" && !jenisProdi) {
+        res.status(400).json({ error: "Jenis Prodi harus diisi untuk role ADMIN_PRODI" });
+        return;
+    }
+
     try {
-        const user = await registerUser(username, password, role);
+        const user = await registerUser(username, password, role, jenisKK, jenisProdi);
         res.status(201).json({ message: "User registered successfully", user });
     } catch (err) {
         res.status(500).json({ error: "Error registering user" });

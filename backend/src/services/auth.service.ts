@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, KelompokKeahlian, Prodi } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -6,11 +6,23 @@ const prisma = new PrismaClient();
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-export const registerUser = async (username: string, password: string, role: "AKADEMIK" | "ADMIN_KK" | "ADMIN_PRODI") => {
+export const registerUser = async (
+    username: string,
+    password: string,
+    role: "AKADEMIK" | "ADMIN_KK" | "ADMIN_PRODI",
+    jenisKK?: string,
+    jenisProdi?: string
+) => {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     return await prisma.user.create({
-        data: { username, password: hashedPassword, role },
+        data: { 
+            username, 
+            password: hashedPassword, 
+            role, 
+            jenisKK: jenisKK as KelompokKeahlian | null | undefined, 
+            jenisProdi: jenisProdi as Prodi | null | undefined 
+        },
     });
 };
 
