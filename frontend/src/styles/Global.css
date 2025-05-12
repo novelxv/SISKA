@@ -55,6 +55,7 @@ body {
     display: flex;
     align-items: center;
     padding: 20px;
+    padding-left: 0;
     background: white;
     border-bottom: 1px solid #ddd;
     width: 100%;

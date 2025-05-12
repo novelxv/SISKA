@@ -6,6 +6,9 @@ import "../styles/AddDosen.css";
 import "../styles/Global.css";
 import { useNavigate, useParams } from 'react-router-dom';  // useParams to get URL params
 import { FormEvent } from 'react';
+import SortButtonNew from '../components/SortButtonNew';
+import { ToastContainer } from 'react-toastify';
+import { RiArrowLeftSLine } from 'react-icons/ri';
 
 const fetchDosenData = async (id: string) => {
   const token = localStorage.getItem('token');
@@ -100,19 +103,28 @@ export default function EditDosen() {
         alert("Terjadi kesalahan saat menyimpan data.");
       });
   };
+
+  const handleCancel = () => {
+    navigate("/dosen");
+  };
   
 
   return (
-    <div className="app-container">
+    <div className="sk-container">
       <Sidebar />
-      <div className="main-content">
+      <ToastContainer />
+      <div className="content-area">
         <div className="form-container">
-          <h1 className="page-title">
-            <ArrowLeft className="back-arrow" /> Edit Dosen
-          </h1>
-
+          <div className="formheader">
+            <button className="back-button" onClick={handleCancel}>
+              <RiArrowLeftSLine size={24} />
+            </button>
+            <h1 className="page-title" id="title-tambah-akun">Edit Dosen</h1>
+          </div>
+          
           <form className="dosen-form" onSubmit={handleSubmit}>
             <InputField
+              required
               label="Nama Dosen (Tanpa Gelar)"
               name="nama_tanpa_gelar"
               value={dosenData.nama_tanpa_gelar}
@@ -120,6 +132,7 @@ export default function EditDosen() {
             />
 
             <InputField
+              required
               label="Nama Dosen (Dengan Gelar)"
               name="nama_dengan_gelar"
               value={dosenData.nama_dengan_gelar}
@@ -151,77 +164,68 @@ export default function EditDosen() {
             <div className="form-row">
               <div className="form-group half-width">
                 <label htmlFor="KK">Kelompok Keahlian</label>
-                <select
-                  id="KK"
-                  name="KK"
-                  value={dosenData.KK}
-                  onChange={(e) => setDosenData({ ...dosenData, KK: e.target.value })}
-                >
-                  <option value="">Pilih Opsi</option>
-                  <option value="INFORMATIKA">KK Informatika</option>
-                  <option value="TEKNIK_KETENAGALISTRIKAN">KK Teknik Ketenagalistrikan</option>
-                  <option value="TEKNIK_TELEKOMUNIKASI">KK Teknik Telekomunikasi</option>
-                  <option value="ELEKTRONIKA">KK Elektronika</option>
-                  <option value="SISTEM_KENDALI_DAN_KOMPUTER">KK Sistem Kendali dan Komputer</option>
-                  <option value="TEKNIK_KOMPUTER">KK Teknik Komputer</option>
-                  <option value="TEKNOLOGI_INFORMASI">KK Teknologi Informasi</option>
-                  <option value="REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN">KK Rekayasa Perangkat Lunak dan Pengetahuan</option>
-                </select>
+                <SortButtonNew
+                  options={[
+                    "INFORMATIKA",
+                    "TEKNIK_KETENAGALISTRIKAN",
+                    "TEKNIK_TELEKOMUNIKASI",
+                    "ELEKTRONIKA",
+                    "SISTEM_KENDALI_DAN_KOMPUTER",
+                    "TEKNIK_KOMPUTER",
+                    "TEKNOLOGI_INFORMASI",
+                    "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN",
+                  ]}
+                  selectedOption={dosenData.KK}
+                  placeholder="Pilih KK"
+                  onChange={(value) => setDosenData((prev) => ({ ...prev, KK: value }))}
+                />
               </div>
 
               <div className="form-group half-width">
                 <label htmlFor="jabatan_fungsional">Jabatan Fungsional</label>
-                <select
-                  id="jabatan_fungsional"
-                  name="jabatan_fungsional"
-                  value={dosenData.jabatan_fungsional}
-                  onChange={(e) => setDosenData({ ...dosenData, jabatan_fungsional: e.target.value })}
-                >
-                  <option value="">Pilih Opsi</option>
-                  <option value="ASISTEN_AHLI">Asisten Ahli</option>
-                  <option value="LEKTOR">Lektor</option>
-                  <option value="LEKTOR_KEPALA">Lektor Kepala</option>
-                  <option value="GURU_BESAR">Guru Besar</option>
-                </select>
+                <SortButtonNew
+                  options={["ASISTEN_AHLI", "LEKTOR", "LEKTOR_KEPALA", "GURU_BESAR"]}
+                  selectedOption={dosenData.jabatan_fungsional}
+                  placeholder="Pilih Jabatan Fungsional"
+                  onChange={(value) => setDosenData((prev) => ({ ...prev, jabatan_fungsional: value }))}
+                />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group half-width">
                 <label htmlFor="jenis_kepegawaian">Jenis _kepegawaian</label>
-                <select
-                  id="jenis_kepegawaian"
-                  name="jenis_kepegawaian"
-                  value={dosenData.jenis_kepegawaian}
-                  onChange={(e) => setDosenData({ ...dosenData, jenis_kepegawaian: e.target.value })}
-                >
-                  <option value="">Pilih Opsi</option>
-                  <option value="DOSEN_TETAP">Dosen Tetap</option>
-                  <option value="DOSEN_TAK_TETAP_PENGAJAR">Dosen Tidak Tetap Pengajar</option>
-                  <option value="DOSEN_TAK_TETAP_PENELITI">Dosen Tidak Tetap Peneliti</option>
-                  <option value="DOSEN_LUAR_STEI">Dosen Luar STEI</option>
-                  <option value="DOSEN_LUAR_ITB">Dosen Luar ITB</option>
-                  <option value="DOSEN_INDUSTRI">Dosen Industri</option>
-                  <option value="TUTOR">Tutor</option>
-                </select>
+                <SortButtonNew
+                  options={[
+                    "DOSEN_TETAP",
+                    "DOSEN_TAK_TETAP_PENGAJAR",
+                    "DOSEN_TAK_TETAP_PENELITI",
+                    "DOSEN_LUAR_STEI",
+                    "DOSEN_LUAR_ITB",
+                    "DOSEN_INDUSTRI",
+                    "TUTOR",
+                  ]}
+                  selectedOption={dosenData.jenis_kepegawaian}
+                  placeholder="Pilih Jenis Kepegawaian"
+                  onChange={(value) => setDosenData((prev) => ({ ...prev, jenis_kepegawaian: value }))}
+                />
               </div>
 
               <div className="form-group half-width">
                 <label htmlFor="status_kepegawaian">Status _kepegawaian</label>
-                <select
-                  id="status_kepegawaian"
-                  name="status_kepegawaian"
-                  value={dosenData.status_kepegawaian}
-                  onChange={(e) => setDosenData({ ...dosenData, status_kepegawaian: e.target.value })}
-                >
-                  <option value="">Pilih Opsi</option>
-                  <option value="AKTIF">Aktif</option>
-                  <option value="TIDAK_AKTIF">Tidak Aktif</option>
-                  <option value="PENSIUN">Pensiun</option>
-                  <option value="PENSIUN_JANDA_DUDA">Pensiun Janda/Duda</option>
-                  <option value="MENGUNDURKAN_DIRI">Mengundurkan Diri</option>
-                  <option value="DIBERHENTIKAN_HORMAT">Diberhentikan hormat</option>
-                </select>
+                <SortButtonNew
+                  options={[
+                    "AKTIF",
+                    "TIDAK_AKTIF",
+                    "PENSIUN",
+                    "PENSIUN_JANDA_DUDA",
+                    "MENGUNDURKAN_DIRI",
+                    "DIBERHENTIKAN_HORMAT",
+                  ]}
+                  selectedOption={dosenData.status_kepegawaian}
+                  placeholder="Pilih Status"
+                  onChange={(value) => setDosenData((prev) => ({ ...prev, status_kepegawaian: value }))}
+                />
               </div>
             </div>
 
