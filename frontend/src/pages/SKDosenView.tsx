@@ -70,6 +70,85 @@ const SKDosenView: React.FC = () => {
     navigate(location.state?.from || "/sk");
   };
 
+  const handlePageChange = (page: number) => {
+  if (page > 0 && page <= totalPages) {
+    setCurrentPage(page)
+  }
+}
+
+const renderPaginationItems = () => {
+  const items = []
+
+  items.push(
+    <button
+      key="prev"
+      className="pagination-btn prev"
+      onClick={() => handlePageChange(currentPage - 1)}
+      disabled={currentPage === 1}
+    >
+      <span className="icon-wrapper"><FaChevronLeft /></span>
+    </button>
+  )
+
+  if (totalPages <= 1) return items
+
+  items.push(
+    <button
+      key={1}
+      className={`pagination-btn ${currentPage === 1 ? "active" : ""}`}
+      onClick={() => handlePageChange(1)}
+    >
+      1
+    </button>
+  )
+
+  if (currentPage > 3) {
+    items.push(<span key="ellipsis1" className="pagination-ellipsis">...</span>)
+  }
+
+  for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+    items.push(
+      <button
+        key={i}
+        className={`pagination-btn ${currentPage === i ? "active" : ""}`}
+        onClick={() => handlePageChange(i)}
+      >
+        {i}
+      </button>
+    )
+  }
+
+  if (currentPage < totalPages - 2) {
+    items.push(<span key="ellipsis2" className="pagination-ellipsis">...</span>)
+  }
+
+  if (totalPages > 1) {
+    items.push(
+      <button
+        key={totalPages}
+        className={`pagination-btn ${currentPage === totalPages ? "active" : ""}`}
+        onClick={() => handlePageChange(totalPages)}
+      >
+        {totalPages}
+      </button>
+    )
+  }
+
+  items.push(
+    <button
+      key="next"
+      className="pagination-btn next"
+      onClick={() => handlePageChange(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      <span className="icon-wrapper"><FaChevronRight /></span>
+    </button>
+  )
+
+  return items
+}
+
+
   return (
     <div className="dosen-page">
       <Sidebar />
@@ -94,8 +173,8 @@ const SKDosenView: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="dosen-table-container">
-              <table className="dosen-table">
+            <div className="dosen-table-container" id="sk-table-container">
+              <table className="table">
                 <thead>
                   <tr>
                     <th>No</th>
@@ -105,7 +184,6 @@ const SKDosenView: React.FC = () => {
                     <th>KK</th>
                     <th>Jenis Kepegawaian</th>
                     <th>Status</th>
-                    <th>Instansi Asal</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -118,27 +196,18 @@ const SKDosenView: React.FC = () => {
                       <td>{formatKK(dosen.KK)}</td>
                       <td>{formatJenisKepegawaian(dosen.jenis_kepegawaian)}</td>
                       <td>{dosen.status_kepegawaian.replace(/_/g, " ")}</td>
-                      <td>{dosen.instansi_asal || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <div className="pagination">
-              <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-                <FaChevronLeft />
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                disabled={currentPage === totalPages || totalPages === 0}
-              >
-                <FaChevronRight />
-              </button>
+            <div className="pagination-container">
+              <div className="pagination">
+                {renderPaginationItems()}
+              </div>
             </div>
+
           </>
         )}
       </main>
