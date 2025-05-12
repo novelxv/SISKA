@@ -141,7 +141,7 @@ const EditAkun: React.FC = () => {
         <div className="page-container">
             <Sidebar />
             <ToastContainer />
-            <div className="content-area">
+            <div className="dosen-content">
                 <div className="form-container">
                     <div className="formheader">
                         <button className="back-button" onClick={handleCancel}>
@@ -211,31 +211,32 @@ const EditAkun: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="akun-sort-filter-select">
-                            <SortButtonNew
-                                options={roleOptions.map((r) => r.label)}
-                                selectedOption={roleOptions.find((r) => r.value === formData.role)?.label || ""}
-                                placeholder="Pilih role"
-                                onChange={(label) => {
-                                    const value = roleOptions.find((r) => r.label === label)?.value || "";
-                                    setFormData({ ...formData, role: value as User["role"], jenisKK: "", jenisProdi: "" });
-                                }}
-                            />
-                        </div>
-
-                        {formData.role === "ADMIN_KK" && (
+                        <div className="akun-dropdown">
                             <div className="akun-sort-filter-select">
                                 <SortButtonNew
-                                options={kkOptions.map((kk) => kk.label)}
-                                selectedOption={kkOptions.find((kk) => kk.value === formData.jenisKK)?.label || ""}
-                                placeholder="Pilih Kelompok Keahlian"
-                                onChange={(label) => {
-                                    const value = kkOptions.find((kk) => kk.label === label)?.value || "";
-                                    setFormData({ ...formData, jenisKK: value, jenisProdi: null }); // jangan diubah, biarin aja error
-                                }}
+                                    options={roleOptions.map((r) => r.label)}
+                                    selectedOption={roleOptions.find((r) => r.value === formData.role)?.label || ""}
+                                    placeholder="Pilih role"
+                                    onChange={(label) => {
+                                        const value = roleOptions.find((r) => r.label === label)?.value || "";
+                                        setFormData({ ...formData, role: value as User["role"], jenisKK: "", jenisProdi: "" });
+                                    }}
                                 />
                             </div>
-                        )}
+                                {formData.role === "ADMIN_KK" && (
+                                    <div className="akun-sort-filter-select" id="sort-kk">
+                                        <SortButtonNew
+                                        options={kkOptions.map((kk) => kk.label)}
+                                        selectedOption={kkOptions.find((kk) => kk.value === formData.jenisKK)?.label || ""}
+                                        placeholder="Pilih Kelompok Keahlian"
+                                        onChange={(label) => {
+                                            const value = kkOptions.find((kk) => kk.label === label)?.value || "";
+                                            setFormData({ ...formData, jenisKK: value, jenisProdi: null }); // jangan diubah, biarin aja error
+                                        }}
+                                        />
+                                    </div>
+                                )}
+                        </div>
 
                         {formData.role === "ADMIN_PRODI" && (
                             <div className="akun-sort-filter-select">
@@ -247,7 +248,6 @@ const EditAkun: React.FC = () => {
                                 />
                             </div>
                         )}
-
                         <div className="button-group">
                             <button type="button" onClick={handleCancel} className="btn-cancel">
                                 Batal

@@ -113,7 +113,7 @@ export default function EditDosen() {
     <div className="sk-container">
       <Sidebar />
       <ToastContainer />
-      <div className="content-area">
+      <div className="form-container">
         <div className="form-container">
           <div className="formheader">
             <button className="back-button" onClick={handleCancel}>

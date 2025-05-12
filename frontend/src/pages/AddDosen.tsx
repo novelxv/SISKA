@@ -72,7 +72,7 @@ export default function AddDosen() {
     <div className="sk-container">
       <Sidebar />
       <ToastContainer />
-      <div className="content-area">
+      <div className="dosen-content">
         <div className="form-container">
           <div className="formheader">
             <button className="back-button" onClick={handleCancel}>
