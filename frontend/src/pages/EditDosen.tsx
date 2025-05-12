@@ -7,7 +7,7 @@ import "../styles/Global.css";
 import { useNavigate, useParams } from 'react-router-dom';  // useParams to get URL params
 import { FormEvent } from 'react';
 import SortButtonNew from '../components/SortButtonNew';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 
 const fetchDosenData = async (id: string) => {
@@ -83,7 +83,7 @@ export default function EditDosen() {
       .then(response => {
         if (response.status === 401) {
           // Token tidak valid atau kadaluarsa
-          alert("Sesi Anda telah berakhir. Silakan login kembali.");
+          toast.error("Sesi Anda telah berakhir. Silakan login kembali.");
           localStorage.removeItem("token");
           navigate("/login"); // ganti dengan route login kamu
           return;
@@ -100,7 +100,7 @@ export default function EditDosen() {
       })
       .catch(error => {
         console.error("Error saat menyimpan data dosen:", error);
-        alert("Terjadi kesalahan saat menyimpan data.");
+        toast.error("Terjadi kesalahan saat menyimpan data.");
       });
   };
 
@@ -113,7 +113,7 @@ export default function EditDosen() {
     <div className="sk-container">
       <Sidebar />
       <ToastContainer />
-      <div className="form-container">
+      <div className="dosen-content">
         <div className="form-container">
           <div className="formheader">
             <button className="back-button" onClick={handleCancel}>

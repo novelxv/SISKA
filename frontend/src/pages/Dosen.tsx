@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast, ToastContainer } from 'react-toastify';
 
 interface DosenData {
   id: number;
@@ -41,10 +42,17 @@ export default function Dosen() {
   const [dosenToDelete, setDosenToDelete] = useState<number | null>(null);
 
   const kkOptions = [
-    "KK Informatika", "KK Teknik Ketenagalistrikan", "KK Teknik Telekomunikasi",
-    "KK Elektronika", "KK Sistem dan Komputer", "KK Teknik Komputer",
-    "KK Teknik Biomedika", "KK Teknologi Informasi", "KK Rekayasa Perangkat Lunak dan Pengetahuan"
+    { value: "INFORMATIKA", label: "KK Informatika" },
+    { value: "TEKNIK_KETENAGALISTRIKAN", label: "KK Teknik Ketenagalistrikan" },
+    { value: "TEKNIK_TELEKOMUNIKASI", label: "KK Teknik Telekomunikasi" },
+    { value: "ELEKTRONIKA", label: "KK Elektronika" },
+    { value: "SISTEM_KENDALI_DAN_KOMPUTER", label: "KK Sistem dan Komputer" },
+    { value: "TEKNIK_KOMPUTER", label: "KK Teknik Komputer" },
+    { value: "TEKNIK_BIOMEDIS", label: "KK Teknik Biomedika" },
+    { value: "TEKNOLOGI_INFORMASI", label: "KK Teknologi Informasi" },
+    { value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN", label: "KK Rekayasa Perangkat Lunak dan Pengetahuan" },
   ];
+
   const token = localStorage.getItem("token");
   // Ambil data dari API
   useEffect(() => {
@@ -188,7 +196,7 @@ export default function Dosen() {
       setDosenData(prev => prev.filter(dosen => dosen.id_dosen !== dosenToDelete));
     } catch (error) {
       console.error('Error deleting dosen:', error);
-      alert('Terjadi kesalahan saat menghapus dosen.');
+      toast.error('Terjadi kesalahan saat menghapus dosen.');
     } finally {
       setIsModalOpen(false);
       setDosenToDelete(null);
@@ -360,6 +368,7 @@ export default function Dosen() {
   return (
     <div className="dosen-page">
       <Sidebar />
+      <ToastContainer/>
       <main className="dosen-content">
         <div className="header">
           <h1>Daftar Dosen</h1>
@@ -374,7 +383,7 @@ export default function Dosen() {
             <select value={kk} onChange={(e) => setKK(e.target.value)}>
               <option value="">KK</option>
               {kkOptions.map((option, index) => (
-                <option key={index} value={option}>{option}</option>
+                <option key={index} value={option.value}>{option.label}</option>
               ))}
             </select>
           </div>

@@ -5,9 +5,9 @@ import { ArrowLeft } from 'lucide-react';
 import '../styles/AddDosen.css';
 import '../styles/Global.css';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import SortButtonNew from '../components/SortButtonNew';
+import { toast, ToastContainer } from "react-toastify"
 
 
 export default function AddDosen() {
@@ -37,7 +37,7 @@ export default function AddDosen() {
     console.log(formData);
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Tidak ada token, silakan login kembali.");
+      toast.error("Tidak ada token, silakan login kembali.");
       return;
     }
 
@@ -56,11 +56,11 @@ export default function AddDosen() {
         throw new Error(error.message || "Gagal menambahkan dosen.");
       }
 
-      alert("Dosen berhasil ditambahkan!");
+      toast.success("Dosen berhasil ditambahkan!");
       navigate("/dosen");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Terjadi kesalahan saat mengirim data.");
+      toast.error("Terjadi kesalahan saat mengirim data.");
     }
   };
 
