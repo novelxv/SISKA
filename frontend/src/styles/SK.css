@@ -13,10 +13,11 @@
   }
   
   .skfilters {
+    padding-left: 20px;
+    padding-right: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 24px;
     flex-wrap: nowrap;
   }
   
@@ -117,6 +118,8 @@
   }
   
   .terbit-sk-row {
+    padding-left: 20px;
+    padding-right: 20px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 2vw;
@@ -124,6 +127,7 @@
   
   /* New styles for tab selection */
   .tab-container {
+    padding-left: 20px;
     display: flex;
     margin: 2vw 0 1vw 0;
     border-bottom: 1px solid #e0e0e0;
@@ -173,6 +177,10 @@
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 2vw;
+  }
+
+  .table-div {
+    padding: 20px;
   }
   
   .table th {

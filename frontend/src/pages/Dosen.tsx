@@ -367,7 +367,9 @@ export default function Dosen() {
         </div>
 
         <div className="filter-row">
-          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <div className='dosen-search-bar'>
+            <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
           <div className="filter-select">
             <select value={kk} onChange={(e) => setKK(e.target.value)}>
               <option value="">KK</option>

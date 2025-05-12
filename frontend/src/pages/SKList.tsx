@@ -272,6 +272,7 @@ const SKList = () => {
 
         {activeTab === "published" && (
           <>
+            <div className="table-div">
             <table className="table">
               <thead>
                 <tr>
@@ -334,6 +335,7 @@ const SKList = () => {
                   ))}
               </tbody>
             </table>
+            </div>
 
             <div className="header">
               <h2>Upload SK</h2>
