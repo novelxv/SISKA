@@ -117,7 +117,7 @@ const SKList = () => {
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement("a")
       link.href = url
-      link.setAttribute("download", `SK_${no_sk}.pdf`)
+      link.setAttribute("download", `SK_${no_sk.replace(/ /g, "_").replace(/\//g, "_")}.pdf`)
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -127,11 +127,11 @@ const SKList = () => {
   }
 
   const handleEditDraft = (no_sk: string) => {
-    navigate(`/draft-sk?no_sk=${no_sk}`)
+    navigate(`/draft-sk?no_sk=${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`)
   }
 
   const handlePreview = (no_sk: string) => {
-    window.open(`/preview-sk/${no_sk}`, "_blank")
+    window.open(`/preview-sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`, "_blank")
   }
 
   const handleArchive = async (sk: SK) => {

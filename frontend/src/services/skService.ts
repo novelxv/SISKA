@@ -46,7 +46,7 @@ export const previewSK = async (formData: any): Promise<Blob> => {
 };
 
 export const publishSK = async (no_sk: string) => {
-    return await api.put(`/sk/${no_sk}/publish`);
+    return await api.put(`/sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}/publish`);
 };
 
 export const getPublishedSK = async () => {
@@ -60,22 +60,22 @@ export const getDraftSK = async () => {
 };
 
 export const downloadSK = async (no_sk: string): Promise<Blob> => {
-    const res = await api.get(`/sk/${no_sk}/download`, { responseType: "blob" });
+    const res = await api.get(`/sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}/download`, { responseType: "blob" });
     return res.data;
 };
 
 export const deleteDraftSK = async (no_sk: string) => {
-    const response = await api.delete(`/sk/draft/${no_sk}`);
+    const response = await api.delete(`/sk/draft/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`);
     return response.data;
 };
 
 export const getDraftSKDetail = async (no_sk: string) => {
-    const response = await api.get(`/sk/draft/${no_sk}/detail`);
+    const response = await api.get(`/sk/draft/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}/detail`);
     return response.data;
 };
 
 export const updateDraftSK = async (no_sk: string, data: any) => {
-    const response = await api.put(`/sk/draft/${no_sk}`, data);
+    const response = await api.put(`/sk/draft/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`, data);
     return response.data;
 };
 

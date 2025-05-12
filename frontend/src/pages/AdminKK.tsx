@@ -58,7 +58,7 @@ const AdminKK = () => {
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement("a")
         link.href = url
-        link.setAttribute("download", `SK_${no_sk}.pdf`)
+        link.setAttribute("download", `SK_${no_sk.replace(/ /g, "_").replace(/\//g, "_")}.pdf`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -68,7 +68,7 @@ const AdminKK = () => {
     }
   
     const handlePreview = (no_sk: string) => {
-      window.open(`/preview-sk/${no_sk}`, "_blank")
+      window.open(`/preview-sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`, "_blank")
     }
   
     const fetchData = async () => {

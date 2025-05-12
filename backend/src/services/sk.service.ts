@@ -154,14 +154,14 @@ export const publishSKService = async (no_sk: string): Promise<void> => {
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
-    const filePath = path.join(outputDir, `${no_sk}.pdf`);
+    const filePath = path.join(outputDir, `${no_sk.replace(/ /g, "_").replace(/\//g, "_")}.pdf`);
     fs.writeFileSync(filePath, docBuffer);
 
     await prisma.sK.update({
         where: { no_sk },
         data: {
             status: "PUBLISHED",
-            file_sk: `uploads/sk/${no_sk}.pdf`,
+            file_sk: `uploads/sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}.pdf`,
         },
     });
 };
@@ -200,6 +200,7 @@ export const getDownloadPathService = async (no_sk: string): Promise<string> => 
 };
 
 export const deleteDraftSKService = async (no_sk: string) => {
+    console.log("Deleting SK with no_sk:", no_sk);
     const sk = await prisma.sK.findUnique({ where: { no_sk } });
     if (!sk) throw new Error("SK tidak ditemukan");
 

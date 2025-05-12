@@ -342,7 +342,7 @@ export default function Dosen() {
     });
   
     // Tambahkan footer dengan tanggal cetak
-    const pageCount = doc.internal.getNumberOfPages();
+    const pageCount = doc.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);

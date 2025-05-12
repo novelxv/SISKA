@@ -91,6 +91,7 @@ export const uploadSKFile = [
             res.status(400).json({
                 message: err.message || "Gagal menyimpan metadata file SK",
             });
+            return;
         }
     },
 ];
@@ -120,7 +121,8 @@ export const getDraftSKs = async (req: Request, res: Response) => {
 export const publishSK = async (req: Request, res: Response) => {
     try {
         const { no_sk } = req.params;
-        await publishSKService(no_sk);
+        const originalNoSK = no_sk.replace(/_/g, "/");
+        await publishSKService(originalNoSK);
         res.status(200).json({ message: "SK berhasil diterbitkan" });
     } catch (err) {
         res.status(500).json({ message: "Gagal menerbitkan SK" });
@@ -165,8 +167,9 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
 export const downloadPublishedSK = async (req: Request, res: Response) => {
     try {
         const { no_sk } = req.params;
-        const filePath = await getDownloadPathService(no_sk);
-        res.download(filePath, `SK_${no_sk}.pdf`);
+        const originalNoSK = no_sk.replace(/_/g, "/");
+        const filePath = await getDownloadPathService(originalNoSK);
+        res.download(filePath, `SK_${no_sk.replace(/ /g, "_").replace(/\//g, "_")}.pdf`);
     } catch (err) {
         console.error("Download SK error:", err);
         res.status(500).json({ message: (err as Error).message || "Gagal mengunduh SK" });
@@ -176,20 +179,27 @@ export const downloadPublishedSK = async (req: Request, res: Response) => {
 export const getSKDetail = async (req: Request, res: Response) => {
     try {
         const { no_sk } = req.params;
-        const sk = await getSKDetailService(no_sk);
-        if (!sk) res.status(404).json({ message: "SK tidak ditemukan" });
+        const originalNoSK = no_sk.replace(/_/g, "/");
+        const sk = await getSKDetailService(originalNoSK);
+        if (!sk) {
+            res.status(404).json({ message: "SK tidak ditemukan" });
+            return;
+        }
         
         res.status(200).json(sk);
+        return;
     } catch (err) {
         console.error("Error get detail SK:", err);
         res.status(500).json({ message: "Gagal mengambil detail SK" });
+        return;
     }
 };
 
 export const deleteDraftSK = async (req: Request, res: Response) => {
     try {
         const { no_sk } = req.params;
-        await deleteDraftSKService(no_sk);
+        const originalNoSK = no_sk.replace(/_/g, "/");
+        await deleteDraftSKService(originalNoSK);
         res.status(200).json({ message: "Draft SK berhasil dihapus" });
     } catch (err) {
         console.error("Error delete draft SK:", err);
@@ -200,22 +210,27 @@ export const deleteDraftSK = async (req: Request, res: Response) => {
 export const getDraftSKDetail = async (req: Request, res: Response) => {
     try {
         const { no_sk } = req.params;
-        const draft = await getDraftSKDetailService(no_sk);
+        const originalNoSK = no_sk.replace(/_/g, "/");
+        const draft = await getDraftSKDetailService(originalNoSK);
         if (!draft) {
             res.status(404).json({ message: "Draft SK tidak ditemukan" });
+            return;
         }
         res.status(200).json(draft);
+        return;
     } catch (err) {
         console.error("Error get draft SK detail:", err);
         res.status(500).json({ message: "Gagal mengambil detail draft SK" });
+        return;
     }
 };
 
 export const updateDraftSK = async (req: Request, res: Response) => {
     try {
         const { no_sk } = req.params;
+        const originalNoSK = no_sk.replace(/_/g, "/");
         const data = req.body;
-        const updatedDraft = await updateDraftSKService(no_sk, data);
+        const updatedDraft = await updateDraftSKService(originalNoSK, data);
         res.status(200).json(updatedDraft);
     } catch (err) {
         console.error("Error update draft SK:", err);
@@ -250,7 +265,8 @@ export const validateAsistenExcel = (req: Request, res: Response) => {
 export const archiveSK = async (req: Request, res: Response): Promise<void> => {
   try {
     const { no_sk } = req.params;
-    await archiveSKService(no_sk);
+    const originalNoSK = no_sk.replace(/_/g, "/");
+    await archiveSKService(originalNoSK);
     res.status(200).json({ message: "SK berhasil diarsipkan" });
   } catch (err) {
     console.error("Error mengarsipkan SK:", err);
@@ -261,7 +277,8 @@ export const archiveSK = async (req: Request, res: Response): Promise<void> => {
 export const unarchiveSK = async (req: Request, res: Response): Promise<void> => {
   try {
     const { no_sk } = req.params;
-    await unarchiveSKService(no_sk);
+    const originalNoSK = no_sk.replace(/_/g, "/");
+    await unarchiveSKService(originalNoSK);
     res.status(200).json({ message: "SK berhasil dipulihkan" });
   } catch (err) {
     console.error("Error memulihkan SK:", err);
