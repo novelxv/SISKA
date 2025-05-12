@@ -237,7 +237,7 @@ const KelolaAkun: React.FC = () => {
 
                 </div>
 
-                <div className="table-container">
+                <div className="dosen-table-container" id="sk-table-container">
                     <table className="table">
                         <thead>
                             <tr>

@@ -390,11 +390,11 @@ export default function Dosen() {
         </div>
 
         <div className="dosen-table-container">
-          <table className="dosen-table">
+          <table className="table">
             <thead>
               <tr>
                 <th>No</th>
-                <th>Nama Dosen Tanpa Gelar</th>
+                <th>Nama Dosen</th>
                 <th>NIDN</th>
                 <th>Nopeg</th>
                 <th>KK</th>
@@ -423,13 +423,11 @@ export default function Dosen() {
                   <td>{dosen.aktif_mulai}</td>
                   <td>{dosen.aktif_sampai}</td>
                   <td>{dosen.instansi_asal}</td>
-                  <td className="action-buttons">
-                    <button className="edit-btn" title="Edit" onClick={() => handleEditDosen(dosen.id_dosen)}>
-                      <span className="icon-wrapper"><FaEdit /></span>
-                    </button>
-                    <button className="delete-btn" title="Delete" onClick={() => handleDeleteDosen(dosen)}>
-                      <span className="icon-wrapper"><FaTrash /></span>
-                    </button>
+                  <td>
+                    <div className="action-icons">
+                        <FaEdit onClick={() => handleEditDosen(dosen.id_dosen)} />
+                        <FaTrash onClick={() => handleDeleteDosen(dosen)} />
+                    </div>
                   </td>
                 </tr>
               ))}

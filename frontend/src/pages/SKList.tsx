@@ -272,7 +272,7 @@ const SKList = () => {
 
         {activeTab === "published" && (
           <>
-            <div className="table-div">
+            <div className="dosen-table-container" id="sk-table-container">
             <table className="table">
               <thead>
                 <tr>
