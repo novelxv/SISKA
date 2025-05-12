@@ -90,7 +90,7 @@ const DraftSK = () => {
         setNoSK(draftData.no_sk || "")
         setTanggal(draftData.tanggal ? draftData.tanggal.split("T")[0] : "") // Format date for input
         setSemester(draftData.semester || 1)
-        setTahunAkademik(draftData.tahun_akademik || 0)
+        setTahunAkademik(draftData.tahun_akademik.toString() + "/" + (draftData.tahun_akademik + 1).toString() || "")
         setNipDekan(draftData.NIP_dekan || "")
         setNamaDekan(draftData.Dekan?.nama || "")
 
@@ -184,7 +184,7 @@ const DraftSK = () => {
       judul,
       jenis_sk: selectedJenisSK,
       semester: Number(semester),
-      tahun_akademik: Number(tahunAkademik),
+      tahun_akademik: Number(tahunAkademik.substring(0, 4)),
       tanggal,
       NIP_dekan: nipDekan,
       nama_dekan: namaDekan,
