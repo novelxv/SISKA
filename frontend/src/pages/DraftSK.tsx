@@ -183,7 +183,7 @@ const DraftSK = () => {
       no_sk: noSK,
       judul,
       jenis_sk: selectedJenisSK,
-      semester: Number(semester),
+      semester: Number(semester) % 2 === 0 ? 2 : 1,
       tahun_akademik: Number(tahunAkademik.substring(0, 4)),
       tanggal,
       NIP_dekan: nipDekan,
@@ -275,34 +275,38 @@ const DraftSK = () => {
   }
 
   return (
-    <div className="container">
+    <div className="page-container">
       <Sidebar />
       <ToastContainer />
-      <div className="content">
-        <div className="draftheader">
-          <div className="title back-button" onClick={navToSK}>
-            <FaAngleLeft />
-          </div>
-          <h1 className="title">{isEditMode ? "Edit Draft SK" : "Draft SK Baru"}</h1>
-        </div>
-        <form>
-          <div>Template: </div>
-          <div className="inputrow1">
-            <div className="template">
-              <SortButtonNew
-                options={jenisSKOptions.map((key) => jenisSKMap[key])}
-                selectedOption={jenisSKMap[selectedJenisSK] ?? ""}
-                onChange={(selectedLabel) => {
-                  const key = Object.entries(jenisSKMap).find(([_, label]) => label === selectedLabel)?.[0] || ""
-                  handleJenisSKChange(key)
-                }}
-                placeholder="Pilih Jenis SK"
-              />
+      <div className="dosen-content">
+        <div className="draft-title">
+          <div className="header" id="draft-header">
+            <div className="title back-button" onClick={navToSK}>
+              <FaAngleLeft />
             </div>
+            <h1 className="title">{isEditMode ? "Edit Draft SK" : "Draft SK Baru"}</h1>
+          </div>
             <div className="button-blue" onClick={handlePreview}>
               <FaRegEye />
               Preview
             </div>
+        </div>
+        <form className="form-container">
+          <div className="draft-template">
+            <p>Template: * </p>
+              <div className="inputrow1">
+                <div className="template">
+                  <SortButtonNew
+                    options={jenisSKOptions.map((key) => jenisSKMap[key])}
+                    selectedOption={jenisSKMap[selectedJenisSK] ?? ""}
+                    onChange={(selectedLabel) => {
+                      const key = Object.entries(jenisSKMap).find(([_, label]) => label === selectedLabel)?.[0] || ""
+                      handleJenisSKChange(key)
+                    }}
+                    placeholder="Pilih Jenis SK"
+                    />
+                </div>
+              </div>
           </div>
           {getExcelStatusMessage()}
 
@@ -317,22 +321,29 @@ const DraftSK = () => {
           </div>
 
           <div className="inputrow3">
-            <InputField
-              label="Nomor SK"
-              name="noSK"
-              value={noSK}
-              onChange={(e) => setNoSK(e.target.value)}
-              required={true}
-              placeholder="Contoh: 123/SK/2024"
-            />
-            <InputField
-              label="Tanggal"
-              name="tanggal"
-              type="date"
-              value={tanggal}
-              onChange={(e) => setTanggal(e.target.value)}
-              required={true}
-            />
+            <div className="input-nomor">
+              <InputField
+                label="Nomor SK"
+                name="noSK"
+                value={noSK}
+                onChange={(e) => setNoSK(e.target.value)}
+                required={true}
+                placeholder="Contoh: 123/SK/2024"
+              />
+            </div>
+            <div className="input-tanggal">
+              <InputField
+                label="Tanggal"
+                name="tanggal"
+                type="date"
+                value={tanggal}
+                onChange={(e) => setTanggal(e.target.value)}
+                required={true}
+              />
+            </div>
+          </div>
+
+          <div className="inputrow7">
             <InputField
               label= {selectedJenisSK == "PEMBIMBING_PENGUJI" ? "Wisuda" : "Semester"}
               name="semester"
@@ -375,13 +386,22 @@ const DraftSK = () => {
           </div>
 
           <div className="inputrow5">
-            <div>
-              <div>TTD Dekan</div>
-              <div className="button-white">
+              <div>TTD Dekan:</div>
+              <div className="signpreview">
+                {ttdPreview ? (
+                  <img className="previewimg" src={ttdPreview || "/placeholder.svg"} alt="Preview TTD" />
+                ) : ttdFilename ? (
+                  <div className="ttd-filename">File TTD tersimpan: {ttdFilename}</div>
+                ) : (
+                  <FaImage className="previewimg" />
+                )}
+              </div>
+              <div className="button-white" id="button-white">
                 <label htmlFor="upload-ttd" style={{ cursor: "pointer" }}>
                   <FaFileArrowUp /> Pilih file
                 </label>
                 <input
+                  className="sign-input-button"
                   type="file"
                   id="upload-ttd"
                   accept="image/*"
@@ -389,18 +409,9 @@ const DraftSK = () => {
                   style={{ display: "none" }}
                 />
               </div>
-            </div>
-            <div className="signpreview">
-              {ttdPreview ? (
-                <img className="previewimg" src={ttdPreview || "/placeholder.svg"} alt="Preview TTD" />
-              ) : ttdFilename ? (
-                <div className="ttd-filename">File TTD tersimpan: {ttdFilename}</div>
-              ) : (
-                <FaImage className="previewimg" />
-              )}
-            </div>
           </div>
 
+        </form>
           <div className="inputrow6">
             <div className="downloads">
               <div className="terbit button-blue" onClick={handleTerbitkan}>
@@ -411,7 +422,6 @@ const DraftSK = () => {
               </div>
             </div>
           </div>
-        </form>
       </div>
     </div>
   )

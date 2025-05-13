@@ -12,6 +12,27 @@
     overflow-y: scroll;
 }
 
+.draft-template {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+#draft-header {
+    margin-bottom: 0;
+    justify-content: left;
+}
+
+.draft-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 0;
+    width: 100%;
+}
+
 .draftheader {
     display: flex;
     flex-direction: row;
@@ -45,10 +66,17 @@
 }
 
 .button-blue, .button-white {
+    min-width: 150px;
     display: flex;
     gap: 1vw;
+    height: fit-content;
     align-items: center;
     width: fit-content;
+}
+
+#button-white {
+    width: 175px;
+    padding: 0;
 }
 
 .template {
@@ -70,10 +98,18 @@
 }
 
 .inputrow3 {
-    display: grid;
-    grid-template-columns: 48% 32% 16%;
-    gap: 2%;
-    margin: 1vw 0;
+  display: flex;
+  gap: 2%;
+  width: 100%;
+}
+
+.inputrow3 .input-tanggal,
+.inputrow3 .input-nomor {
+  flex: 1;
+}
+
+.input-tanggal {
+    width:100%;
 }
 
 .inputrow4 {
@@ -85,10 +121,16 @@
 
 .inputrow5 {
     display: flex;
-    width: 50%;
+    flex-direction: column;
+    width: 100%;
     justify-content: flex-start;
-    gap: 2vw;
+    gap: 5px;
     margin: 1vw 0;
+}
+
+.inputrow7 {
+    display: flex;
+    gap: 2%;
 }
 
 .signpreview {
@@ -108,10 +150,13 @@
 }
 
 .inputrow6 {
+    border-top: solid rgb(169, 169, 169) 1px;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     margin: 1vw 0;
+    padding-top: 15px;
 }
 
 .downloads {
@@ -122,6 +167,7 @@
 
 .terbit {
     background-color: #29388F;
+    min-width: 150px;
 }
 
 .loading {
@@ -171,3 +217,24 @@
     margin-bottom: 4px;
   }
   
+.input-tanggal input[type="date"] {
+  position: relative;
+}
+
+/* Add a custom calendar icon */
+.input-tanggal input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 1;
+  background-color: #4e5968;
+  border-radius: 3px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+/* Ensure the icon is visible on hover */
+.input-tanggal input[type="date"]:hover::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
