@@ -4,11 +4,6 @@
   background-color: white;
 }
 
-.content-area {
-  flex: 1;
-  padding: 3rem 5rem;
-}
-
 .form-container {
   margin: 0 auto;
 }
@@ -31,6 +26,12 @@
   font-size: 1.5rem;
   font-weight: bold;
   justify-content: none;
+}
+
+.akun-dropdown {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .form-group {

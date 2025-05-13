@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { getLoggedInUser } from "../services/authService";
 import { getUsers, deleteUser, User } from "../services/userService";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const KelolaAkun: React.FC = () => {
     const navigate = useNavigate();
@@ -50,6 +51,10 @@ const KelolaAkun: React.FC = () => {
     if (page > 0 && page <= totalPages) {
         setCurrentPage(page);
     }
+    };
+
+    const cancelDelete = () => {
+        setIsModalOpen(false);
     };
     
     const renderPaginationItems = () => {
@@ -290,16 +295,13 @@ const KelolaAkun: React.FC = () => {
 
             {/* Confirmation Delete */}
             {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <h2>Yakin untuk hapus akun ini?</h2>
-                        <p>Aksi ini tidak bisa dibatalkan.</p>
-                        <div className="modal-buttons">
-                            <button className="button-outline" onClick={() => setIsModalOpen(false)}>Batal</button>
-                            <button className="button-confirm" onClick={confirmDelete}>Konfirmasi</button>
-                        </div>
-                    </div>
-                </div>
+                <ConfirmationModal
+                    isOpen={isModalOpen}
+                    title="Konfirmasi Hapus"
+                    message="Apakah Anda yakin ingin menghapus akun ini?"
+                    onConfirm={confirmDelete}
+                    onCancel={cancelDelete}
+                />
             )}
 
             <ToastContainer />
