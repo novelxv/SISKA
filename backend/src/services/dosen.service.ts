@@ -66,3 +66,32 @@ export const deleteDosenService = async (id: number) => {
         where: { id_dosen: id },
     });
 };
+
+export const getDosenPengajaran = async (namaDosen: String) => {
+    try {
+        const dosen = await prisma.dosen.findFirst({
+            where: {
+                nama_plus_gelar: namaDosen.trim()
+            },
+            select: {
+                nama_plus_gelar: true,
+                NIP: true,
+                KK: true,
+                jenis_kepegawaian: true,
+            }
+        });
+
+        if (dosen) {
+            return {
+                nama_dosen: dosen.nama_plus_gelar,
+                nip_dosen: dosen.NIP,
+                kk: dosen.KK,
+                jenis_kepegawaian: dosen.jenis_kepegawaian,
+            };
+        } else {
+            console.log(`Dosen dengan nama ${namaDosen} tidak ditemukan`);
+        }
+    } catch (error) {
+        console.error('Error saat mengambil data dosen:', error);
+    }
+}
