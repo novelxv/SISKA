@@ -225,7 +225,7 @@ const DraftSK = () => {
         no_sk: noSK,
         judul,
         jenis_sk: selectedJenisSK,
-        tahun_akademik: tahunAkademik,
+        tahun_akademik: Number(tahunAkademik.substring(0, 4)),
         semester: Number(semester),
         tanggal,
         NIP_dekan: nipDekan,
@@ -334,7 +334,7 @@ const DraftSK = () => {
               required={true}
             />
             <InputField
-              label="Semester"
+              label= {selectedJenisSK == "PEMBIMBING_PENGUJI" ? "Wisuda" : "Semester"}
               name="semester"
               type="number"
               value={semester.toString()}
