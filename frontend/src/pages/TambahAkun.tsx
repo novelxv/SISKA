@@ -24,6 +24,8 @@ const TambahAkun: React.FC = () => {
     jenisProdi: "",
   });
 
+  const mapProdiToEnum = (prodi: string) => `PRODI_${prodi}`;
+
   const handleSimpan = async () => {
     // Validasi username
     if (formData.username.length < 5 || formData.username.length > 20) {
@@ -61,7 +63,7 @@ const TambahAkun: React.FC = () => {
         formData.password,
         formData.role,
         formData.jenisKK || undefined,
-        formData.jenisProdi || undefined
+        formData.jenisProdi ? mapProdiToEnum(formData.jenisProdi) : undefined
       );
       toast.success("Akun berhasil ditambahkan!");
       navigate("/kelola-akun");
@@ -108,7 +110,7 @@ const TambahAkun: React.FC = () => {
     { label: "Rekayasa Perangkat Lunak dan Pengetahuan", value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN" },
   ];
 
-  const prodiOptions = ["IF", "II", "EL", "ET", "EP", "EB"];
+  const prodiOptions = ["132", "135", "180", "181", "182", "183", "232", "235", "332", "932", "935"];
 
   return (
     <div className="page-container">

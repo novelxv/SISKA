@@ -254,7 +254,7 @@ export const updateDraftSKService = async (no_sk: string, data: any) => {
     });
 };
 
-const PRODI_CODES = ["IF", "II", "EL", "EP", "ET", "EB"];
+const PRODI_CODES = ["132", "135", "180", "181", "182", "183", "232", "235", "332", "932", "935"];
 
 function checkExcelByProdi(dirPath: string): boolean {
   if (!fs.existsSync(dirPath)) return false;

@@ -231,10 +231,15 @@ model UploadStatus {
 }
 
 enum Prodi {
-  IF
-  II
-  EL
-  ET
-  EP
-  EB
+    PRODI_132 @map("132")
+    PRODI_135 @map("135")
+    PRODI_180 @map("180")
+    PRODI_181 @map("181")
+    PRODI_182 @map("182")
+    PRODI_183 @map("183")
+    PRODI_232 @map("232")
+    PRODI_235 @map("235")
+    PRODI_332 @map("332")
+    PRODI_932 @map("932")
+    PRODI_935 @map("935")
 }

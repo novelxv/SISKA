@@ -130,8 +130,8 @@ export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Pro
   if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir, { recursive: true });
   }
-
-  const kodeProdi = req.user?.kodeProdi || "UNKNOWN";
+  
+  const kodeProdi = req.user?.kodeProdi ? req.user.kodeProdi.replace("PRODI_", "") : "UNKNOWN";
 
   let fileName: string;
   if (jenis === "dosen-wali") {

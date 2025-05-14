@@ -34,7 +34,7 @@ const EditAkun: React.FC = () => {
         { label: "Rekayasa Perangkat Lunak dan Pengetahuan", value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN" },
     ];
 
-    const prodiOptions = ["IF", "II", "EL", "ET", "EP", "EB"];
+    const prodiOptions = ["132", "135", "180", "181", "182", "183", "232", "235", "332", "932", "935"];
 
     const [formData, setFormData] = useState({
         username: "",
@@ -76,6 +76,8 @@ const EditAkun: React.FC = () => {
         fetchUser();
     }, [id]);
 
+    const mapProdiToEnum = (prodi: string) => `PRODI_${prodi}`;
+
     const handleSimpan = async () => {
         // Validasi username
         if (formData.username.length < 5 || formData.username.length > 20) {
@@ -109,6 +111,7 @@ const EditAkun: React.FC = () => {
 
         try {
             if (id) {
+                formData.jenisProdi = formData.jenisProdi ? mapProdiToEnum(formData.jenisProdi) : null;
                 await updateUser(parseInt(id), formData);
                 toast.success("Akun berhasil diedit!");
                 navigate("/kelola-akun");
