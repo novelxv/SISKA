@@ -23,6 +23,9 @@ export default function AddDosen() {
     jabatanFungsional: '',
     jenisKepegawaian: '',
     statusKepegawaian: '',
+    aktif_mulai: '',
+    aktif_sampai: '',
+    instansi_asal: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -93,7 +96,7 @@ export default function AddDosen() {
 
             <div className="form-row">
               <div className="form-group half-width">
-                <label htmlFor="kelompokKeahlian">Kelompok Keahlian</label>
+                <label htmlFor="kelompokKeahlian" style={{ fontSize: '0.9rem', color: '#333' }}>Kelompok Keahlian</label>
                 <SortButtonNew
                   options={[
                     "INFORMATIKA",
@@ -114,7 +117,7 @@ export default function AddDosen() {
               </div>
 
               <div className="form-group half-width">
-                <label htmlFor="jabatanFungsional">Jabatan Fungsional</label>
+                <label htmlFor="jabatanFungsional" style={{ fontSize: '0.9rem', color: '#333' }}>Jabatan Fungsional</label>
                   <SortButtonNew
                     options={["ASISTEN_AHLI", "LEKTOR", "LEKTOR_KEPALA", "GURU_BESAR"]}
                     selectedOption={formData.jabatanFungsional}
@@ -127,7 +130,8 @@ export default function AddDosen() {
             </div>
             <div className="form-row">
               <div className="form-group half-width">
-                <label htmlFor="jenisKepegawaian">Jenis Kepegawaian</label>
+                <label htmlFor="jenisKepegawaian"
+                style={{ fontSize: '0.9rem', color: '#333' }}>Jenis Kepegawaian</label>
                 <SortButtonNew
                   options={[
                     "DOSEN_TETAP",
@@ -147,13 +151,15 @@ export default function AddDosen() {
               </div>
 
               <div className="form-group half-width">
-                <label htmlFor="statusKepegawaian">Status Kepegawaian</label>
+                <label htmlFor="statusKepegawaian" 
+                      style={{ fontSize: '0.9rem', color: '#333' }}> Status Kepegawaian <span style={{ color: 'red' }}>*</span></label>
                 <SortButtonNew
                   options={[
                     "AKTIF",
                     "TIDAK_AKTIF",
                     "PENSIUN",
                     "PENSIUN_JANDA_DUDA",
+                    "TUGAS_BELAJAR",
                     "MENGUNDURKAN_DIRI",
                     "DIBERHENTIKAN_HORMAT",
                   ]}
@@ -165,6 +171,27 @@ export default function AddDosen() {
                 />
               </div>
             </div>
+            <div className="form-row">
+              <div className="input-tanggal">
+                <InputField
+                  label="Aktif Mulai"
+                  name="aktif_mulai"
+                  type="date"
+                  value={formData.aktif_mulai}
+                  onChange={handleChange}
+                />
+              </div>   
+              <div className="input-tanggal">
+                <InputField
+                  label="Aktif Sampai"
+                  name="aktif_sampai"
+                  type="date"
+                  value={formData.aktif_sampai}
+                  onChange={handleChange}
+                />
+              </div> 
+            </div>
+            <InputField label="Instansi Asal" name="instansi_asal" value={formData.instansi_asal} onChange={handleChange} />
 
             <div className="form-actions">
               <button type="button" className="btn btn-cancel" onClick={() => navigate("/dosen")}>

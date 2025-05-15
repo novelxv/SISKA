@@ -264,6 +264,32 @@ export default function Dosen() {
     return jf;
   };
   
+  const formatStatus = (Status: string) => {
+    if (Status === "AKTIF") {
+      return "Aktif";
+    } else if (Status === "TIDAK_AKTIF") {
+      return "Tidak Aktif";
+    } else if (Status === "PENSIUN") {
+      return "Pensiun";
+    } else if (Status === "PENSIUN_JANDA_DUDA") {
+      return "Pensiun Janda/Duda";
+    } else if (Status === "TUGAS_BELAJAR") {
+      return "Tugas Belajar";
+    } else if (Status === "MENGUNDURKAN_DIRI") {
+      return "Mengundurkan Diri";
+    } else if (Status === "DIBERHENTIKAN_HORMAT") {
+      return "Diberhentikan Hormat";
+    }
+    return Status;
+  };
+
+const formatDate = (isoDate: string): string => {
+  if (!isoDate) return '';
+  return new Date(isoDate).toISOString().slice(0, 10); 
+};
+
+
+  
   const handleDownloadPDF = () => {
     // Buat dokumen PDF dengan orientasi landscape
     const doc = new jsPDF({
@@ -428,9 +454,9 @@ export default function Dosen() {
                   <td>{formatJK(dosen.jenis_kepegawaian)}</td>
                   <td>{dosen.pangkat}</td>
                   <td>{formatJF(dosen.jabatan_fungsional)}</td>
-                  <td>{dosen.status_kepegawaian}</td>
-                  <td>{dosen.aktif_mulai}</td>
-                  <td>{dosen.aktif_sampai}</td>
+                  <td>{formatStatus(dosen.status_kepegawaian)}</td>
+                  <td>{formatDate(dosen.aktif_mulai)}</td>
+                  <td>{formatDate(dosen.aktif_sampai)}</td>
                   <td>{dosen.instansi_asal}</td>
                   <td>
                     <div className="action-icons">

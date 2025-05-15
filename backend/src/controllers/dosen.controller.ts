@@ -8,7 +8,6 @@ import {
 } from "../services/dosen.service";
 
 export const createDosen = async (req: Request, res: Response) => {
-    console.log("nyampe di sini")
     try {
         const data = req.body;
         console.log("data", req.body);

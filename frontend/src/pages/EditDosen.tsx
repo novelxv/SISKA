@@ -9,6 +9,7 @@ import { FormEvent } from 'react';
 import SortButtonNew from '../components/SortButtonNew';
 import { toast, ToastContainer } from 'react-toastify';
 import { RiArrowLeftSLine } from 'react-icons/ri';
+import { checkWaliAktifExcel } from '../services/skService';
 
 const fetchDosenData = async (id: string) => {
   const token = localStorage.getItem('token');
@@ -44,6 +45,9 @@ export default function EditDosen() {
     jabatan_fungsional: '',
     jenis_kepegawaian: '',
     status_kepegawaian: '',
+    aktif_mulai: '',
+    aktif_sampai: '',
+    instansi_asal: '',
   });
 
   useEffect(() => {
@@ -60,6 +64,9 @@ export default function EditDosen() {
             jabatan_fungsional: data.jabatan_fungsional || '',
             jenis_kepegawaian: data.jenis_kepegawaian || '',
             status_kepegawaian: data.status_kepegawaian || '',
+            aktif_mulai: data.aktif_mulai ? new Date(data.aktif_mulai).toISOString().split('T')[0] : '',
+            aktif_sampai: data.aktif_sampai ? new Date(data.aktif_sampai).toISOString().split('T')[0] : '',
+            instansi_asal: data.instansi_asal || '',
           });
         })
         .catch(error => {
@@ -163,7 +170,7 @@ export default function EditDosen() {
 
             <div className="form-row">
               <div className="form-group half-width">
-                <label htmlFor="KK">Kelompok Keahlian</label>
+                <label htmlFor="KK" style={{ fontSize: '0.9rem', color: '#333' }}>Kelompok Keahlian</label>
                 <SortButtonNew
                   options={[
                     "INFORMATIKA",
@@ -182,7 +189,7 @@ export default function EditDosen() {
               </div>
 
               <div className="form-group half-width">
-                <label htmlFor="jabatan_fungsional">Jabatan Fungsional</label>
+                <label htmlFor="jabatan_fungsional" style={{ fontSize: '0.9rem', color: '#333' }}>Jabatan Fungsional</label>
                 <SortButtonNew
                   options={["ASISTEN_AHLI", "LEKTOR", "LEKTOR_KEPALA", "GURU_BESAR"]}
                   selectedOption={dosenData.jabatan_fungsional}
@@ -194,7 +201,7 @@ export default function EditDosen() {
 
             <div className="form-row">
               <div className="form-group half-width">
-                <label htmlFor="jenis_kepegawaian">Jenis _kepegawaian</label>
+                <label htmlFor="jenis_kepegawaian" style={{ fontSize: '0.9rem', color: '#333' }}>Jenis Kepegawaian</label>
                 <SortButtonNew
                   options={[
                     "DOSEN_TETAP",
@@ -212,7 +219,7 @@ export default function EditDosen() {
               </div>
 
               <div className="form-group half-width">
-                <label htmlFor="status_kepegawaian">Status _kepegawaian</label>
+                <label htmlFor="status_kepegawaian" style={{ fontSize: '0.9rem', color: '#333' }}>Status Kepegawaian <span style={{ color: 'red' }}>*</span></label>
                 <SortButtonNew
                   options={[
                     "AKTIF",
@@ -228,6 +235,29 @@ export default function EditDosen() {
                 />
               </div>
             </div>
+
+            <div className="form-row">
+              <div className="input-tanggal">
+                <InputField
+                  label="Aktif Mulai"
+                  name="aktif_mulai"
+                  type="date"
+                  value={dosenData.aktif_mulai}
+                  onChange={(e) => setDosenData({ ...dosenData, aktif_mulai: e.target.value })}
+                />
+              </div>   
+              <div className="input-tanggal">
+                <InputField
+                  label="Aktif Sampai"
+                  name="aktif_sampai"
+                  type="date"
+                  value={dosenData.aktif_sampai}
+                  onChange={(e) => setDosenData({ ...dosenData, aktif_sampai: e.target.value })}
+                />
+              </div> 
+            </div>
+            <InputField label="Instansi Asal" name="instansi_asal" value={dosenData.instansi_asal} onChange={(e) => setDosenData({ ...dosenData, instansi_asal: e.target.value })} />
+
 
             <div className="form-actions">
               <button type="button" className="btn btn-cancel" onClick={() => navigate("/dosen")}>
