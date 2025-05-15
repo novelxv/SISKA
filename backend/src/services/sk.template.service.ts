@@ -59,25 +59,35 @@ function getPengajaranData(){
                 }
             ],
             luar: []
-        }
+        },
+        teknik_informatika: {},
+        teknik_tenaga_listrik: {},
+        teknik_telekomunikasi: {},
+        sistem_teknologi_informasi: {},
+        teknik_biomedis: {},
+        magister_teknik_elektro: {},
+        magister_teknik_informatika: {},
+        doktor_elektro_informatika: {},
+        ppi_elektro: {},
+        ppi_informatika: {}
     }
 }
 
 function getWaliTPBData() {
     return {
-            steik : [
-                {nama_dosen: 'Arrival Dwi Sentosa, S.Kom., M.T.', nip_dosen: '223122016', no: [1, 2, 3], nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
-                {nama_dosen: 'Atina Putri, S.Kom., M.T.', nip_dosen: '223122017', no: [1, 2], nim: ['19624058', '19624059'], mhs: ['Forza Derian', 'Mikhael Andrian Yonatan']},
-            ],
-            steir : [
-                {nama_dosen: 'Arrival Dwi Sentosa, S.Kom., M.T.', nip_dosen: '223122016', no: [1, 2, 3], nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
-                {nama_dosen: 'Atina Putri, S.Kom., M.T.', nip_dosen: '223122017', no: [1, 2], nim: ['19624058', '19624059'], mhs: ['Forza Derian', 'Mikhael Andrian Yonatan']},
-            ],
-            inter : [
-                {nama_dosen: 'Arrival Dwi Sentosa, S.Kom., M.T.', nip_dosen: '223122016', no: [1, 2, 3], nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
-                {nama_dosen: 'Atina Putri, S.Kom., M.T.', nip_dosen: '223122017', no: [1, 2], nim: ['19624058', '19624059'], mhs: ['Forza Derian', 'Mikhael Andrian Yonatan']},
-            ]
-        }
+        steik : [
+            {nama_dosen: 'Arrival Dwi Sentosa, S.Kom., M.T.', nip_dosen: '223122016', no: [1, 2, 3], nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+            {nama_dosen: 'Atina Putri, S.Kom., M.T.', nip_dosen: '223122017', no: [1, 2], nim: ['19624058', '19624059'], mhs: ['Forza Derian', 'Mikhael Andrian Yonatan']},
+        ],
+        steir : [
+            {nama_dosen: 'Arrival Dwi Sentosa, S.Kom., M.T.', nip_dosen: '223122016', no: [1, 2, 3], nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+            {nama_dosen: 'Atina Putri, S.Kom., M.T.', nip_dosen: '223122017', no: [1, 2], nim: ['19624058', '19624059'], mhs: ['Forza Derian', 'Mikhael Andrian Yonatan']},
+        ],
+        inter : [
+            {nama_dosen: 'Arrival Dwi Sentosa, S.Kom., M.T.', nip_dosen: '223122016', no: [1, 2, 3], nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+            {nama_dosen: 'Atina Putri, S.Kom., M.T.', nip_dosen: '223122017', no: [1, 2], nim: ['19624058', '19624059'], mhs: ['Forza Derian', 'Mikhael Andrian Yonatan']},
+        ]
+    }
 }
 
 function getWaliAktifData() {
@@ -99,65 +109,85 @@ function getWaliAktifData() {
                     ]
                 },
             ],
-        }
+        },
+        teknik_informatika: {},
+        teknik_tenaga_listrik: {},
+        teknik_telekomunikasi: {},
+        sistem_teknologi_informasi: {},
+        teknik_biomedis: {},
+        magister_teknik_elektro: {},
+        magister_teknik_informatika: {},
+        doktor_elektro_informatika: {},
+        ppi_elektro: {},
+        ppi_informatika: {}
     }
 }
 
 function getPembimbingAktifData () {
     return {
-            teknik_informatika: {
-                tetap: [
-                    {
-                        kk: "KK Elektronika",
-                        isi: [
-                            {
-                                no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            },
-                            {
-                                no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            }
-                        ]
-                    },
-                    {
-                        kk: "KK Informatika",
-                        isi: [
-                            {
-                                no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            },
-                            {
-                                no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            }
-                        ]
-                    }
-                ],
-                tidak_tetap: [
-                    {
-                        jenis: "Dosen Tidak Tetap Peneliti",
-                        isi: [
-                            {
-                                no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            },
-                            {
-                                no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            }
-                        ]
-                    },
-                ],
-                luar: [
-                    {
-                        jenis: "Dosen Luar STEI",
-                        isi: [
-                            {
-                                no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            },
-                            {
-                                no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
-                            }
-                        ]
-                    },
-                ]
-            }
-        }
+        teknik_elektro: {
+            tetap: [
+                {
+                    kk: "KK Elektronika",
+                    isi: [
+                        {
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        },
+                        {
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        }
+                    ]
+                },
+                {
+                    kk: "KK Informatika",
+                    isi: [
+                        {
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        },
+                        {
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        }
+                    ]
+                }
+            ],
+            tidak_tetap: [
+                {
+                    jenis: "Dosen Tidak Tetap Peneliti",
+                    isi: [
+                        {
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        },
+                        {
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        }
+                    ]
+                },
+            ],
+            luar: [
+                {
+                    jenis: "Dosen Luar STEI",
+                    isi: [
+                        {
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        },
+                        {
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        }
+                    ]
+                },
+            ]
+        },
+        teknik_informatika: {},
+        teknik_tenaga_listrik: {},
+        teknik_telekomunikasi: {},
+        sistem_teknologi_informasi: {},
+        teknik_biomedis: {},
+        magister_teknik_elektro: {},
+        magister_teknik_informatika: {},
+        doktor_elektro_informatika: {},
+        ppi_elektro: {},
+        ppi_informatika: {}
+    }
 }
 
 function getPembimbingPengujiData() {
@@ -198,7 +228,17 @@ function getPembimbingPengujiData() {
                         ]
                     },
                 ]
-            }
+            },
+            teknik_informatika: {},
+            teknik_tenaga_listrik: {},
+            teknik_telekomunikasi: {},
+            sistem_teknologi_informasi: {},
+            teknik_biomedis: {},
+            magister_teknik_elektro: {},
+            magister_teknik_informatika: {},
+            doktor_elektro_informatika: {},
+            ppi_elektro: {},
+            ppi_informatika: {}
         },
         penguji: {}
     }
@@ -214,7 +254,17 @@ function getAsistenData() {
                 {
                     no: 2, kode: 'EL2006', matkul: 'Material Teknik Elektro', sks: '3', kelas: '1, 2, 3', asisten: ['Siapa', 'Siapa', 'Siapa'], nim: ['xxxxxxxx','xxxxxxxx', 'xxxxxxxx'], jabatan: ['Asisten Kuliah', 'Koordinator', 'Asisten Kuliah']
                 }
-            ]
+            ],
+            teknik_informatika: [],
+            teknik_tenaga_listrik: [],
+            teknik_telekomunikasi: [],
+            sistem_teknologi_informasi: [],
+            teknik_biomedis: [],
+            magister_teknik_elektro: [],
+            magister_teknik_informatika: [],
+            doktor_elektro_informatika: [],
+            ppi_elektro: [],
+            ppi_informatika: []
         },
         praktikum: {
 
