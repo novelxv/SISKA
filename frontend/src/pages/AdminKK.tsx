@@ -115,7 +115,7 @@ const AdminKK = () => {
             </div>
           </div>
   
-          <table className="table">
+          <table className="table" style={{marginTop: "2vw"}}>
             <thead>
               <tr>
                 <th>No</th>
