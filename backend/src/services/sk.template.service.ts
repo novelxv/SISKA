@@ -3,7 +3,6 @@ import path from "path";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { PrismaClient } from "@prisma/client";
-import { roundToNearestHours } from "date-fns";
 
 const prisma = new PrismaClient();
 
@@ -81,6 +80,29 @@ function getWaliTPBData() {
         }
 }
 
+function getWaliAktifData() {
+    return {
+        teknik_elektro: {
+            dosen: [
+                {
+                    kk: "KK Elektronika",
+                    isi: [
+                        {no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+                        {no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+                    ]
+                },
+                {
+                    kk: "KK Sistem Kendali & Komputer",
+                    isi: [
+                        {no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+                        {no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.']},
+                    ]
+                },
+            ],
+        }
+    }
+}
+
 function getPembimbingAktifData () {
     return {
             teknik_informatika: {
@@ -136,6 +158,68 @@ function getPembimbingAktifData () {
                 ]
             }
         }
+}
+
+function getPembimbingPengujiData() {
+    return {
+        pembimbing: {
+            teknik_elektro: {
+                tetap: [
+                    {
+                        kk: "KK Elektronika",
+                        isi: [
+                            {no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama']},
+                            {no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 2/Pendamping', 'Pemb. 1/Utama', 'Pemb. 1/Utama']},
+                        ]
+                    },
+                    {
+                        kk: "KK Sistem Kendali & Komputer",
+                        isi: [
+                            {no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama']},
+                            {no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama']},
+                        ]
+                    }
+                ],
+                tidak_tetap: [
+                    {
+                        jenis: "Dosen Tidak Tetap Peneliti",
+                        isi: [
+                            {no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama']},
+                            {no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama']},
+                        ]
+                    },
+                ],
+                luar: [
+                    {
+                        jenis: "Dosen Industri",
+                        isi: [
+                            {no: 1, nama_dosen: "Ir. Akhmadi Surawijaya, S.T, M. Eng.", nip_dosen: "118110068", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama'], asal: 'Instansi'},
+                            {no: 2, nama_dosen: "Ir. Arif Sasongko, S.T, M.T, Ph.D.", nip_dosen: "19761025 200604 1 001", nim: ['19624039', '19624040', '19624041'], mhs: ['Nisrina Zakiyah', 'Yumna Fathonah Kautsar', 'Dzakwan Muhammad K. P. P.'], tanggal: ['1 Januari 2025', '1 Januari 2025', '1 Januari 2025'], jabatan: ['Pemb. 1/Utama', 'Pemb. 1/Utama', 'Pemb. 1/Utama'], asal: 'Instansi'},
+                        ]
+                    },
+                ]
+            }
+        },
+        penguji: {}
+    }
+}
+
+function getAsistenData() {
+    return {
+        kuliah: {
+            teknik_elektro: [
+                {
+                    no: 1, kode: 'EL2006', matkul: 'Material Teknik Elektro', sks: '3', kelas: '1, 2, 3', asisten: ['Siapa', 'Siapa', 'Siapa'], nim: ['xxxxxxxx','xxxxxxxx', 'xxxxxxxx'], jabatan: ['Asisten Kuliah', 'Koordinator', 'Asisten Kuliah']
+                },
+                {
+                    no: 2, kode: 'EL2006', matkul: 'Material Teknik Elektro', sks: '3', kelas: '1, 2, 3', asisten: ['Siapa', 'Siapa', 'Siapa'], nim: ['xxxxxxxx','xxxxxxxx', 'xxxxxxxx'], jabatan: ['Asisten Kuliah', 'Koordinator', 'Asisten Kuliah']
+                }
+            ]
+        },
+        praktikum: {
+
+        }
+    }
 }
 
 export const generateSKPreviewService = async (data: {
@@ -208,7 +292,13 @@ export const generateSKPreviewService = async (data: {
         tabel = getWaliTPBData()
     } else if (data.jenis_sk == "PEMBIMBING_AKTIF") {
         tabel = getPembimbingAktifData()
-    }
+    } else if (data.jenis_sk == "PEMBIMBING_PENGUJI") {
+        tabel = getPembimbingPengujiData()
+    } else if (data.jenis_sk == "WALI_MHS_AKTIF") {
+        tabel = getWaliAktifData()
+    } else if (data.jenis_sk == "ASISTEN_PRAKTIKUM") {
+        tabel = getAsistenData()
+    } 
 
     const doc = new Docxtemplater(zip, { parser: expressionParser, modules: [imageModule], paragraphLoop: true, linebreaks: true });
     try {
