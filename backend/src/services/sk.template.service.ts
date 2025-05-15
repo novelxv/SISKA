@@ -152,6 +152,17 @@ function getPembimbingAktifData () {
             ],
             tidak_tetap: [
                 {
+                    jenis: "Dosen Tidak Tetap Pengajar",
+                    isi: [
+                        {
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        },
+                        {
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                        }
+                    ]
+                },
+                {
                     jenis: "Dosen Tidak Tetap Peneliti",
                     isi: [
                         {
@@ -168,10 +179,21 @@ function getPembimbingAktifData () {
                     jenis: "Dosen Luar STEI",
                     isi: [
                         {
-                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"], instansi_asal: ["", ""]
                         },
                         {
-                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"]
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"], instansi_asal: ["", ""]
+                        }
+                    ]
+                },
+                {
+                    jenis: "Dosen Luar ITB",
+                    isi: [
+                        {
+                            no: 1, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"], instansi_asal: ["", ""]
+                        },
+                        {
+                            no: 2, nama_dosen:"AAA", nip_dosen:"123", nim:["12345678", "12345678"], mhs:["ABC", "ABC"], jabatan: ["jabatan", "jabatan"], instansi_asal: ["", ""]
                         }
                     ]
                 },
