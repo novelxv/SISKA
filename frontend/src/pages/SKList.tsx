@@ -131,8 +131,9 @@ const SKList = () => {
   }
 
   const handlePreview = async (no_sk: string) => {
-    // const blob = await previewPublishedSK(no_sk);
-    window.open(`../../../backend/public/uploads/sk/${no_sk}.pdf`, "_blank")
+    const blob = await previewPublishedSK(no_sk);
+    const url = window.URL.createObjectURL(blob)
+    window.open(url, "_blank")
   }
 
   const handleArchive = async (sk: SK) => {

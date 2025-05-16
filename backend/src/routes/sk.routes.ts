@@ -1,5 +1,5 @@
 import express from "express";
-import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK, getArchivedSKs } from "../controllers/sk.controller";
+import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK, getArchivedSKs, previewPublishedSK } from "../controllers/sk.controller";
 import { authMiddleware, akademikMiddleware } from "../middleware/auth.middleware";
 import {
     validatePengajaranExcel,
@@ -35,6 +35,6 @@ router.get("/validate/asisten", authMiddleware, akademikMiddleware, validateAsis
 router.put("/:no_sk/archive", authMiddleware, akademikMiddleware, archiveSK);
 router.put("/:no_sk/unarchive", authMiddleware, akademikMiddleware, unarchiveSK);
 router.get("/archived", authMiddleware, akademikMiddleware, getArchivedSKs);
-router.get("/:no_sk/preview", authMiddleware, )
+router.get("/:no_sk/preview", authMiddleware, previewPublishedSK);
 
 export default router;

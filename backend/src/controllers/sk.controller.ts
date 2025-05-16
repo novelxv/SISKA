@@ -302,7 +302,8 @@ export const previewPublishedSK = async(req: Request, res: Response) => {
         const originalNoSK = no_sk.replace(/_/g, "/");
         const filePath = await getDownloadPathService(originalNoSK);
         var pdfBuffer = fs.readFileSync(filePath);
-        res.contentType("application/pdf");
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", `inline; filename=preview.pdf`);
         res.status(200).send(pdfBuffer);
     } catch (err) {
         console.error("Error getting SK preview:", err);

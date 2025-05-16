@@ -9,7 +9,7 @@ import "../styles/Global.css"
 import "../styles/SK.css"
 import { useNavigate } from "react-router-dom"
 import { FaDownload, FaEye } from "react-icons/fa"
-import { getPublishedSK, downloadSK } from "../services/skService"
+import { getPublishedSK, downloadSK, previewPublishedSK } from "../services/skService"
 import ButtonWithIcon from "../components/Button"
 import Search from "../components/Search"
 import SortButtonNew from "../components/SortButtonNew"
@@ -67,8 +67,10 @@ const AdminKK = () => {
       }
     }
   
-    const handlePreview = (no_sk: string) => {
-      window.open(`/preview-sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`, "_blank")
+    const handlePreview = async (no_sk: string) => {
+      const blob = await previewPublishedSK(no_sk);
+      const url = window.URL.createObjectURL(blob)
+      window.open(url, "_blank")
     }
   
     const fetchData = async () => {
