@@ -6,6 +6,8 @@ import path from "path";
 import { parseSKMetadata } from "../utils/parseSKMetadata";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import os from "os";
+import { convertDocxToPdf } from "../utils/convertToPdf";
 
 const prisma = new PrismaClient();
 
@@ -150,12 +152,22 @@ export const publishSKService = async (no_sk: string): Promise<void> => {
         NIP_dekan: skData.NIP_dekan,
         nama_dekan: skData.Dekan.nama,
     });
+
+    const tmpDir = os.tmpdir();
+    const tempDocxPath = path.join(tmpDir, `preview-${Date.now()}.docx`);
+    const tempPdfPath = tempDocxPath.replace(".docx", ".pdf");
+    
+    fs.writeFileSync(tempDocxPath, docBuffer);
+    const pdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
+    
+    const pdfBuffer = fs.readFileSync(pdfPath);
+
     const outputDir = path.join(__dirname, "../../public/uploads/sk");
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
     const filePath = path.join(outputDir, `${no_sk.replace(/ /g, "_").replace(/\//g, "_")}.pdf`);
-    fs.writeFileSync(filePath, docBuffer);
+    fs.writeFileSync(filePath, pdfBuffer);
 
     await prisma.sK.update({
         where: { no_sk },

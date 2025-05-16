@@ -8,7 +8,7 @@ import "../styles/Global.css"
 import "../styles/SK.css"
 import { FaDownload, FaPencilAlt, FaEye, FaArchive, FaTrash } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
-import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF, deleteDraftSK, archiveSK, unarchiveSK, getArchivedSK } from "../services/skService"
+import { getPublishedSK, getDraftSK, downloadSK, uploadSKPDF, deleteDraftSK, archiveSK, unarchiveSK, getArchivedSK, previewPublishedSK } from "../services/skService"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import ButtonWithIcon from "../components/Button"
@@ -130,8 +130,9 @@ const SKList = () => {
     navigate(`/draft-sk?no_sk=${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`)
   }
 
-  const handlePreview = (no_sk: string) => {
-    window.open(`/preview-sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`, "_blank")
+  const handlePreview = async (no_sk: string) => {
+    // const blob = await previewPublishedSK(no_sk);
+    window.open(`../../../backend/public/uploads/sk/${no_sk}.pdf`, "_blank")
   }
 
   const handleArchive = async (sk: SK) => {

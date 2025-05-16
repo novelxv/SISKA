@@ -35,5 +35,6 @@ router.get("/validate/asisten", authMiddleware, akademikMiddleware, validateAsis
 router.put("/:no_sk/archive", authMiddleware, akademikMiddleware, archiveSK);
 router.put("/:no_sk/unarchive", authMiddleware, akademikMiddleware, unarchiveSK);
 router.get("/archived", authMiddleware, akademikMiddleware, getArchivedSKs);
+router.get("/:no_sk/preview", authMiddleware, )
 
 export default router;

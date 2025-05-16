@@ -295,3 +295,17 @@ export const getArchivedSKs = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: "Gagal mengambil data SK yang diarsipkan" });
   }
 };
+
+export const previewPublishedSK = async(req: Request, res: Response) => {
+    try {
+        const { no_sk } = req.params;
+        const originalNoSK = no_sk.replace(/_/g, "/");
+        const filePath = await getDownloadPathService(originalNoSK);
+        var pdfBuffer = fs.readFileSync(filePath);
+        res.contentType("application/pdf");
+        res.status(200).send(pdfBuffer);
+    } catch (err) {
+        console.error("Error getting SK preview:", err);
+        res.status(500).json({ message: "Gagal preview SK" })
+    }
+}

@@ -64,6 +64,11 @@ export const downloadSK = async (no_sk: string): Promise<Blob> => {
     return res.data;
 };
 
+export const previewPublishedSK = async (no_sk: string): Promise<Blob> => {
+    const res = await api.get(`/sk/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}/preview`, { responseType: "blob" });
+    return res.data;
+}
+
 export const deleteDraftSK = async (no_sk: string) => {
     const response = await api.delete(`/sk/draft/${no_sk.replace(/ /g, "_").replace(/\//g, "_")}`);
     return response.data;
