@@ -273,7 +273,7 @@ function checkExcelByProdi(dirPath: string): boolean {
   const files = fs.readdirSync(dirPath);
   const foundCodes = new Set<string>();
   files.forEach((f) => {
-    const match = f.match(/^([A-Z]{2})[-_].+\.xlsx$/);
+  const match = f.match(/^(\d{3})[-_].+\.xlsx$/);
     if (match) foundCodes.add(match[1]);
   });
   return PRODI_CODES.every((code) => foundCodes.has(code));
@@ -292,7 +292,7 @@ export const checkPembimbingPengujiExcel = () =>
   checkExcelByProdi(path.join(__dirname, "../../public/uploads/excel/excel_pembimbing_penguji"));
 
 export const checkPembimbingAktifExcel = () =>
-  checkExcelByProdi(path.join(__dirname, "../../public/uploads/excel/excel_pembimbing_penguji"));
+  checkExcelByProdi(path.join(__dirname, "../../public/uploads/excel/excel_pembimbing_aktif"));
 
 export const checkWaliTPBExcel = () =>
   checkSingleExcel(path.join(__dirname, "../../public/uploads/excel/excel_dosen_wali"));
