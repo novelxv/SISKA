@@ -292,7 +292,7 @@ export const checkPembimbingPengujiExcel = () =>
   checkExcelByProdi(path.join(__dirname, "../../public/uploads/excel/excel_pembimbing_penguji"));
 
 export const checkPembimbingAktifExcel = () =>
-  checkExcelByProdi(path.join(__dirname, "../../public/uploads/excel/excel_pembimbing_aktif"));
+  checkSingleExcel(path.join(__dirname, "../../public/uploads/excel/excel_pembimbing_aktif"));
 
 export const checkWaliTPBExcel = () =>
   checkSingleExcel(path.join(__dirname, "../../public/uploads/excel/excel_dosen_wali"));

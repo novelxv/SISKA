@@ -66,7 +66,8 @@ router.get("/templates", authMiddleware, (req, res) => {
             { id: "pengajaran", name: "Template Pengajaran" },
             { id: "pembimbing-penguji", name: "Template Pembimbing & Penguji" },
             { id: "dosen-wali", name: "Template Dosen Wali" },
-            { id: "asisten-perkuliahan", name: "Template Asisten Perkuliahan" }
+            { id: "asisten-perkuliahan", name: "Template Asisten Perkuliahan" },
+            { id: "pembimbing-aktif", name: "Template Pembimbing Aktif" }
         ]
     });
 });

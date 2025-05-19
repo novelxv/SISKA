@@ -12,13 +12,17 @@ import "../styles/SK.css"
 import "../styles/UploadExcelAkademik.css"
 import dosenWaliTemplate from "../assets/template-excel-dosen-wali.xlsx"
 import asistenTemplate from "../assets/template-excel-asisten.xlsx"
-import { uploadExcelDosenWali, uploadExcelAsisten } from "../services/excelService"
+import dosbingAktifTemplate from "../assets/template-excel-dosen-pembimbing-aktif.xlsx"
+
+import { uploadExcelDosenWali, uploadExcelAsisten, uploadExcelDosbingAktif } from "../services/excelService"
 
 const UploadExcelAkademik = () => {
   const [dosenWaliFile, setDosenWaliFile] = useState<File | null>(null)
   const [dosenWaliFileName, setDosenWaliFileName] = useState<string | null>(null)
   const [asistenFile, setAsistenFile] = useState<File | null>(null)
   const [asistenFileName, setAsistenFileName] = useState<string | null>(null)
+  const [dosbingAktifFile, setDosbingAktifFile] = useState<File | null>(null)
+  const [dosbingAktifFileName, setDosbingAktifFileName] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
   const handleDownloadDosenWaliTemplate = () => {
@@ -53,6 +57,21 @@ const UploadExcelAkademik = () => {
     }
   }
 
+    const handleDownloadDosbingAktifTemplate = () => {
+    try {
+      const link = document.createElement("a")
+      link.href = dosbingAktifTemplate
+      link.download = "template-excel-dosen-pembimbing-aktif.xlsx"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      toast.info("Template Excel Dosen Pembimbing Mahasiswa Aktif berhasil diunduh")
+    } catch (error) {
+      toast.error("Gagal mengunduh template Excel Dosen Pembimbing Mahasiswa Aktif")
+    }
+  }
+
   const handleDosenWaliFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -74,6 +93,18 @@ const UploadExcelAkademik = () => {
       }
       setAsistenFile(file)
       setAsistenFileName(file.name)
+    }
+  }
+
+    const handleDosbingAktifFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
+        toast.error("File harus berformat Excel (.xlsx atau .xls)")
+        return
+      }
+      setDosbingAktifFile(file)
+      setDosbingAktifFileName(file.name)
     }
   }
 
@@ -118,6 +149,28 @@ const UploadExcelAkademik = () => {
       setIsUploading(false);
     }
   };
+
+    const handleUploadDosbingAktif = async () => {
+      if (!dosbingAktifFile) {
+        toast.warning("Silakan pilih file Excel Dosen Pembimbing Mahasiswa Aktif terlebih dahulu");
+        return;
+      }
+
+      setIsUploading(true);
+      try {
+        const response = await uploadExcelDosbingAktif(dosbingAktifFile);
+        toast.success(response.message || "File Excel Dosen Pembimbing Mahasiswa Aktif berhasil diunggah");
+        setDosbingAktifFile(null);
+        setDosbingAktifFileName(null);
+        (document.getElementById("dosbingAktifInput") as HTMLInputElement).value = "";
+      } catch (err: any) {
+        const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Pembimbing Mahasiswa Aktif";
+        toast.error(errorMsg);
+      } finally {
+        setIsUploading(false);
+      }
+  };
+
 
   return (
     <div className="sk-container">
@@ -204,6 +257,39 @@ const UploadExcelAkademik = () => {
               onClick={handleUploadAsisten}
               hideIcon
               disabled={isUploading || !asistenFile}
+            />
+          </div>
+
+          <div className="header mt-8">
+            <h2>Upload Excel Dosen Pembimbing Mahasiswa Aktif</h2>
+          </div>
+          <div className="template-download">
+            <p>Download template terlebih dahulu:</p>
+            <button className="download-template-btn" onClick={handleDownloadDosbingAktifTemplate}>
+              <FaDownload /> Template Excel Dosen Pembimbing Mahasiswa Aktif
+            </button>
+          </div>
+          <div className="terbit-sk-row">
+            <div className="upload-sk">
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                onChange={handleDosbingAktifFileChange}
+                hidden
+                id="dosbingAktifInput"
+                disabled={isUploading}
+              />
+              <label htmlFor="dosbingAktifInput" className="button-white">
+                <FaFileArrowUp />
+                Pilih file
+              </label>
+              <div>{dosbingAktifFileName ? dosbingAktifFileName : "Pilih file Excel Dosen Pembimbing Mahasiswa Aktif"}</div>
+            </div>
+            <ButtonWithIcon
+              text={isUploading ? "Mengunggah..." : "Upload"}
+              onClick={handleUploadDosbingAktif}
+              hideIcon
+              disabled={isUploading || !dosbingAktifFile}
             />
           </div>
         </div>

@@ -103,7 +103,7 @@ export const resetStatus = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-const ALLOWED_TYPES = ["pengajaran", "pembimbing-penguji", "dosen-wali", "asisten"];
+const ALLOWED_TYPES = ["pengajaran", "pembimbing-penguji", "dosen-wali", "asisten", "pembimbing-aktif"];
 
 export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { jenis } = req.params;
@@ -123,6 +123,7 @@ export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Pro
     "pembimbing-penguji": "excel_pembimbing_penguji",
     "dosen-wali": "excel_dosen_wali",
     asisten: "excel_asisten",
+    "pembimbing-aktif": "excel_pembimbing_aktif",
   };
 
   const destDir = path.join(__dirname, "../../public/uploads/excel", folderMap[jenis]);
@@ -138,6 +139,8 @@ export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Pro
     fileName = "excel-dosen-wali.xlsx";
   } else if (jenis === "asisten") {
     fileName = "excel-asisten.xlsx";
+  } else if (jenis === "pembimbing-aktif") {
+    fileName = "excel-pembimbing-aktif.xlsx";
   } else {
     fileName = `${kodeProdi}-excel-${jenis}.xlsx`;
   }

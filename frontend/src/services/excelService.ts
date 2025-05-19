@@ -201,4 +201,22 @@ export const uploadExcelAsisten = async (file: File) => {
   }
 };
 
+export const uploadExcelDosbingAktif = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/excel/upload/pembimbing-aktif", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error uploading Dosen Pembimbing Aktif file:", error);
+    throw error.response?.data || { message: "Gagal mengunggah file Excel Dosen Pembimbing Aktif" };
+  }
+};
+
 export default excelService;
