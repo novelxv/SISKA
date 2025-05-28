@@ -238,3 +238,13 @@
 .input-tanggal input[type="date"]:hover::-webkit-calendar-picker-indicator {
   opacity: 1;
 }
+
+
+.button-gotoexcel {
+  background-color: #1976d2;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}

@@ -25,6 +25,7 @@ import {
   checkWaliAktifExcel,
   checkAsistenExcel,
 } from "../services/skService"
+import { RiQuestionLine } from "react-icons/ri"
 
 const jenisSKMap: Record<string, string> = {
   PENGAJARAN: "SK Pengajaran",
@@ -73,6 +74,13 @@ const DraftSK = () => {
   const [excelComplete, setExcelComplete] = useState<boolean | null>(null)
   const [checkingExcel, setCheckingExcel] = useState(false)
   const [selectedJenisSK, setSelectedJenisSK] = useState("")
+
+
+  const [showExcelModal, setShowExcelModal] = useState(false);
+  const handleOpenExcelModal = () => setShowExcelModal(true);
+  const handleCloseExcelModal = () => setShowExcelModal(false);
+  const handleGoToExcelUpload = () => navigate("/upload-excel-akademik");
+
 
   useEffect(() => {
     const fetchDraftData = async () => {
@@ -281,20 +289,24 @@ const DraftSK = () => {
 
   // Function to get Excel status message
   const getExcelStatusMessage = () => {
-    if (excelComplete === null) {
-      return null // No message for SK types without Excel check
-    }
+  if (excelComplete === null) return null;
 
-    if (checkingExcel) {
-      return <div className="excel-status checking">Memeriksa kelengkapan data...</div>
-    }
-
-    return excelComplete ? (
-      <div className="excel-status complete">Data Excel lengkap</div>
-    ) : (
-      <div className="excel-status incomplete">Data Excel belum lengkap</div>
-    )
+  if (checkingExcel) {
+    return <div className="excel-status checking">Memeriksa kelengkapan data...</div>;
   }
+
+  return excelComplete ? (
+    <div className="excel-status complete">Data Excel lengkap</div>
+  ) : (
+    <div className="excel-status incomplete">
+      Data Excel belum lengkap{" "}
+      <span className="help-icon" onClick={handleOpenExcelModal} title="Info lebih lanjut">
+        <RiQuestionLine />
+      </span>
+    </div>
+  );
+};
+
 
   if (isLoading) {
     return (
@@ -456,6 +468,22 @@ const DraftSK = () => {
             </div>
           </div>
       </div>
+      {showExcelModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Data Excel Belum Lengkap</h2>
+            <div>Masukkan data Excel terlebih dahulu di halaman upload Excel.</div>
+            <br></br>
+            <div className="modal-buttons">
+              <button className="button-outline" onClick={handleCloseExcelModal}>Tutup</button>
+              <button className="button-gotoexcel" onClick={handleGoToExcelUpload}>
+                Ke Halaman Upload Excel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
