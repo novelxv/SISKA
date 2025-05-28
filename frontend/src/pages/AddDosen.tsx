@@ -38,6 +38,24 @@ export default function AddDosen() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+
+    if (!formData.namaTanpaGelar.trim()) {
+      toast.warning("Nama tanpa gelar wajib diisi.");
+      return;
+    }
+    if (!formData.namaDenganGelar.trim()) {
+      toast.warning("Nama dengan gelar wajib diisi.");
+      return;
+    }
+    if (!formData.statusKepegawaian.trim()) {
+      toast.warning("Status kepegawaian wajib dipilih.");
+      return;
+    }
+    if (!formData.jenisKepegawaian.trim()) {
+      toast.warning("Jenis kepegawaian wajib dipilih.");
+      return;
+    }
+    
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Tidak ada token, silakan login kembali.");
@@ -131,7 +149,7 @@ export default function AddDosen() {
             <div className="form-row">
               <div className="form-group half-width">
                 <label htmlFor="jenisKepegawaian"
-                style={{ fontSize: '0.9rem', color: '#333' }}>Jenis Kepegawaian</label>
+                style={{ fontSize: '0.9rem', color: '#333' }}>Jenis Kepegawaian <span style={{ color: 'red' }}>*</span></label>
                 <SortButtonNew
                   options={[
                     "DOSEN_TETAP",
