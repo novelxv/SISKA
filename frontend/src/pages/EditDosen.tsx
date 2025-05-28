@@ -78,6 +78,23 @@ export default function EditDosen() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+
+    if (!dosenData.nama_tanpa_gelar.trim()) {
+      toast.warning("Nama tanpa gelar wajib diisi.");
+      return;
+    }
+    if (!dosenData.nama_dengan_gelar.trim()) {
+      toast.warning("Nama dengan gelar wajib diisi.");
+      return;
+    }
+    if (!dosenData.status_kepegawaian.trim()) {
+      toast.warning("Status kepegawaian wajib dipilih.");
+      return;
+    }
+    if (!dosenData.jenis_kepegawaian.trim()) {
+      toast.warning("Jenis kepegawaian wajib dipilih.");
+      return;
+    }
   
     fetch(`http://localhost:3000/api/dosen/${id}`, {
       method: 'PUT',
@@ -201,7 +218,7 @@ export default function EditDosen() {
 
             <div className="form-row">
               <div className="form-group half-width">
-                <label htmlFor="jenis_kepegawaian" style={{ fontSize: '0.9rem', color: '#333' }}>Jenis Kepegawaian</label>
+                <label htmlFor="jenis_kepegawaian" style={{ fontSize: '0.9rem', color: '#333' }}>Jenis Kepegawaian <span style={{ color: 'red' }}>*</span></label>
                 <SortButtonNew
                   options={[
                     "DOSEN_TETAP",
