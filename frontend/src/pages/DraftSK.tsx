@@ -179,6 +179,39 @@ const DraftSK = () => {
   }
 
   const handleSimpan = async () => {
+    if (!selectedJenisSK) {
+    toast.error("Jenis SK belum dipilih.");
+    return;
+  }
+  if (!judul.trim()) {
+    toast.error("Judul SK tidak boleh kosong.");
+    return;
+  }
+  if (!noSK.trim()) {
+    toast.error("Nomor SK tidak boleh kosong.");
+    return;
+  }
+  if (!tanggal) {
+    toast.error("Tanggal belum dipilih.");
+    return;
+  }
+  if (!semester) {
+    toast.error("Semester belum diisi.");
+    return;
+  }
+  if (!tahunAkademik.trim()) {
+    toast.error("Tahun akademik harus dalam format 2024/2025.");
+    return;
+  }
+  if (!namaDekan.trim()) {
+    toast.error("Nama dekan tidak boleh kosong.");
+    return;
+  }
+  if (!nipDekan.trim()) {
+    toast.error("NIP dekan tidak boleh kosong.");
+    return;
+  }
+
     const skData: DraftSKData = {
       no_sk: noSK,
       judul,
