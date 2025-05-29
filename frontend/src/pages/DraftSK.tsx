@@ -253,7 +253,7 @@ const DraftSK = () => {
         await createDraftSK(skData)
         toast.success("Draft SK berhasil disimpan!")
       }
-      setTimeout(() => navigate("/sk"), 1500)
+      // setTimeout(() => navigate("/sk"), 1500)
     } catch (err) {
       console.error(err)
       toast.error(isEditMode ? "Gagal memperbarui draft SK" : "Gagal menyimpan draft SK")
@@ -262,6 +262,7 @@ const DraftSK = () => {
 
   const handleTerbitkan = async () => {
     try {
+      await handleSimpan()
       await publishSK(noSK)
       toast.success("SK berhasil diterbitkan!")
       setTimeout(() => navigate("/sk"), 1500)
