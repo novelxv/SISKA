@@ -10,7 +10,7 @@ import { register } from "../services/authService";
 import { User } from "../services/userService";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SortButtonNew from "../components/SortButtonNew"; // Import komponen SortButtonNew
+import SortButtonNew from "../components/SortButtonNew";
 
 const TambahAkun: React.FC = () => {
   const navigate = useNavigate();
@@ -57,13 +57,16 @@ const TambahAkun: React.FC = () => {
       return;
     }
 
+    console.log(formData.jenisKK)
+    console.log(formData.jenisProdi)
+
     try {
       await register(
         formData.username,
         formData.password,
         formData.role,
         formData.jenisKK || undefined,
-        formData.jenisProdi ? mapProdiToEnum(formData.jenisProdi) : undefined
+        formData.jenisProdi || undefined
       );
       toast.success("Akun berhasil ditambahkan!");
       navigate("/kelola-akun");
@@ -83,7 +86,7 @@ const TambahAkun: React.FC = () => {
     let cleanedValue = value.trimStart();
 
     if (name === "username") {
-      cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, ""); // Hanya izinkan karakter alfanumerik
+      cleanedValue = cleanedValue.replace(/[^a-zA-Z0-9]/g, "");
     }
 
     setFormData((prevState) => ({
@@ -110,7 +113,19 @@ const TambahAkun: React.FC = () => {
     { label: "Rekayasa Perangkat Lunak dan Pengetahuan", value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN" },
   ];
 
-  const prodiOptions = ["132", "135", "180", "181", "182", "183", "232", "235", "332", "932", "935"];
+  const prodiOptions = [
+    { label: "132 - Teknik Elektro", value: "PRODI_132" },
+    { label: "135 - Teknik Informatika", value: "PRODI_135" },
+    { label: "180 - Teknik Tenaga Listrik", value: "PRODI_180" },
+    { label: "181 - Teknik Telekomunikasi", value: "PRODI_181" },
+    { label: "182 - Sistem dan Teknologi Informasi", value: "PRODI_182" },
+    { label: "183 - Teknik Biomedis", value: "PRODI_183" },
+    { label: "232 - Teknik Elektro", value: "PRODI_232" },
+    { label: "235 - Teknik Informatika", value: "PRODI_235" },
+    { label: "332 - Teknik Elektro dan Informatika", value: "PRODI_332" },
+    { label: "932 - PPI - Teknik Elektro", value: "PRODI_932" },
+    { label: "935 - PPI - Teknik Informatika", value: "PRODI_935" },
+  ]
 
   return (
     <div className="page-container">
@@ -216,10 +231,13 @@ const TambahAkun: React.FC = () => {
             {formData.role === "ADMIN_PRODI" && (
               <div className="akun-sort-filter-select">
                 <SortButtonNew
-                  options={prodiOptions}
-                  selectedOption={formData.jenisProdi || ""}
+                  options={prodiOptions.map((prodi) => prodi.label)}
+                  selectedOption={prodiOptions.find((prodi) => prodi.value === formData.jenisProdi)?.label || ""}
                   placeholder="Pilih Program Studi"
-                  onChange={(value) => setFormData({ ...formData, jenisProdi: value })}
+                  onChange={(label) => {
+                    const value = prodiOptions.find((prodi) => prodi.label === label)?.value || "";
+                    setFormData({ ...formData, jenisProdi: value });
+                  }}
                 />
               </div>
             )}

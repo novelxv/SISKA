@@ -18,8 +18,20 @@ interface Dosen {
     jabatanFungsional: string | undefined;    
     statusKepegawaian: string;    
     aktifMulai: string | undefined;         
-    aktifSampai: string | undefined;          
+    aktifSampai: string | undefined;        
+    asalInstansi: string | undefined;  
   }
+
+    const fakultas = ['FMIPA', 'SITH', 'SF', 'FITB', 'FTTM', 'FTSL', 'FTI', 'FSRD', 'FTMD', 'SBM', 'SAPPK'];
+
+
+    const mapIA = (ia: string): string | undefined => {
+        if (fakultas.includes(ia)) {
+            return ia;
+        } else {
+            return undefined;
+        }
+    }
 
   const readExcelDosen = (fPath: string): Dosen[] => {
     const file = fs.readFileSync(fPath);
@@ -41,6 +53,7 @@ interface Dosen {
       statusKepegawaian: row['Status Kepegawaian'],
       aktifMulai: row['Aktif Mulai'],
       aktifSampai: row['Aktif Sampai'],
+      asalInstansi: mapIA(row['KK']),
     })) as Dosen[];
 };
 
@@ -63,6 +76,8 @@ const mapKKToEnum = (kk: string | undefined): KelompokKeahlian | undefined => {
         return KelompokKeahlian.TEKNIK_KOMPUTER;
     } else if (kk.includes('Teknologi Informasi')) {
         return KelompokKeahlian.TEKNOLOGI_INFORMASI;
+    } else if (kk.includes('Teknik Biomedika')) {
+        return KelompokKeahlian.TEKNIK_BIOMEDIS;
     }
   };
 
@@ -71,9 +86,9 @@ const mapKKToEnum = (kk: string | undefined): KelompokKeahlian | undefined => {
         return JenisKepegawaian.DOSEN_TETAP;
     } else if (jk?.includes('ASISTEN AKADEMIK')) {
         return JenisKepegawaian.ASISTEN_AKADEMIK;
-    } else if (jk?.includes('KONTRAK PENGAJAR')) {
+    } else if (jk?.includes('DOSEN KONTRAK PENGAJAR')) {
         return JenisKepegawaian.DOSEN_TAK_TETAP_PENGAJAR;
-    } else if (kk?.includes('KONTRAK PENELITI')) {
+    } else if (kk?.includes('DOSEN KONTRAK PENELITI (P)')) {
         return JenisKepegawaian.DOSEN_TAK_TETAP_PENELITI;
     } else if (kk?.includes('Dosen Industri') || jk?.includes('DI')) {
         return JenisKepegawaian.DOSEN_INDUSTRI;
@@ -84,7 +99,7 @@ const mapKKToEnum = (kk: string | undefined): KelompokKeahlian | undefined => {
     } else if (kk?.includes('Tutor')) {
         return JenisKepegawaian.TUTOR;
     } else {
-        return undefined;
+        return JenisKepegawaian.DOSEN_INDUSTRI;
     }
   };
 
@@ -147,8 +162,8 @@ async function main() {
             pangkat: row.pangkat,
             jabatan_fungsional: jfEnum,
             status_kepegawaian: skEnum,
+            instansi_asal: row.asalInstansi,
             // soon
-
           },
         });
       }
