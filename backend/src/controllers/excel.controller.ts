@@ -162,7 +162,7 @@ export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Pro
 export const getUploadHistory = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { jenis } = req.params;
-    
+
     if (jenis && !ALLOWED_TYPES.includes(jenis)) {
       res.status(400).json({ message: "Jenis SK tidak valid" });
       return;
@@ -177,40 +177,42 @@ export const getUploadHistory = async (req: AuthenticatedRequest, res: Response)
     };
 
     if (jenis) {
-      // Get specific file info
       const destDir = path.join(__dirname, "../../public/uploads/excel", folderMap[jenis]);
       
-      if (fs.existsSync(destDir)) {
-        const files = fs.readdirSync(destDir);
-        const fileDetails = files.map(file => {
-          const filePath = path.join(destDir, file);
-          const stats = fs.statSync(filePath);
-          return {
-            filename: file,
-            uploadedAt: stats.mtime,
-            size: stats.size,
-            path: `/uploads/excel/${folderMap[jenis]}/${file}`
-          };
-        }).sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
+      // Ambil kodeProdi tanpa prefix "PRODI_"
+      const kodeProdi = req.user?.kodeProdi
+        ? req.user.kodeProdi.replace("PRODI_", "")
+        : "UNKNOWN";
 
-        res.status(200).json({ 
-          success: true, 
-          data: {
-            jenis,
-            files: fileDetails,
-            latestFile: fileDetails[0] || null
-          }
-        });
-      } else {
-        res.status(200).json({ 
-          success: true, 
-          data: {
-            jenis,
-            files: [],
-            latestFile: null
-          }
-        });
+      let files: string[] = [];
+      if (fs.existsSync(destDir)) {
+        files = fs.readdirSync(destDir);
+        
+        // Jika jenis pengajaran atau pembimbing-penguji, filter berdasarkan prefix kodeProdi-
+        if (jenis === "pengajaran" || jenis === "pembimbing-penguji") {
+          files = files.filter(file => file.startsWith(`${kodeProdi}-`));
+        }
       }
+
+      const fileDetails = files.map(file => {
+        const filePath = path.join(destDir, file);
+        const stats = fs.statSync(filePath);
+        return {
+          filename: file,
+          uploadedAt: stats.mtime,
+          size: stats.size,
+          path: `/uploads/excel/${folderMap[jenis]}/${file}`
+        };
+      }).sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
+
+      res.status(200).json({ 
+        success: true, 
+        data: {
+          jenis,
+          files: fileDetails,
+          latestFile: fileDetails[0] || null
+        }
+      });
       return;
     }
 
