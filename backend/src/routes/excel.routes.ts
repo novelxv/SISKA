@@ -1,7 +1,8 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { uploadFile, getUploadStatus, resetStatus, uploadExcel } from "../controllers/excel.controller";
+import fs from "fs";
+import { uploadFile, getUploadStatus, resetStatus, uploadExcel, getUploadHistory } from "../controllers/excel.controller";
 import { authMiddleware, akademikMiddleware, AdminProdiMiddleware } from "../middleware/auth.middleware";
 
 // Configure multer for file uploads
@@ -85,5 +86,27 @@ const upload2 = multer({
 });
 
 router.post("/upload/:jenis", authMiddleware, upload2.single("file"), uploadExcel);
+
+router.get("/upload-history/:jenis", authMiddleware, getUploadHistory);
+
+router.get("/download/:jenis/:filename", authMiddleware, (req, res) => {
+  const { jenis, filename } = req.params;
+  
+  const folderMap: Record<string, string> = {
+    pengajaran: "excel_pengajaran",
+    "pembimbing-penguji": "excel_pembimbing_penguji",
+    "dosen-wali": "excel_dosen_wali",
+    asisten: "excel_asisten",
+    "pembimbing-aktif": "excel_pembimbing_aktif",
+  };
+
+  const filePath = path.join(__dirname, "../../public/uploads/excel", folderMap[jenis], filename);
+  
+  if (fs.existsSync(filePath)) {
+    res.download(filePath, filename);
+  } else {
+    res.status(404).json({ message: "File tidak ditemukan" });
+  }
+});
 
 export default router;

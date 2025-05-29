@@ -100,3 +100,44 @@
     background-color: #d0e8ff;
   }
   
+  .file-display {
+    flex: 1;
+    margin-left: 12px;
+  }
+  
+  .selected-file {
+    color: #28a745;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .uploaded-file-info {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .uploaded-file-info:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .file-name {
+    color: #007bff;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .file-date {
+    color: #6c757d;
+    font-size: 12px;
+  }
+  
+  .no-file {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 14px;
+  }

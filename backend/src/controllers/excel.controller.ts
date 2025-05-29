@@ -148,8 +148,78 @@ export const uploadExcel = async (req: AuthenticatedRequest, res: Response): Pro
   const destPath = path.join(destDir, fileName);
   fs.renameSync(req.file.path, destPath);
 
+  const now = new Date();
+  fs.utimesSync(destPath, now, now);
+
   res.status(200).json({
     message: `File berhasil diunggah ke ${folderMap[jenis]}`,
     filename: fileName,
+    uploadedAt: now.toISOString(),
+    path: `/uploads/excel/${folderMap[jenis]}/${fileName}`
   });
+};
+
+export const getUploadHistory = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const { jenis } = req.params;
+    
+    if (jenis && !ALLOWED_TYPES.includes(jenis)) {
+      res.status(400).json({ message: "Jenis SK tidak valid" });
+      return;
+    }
+
+    const folderMap: Record<string, string> = {
+      pengajaran: "excel_pengajaran",
+      "pembimbing-penguji": "excel_pembimbing_penguji",
+      "dosen-wali": "excel_dosen_wali",
+      asisten: "excel_asisten",
+      "pembimbing-aktif": "excel_pembimbing_aktif",
+    };
+
+    if (jenis) {
+      // Get specific file info
+      const destDir = path.join(__dirname, "../../public/uploads/excel", folderMap[jenis]);
+      
+      if (fs.existsSync(destDir)) {
+        const files = fs.readdirSync(destDir);
+        const fileDetails = files.map(file => {
+          const filePath = path.join(destDir, file);
+          const stats = fs.statSync(filePath);
+          return {
+            filename: file,
+            uploadedAt: stats.mtime,
+            size: stats.size,
+            path: `/uploads/excel/${folderMap[jenis]}/${file}`
+          };
+        }).sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
+
+        res.status(200).json({ 
+          success: true, 
+          data: {
+            jenis,
+            files: fileDetails,
+            latestFile: fileDetails[0] || null
+          }
+        });
+      } else {
+        res.status(200).json({ 
+          success: true, 
+          data: {
+            jenis,
+            files: [],
+            latestFile: null
+          }
+        });
+      }
+      return;
+    }
+
+    res.status(400).json({ message: "Jenis tidak disediakan" });
+  } catch (error) {
+    console.error("Error getting upload history:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Gagal mengambil riwayat upload" 
+    });
+  }
 };

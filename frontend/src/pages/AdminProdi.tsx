@@ -12,7 +12,7 @@ import "../styles/SK.css"
 import "../styles/UploadExcelAkademik.css"
 import dosenPembimbingPengujiTemplate from "../assets/template-excel-dosen-pembimbing-dan-penguji.xlsx";
 import pengajaranTemplate from "../assets/template-excel-pengajaran.xlsx";
-import {uploadExcelPembimbingPenguji, uploadExcelPengajaran} from "../services/excelService"
+import { uploadExcelPembimbingPenguji, uploadExcelPengajaran, getUploadHistory, downloadUploadedFile } from "../services/excelService"
 
 const AdminProdi = () => {
   const [dosenPPFile, setDosenPPFile] = useState<File | null>(null);
@@ -20,6 +20,46 @@ const AdminProdi = () => {
   const [pengajaranFile, setPengajaranFile] = useState<File | null>(null);
   const [pengajaranFileName, setPengajaranFileName] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadHistory, setUploadHistory] = useState<any>({});
+
+  useEffect(() => {
+    loadUploadHistory();
+  }, []);
+
+  const loadUploadHistory = async () => {
+    try {
+      const [pengajaranHistory, pembimbingHistory] = await Promise.all([
+        getUploadHistory("pengajaran"),
+        getUploadHistory("pembimbing-penguji")
+      ]);
+      
+      setUploadHistory({
+        pengajaran: pengajaranHistory.data,
+        "pembimbing-penguji": pembimbingHistory.data
+      });
+    } catch (error) {
+      console.error("Error loading upload history:", error);
+    }
+  };
+
+  const handleDownloadFile = async (jenis: string, filename: string) => {
+    try {
+      await downloadUploadedFile(jenis, filename);
+      toast.success("File berhasil didownload");
+    } catch (error) {
+      toast.error("Gagal mendownload file");
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString('id-ID', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   const handleDownloadPPTemplate = () => {
     try {
@@ -75,27 +115,6 @@ const AdminProdi = () => {
     }
   };
 
-  const handleUploadDosenPP = async () => {
-    if (!dosenPPFile) {
-      toast.warning("Silakan pilih file Excel Dosen Pembimbing dan Penguji terlebih dahulu");
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      const response = await uploadExcelPembimbingPenguji(dosenPPFile);
-      toast.success(response.message || "File Excel Dosen Pembimbing dan Penguji berhasil diunggah");
-      setDosenPPFile(null);
-      setDosenPPFileName(null);
-      (document.getElementById("dosenPPInput") as HTMLInputElement).value = ""; // Reset input file
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Pembimbing dan Penguji";
-      toast.error(errorMsg);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   const handleUploadPengajaran = async () => {
     if (!pengajaranFile) {
       toast.warning("Silakan pilih file Excel Pengajaran terlebih dahulu");
@@ -108,9 +127,36 @@ const AdminProdi = () => {
       toast.success(response.message || "File Excel Pengajaran berhasil diunggah");
       setPengajaranFile(null);
       setPengajaranFileName(null);
-      (document.getElementById("pengajaranInput") as HTMLInputElement).value = ""; // Reset input file
+      (document.getElementById("pengajaranInput") as HTMLInputElement).value = "";
+      
+      // Reload history setelah upload
+      await loadUploadHistory();
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Pengajaran";
+      toast.error(errorMsg);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUploadDosenPP = async () => {
+    if (!dosenPPFile) {
+      toast.warning("Silakan pilih file Excel Dosen Pembimbing dan Penguji terlebih dahulu");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const response = await uploadExcelPembimbingPenguji(dosenPPFile);
+      toast.success(response.message || "File Excel Dosen Pembimbing dan Penguji berhasil diunggah");
+      setDosenPPFile(null);
+      setDosenPPFileName(null);
+      (document.getElementById("dosenPPInput") as HTMLInputElement).value = "";
+      
+      // Reload history setelah upload
+      await loadUploadHistory();
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Pembimbing dan Penguji";
       toast.error(errorMsg);
     } finally {
       setIsUploading(false);
@@ -162,7 +208,24 @@ const AdminProdi = () => {
                 <FaFileArrowUp />
                 Pilih file
               </label>
-              <div>{pengajaranFileName ? pengajaranFileName : "Pilih file Excel Pengajaran"}</div>
+              <div className="file-display">
+                {pengajaranFileName ? (
+                  <span className="selected-file">{pengajaranFileName}</span>
+                ) : uploadHistory["pengajaran"]?.latestFile ? (
+                  <div 
+                    className="uploaded-file-info" 
+                    onClick={() => handleDownloadFile("pengajaran", uploadHistory["pengajaran"].latestFile.filename)}
+                    title="Klik untuk download"
+                  >
+                    <span className="file-name">📄 {uploadHistory["pengajaran"].latestFile.filename}</span>
+                    <span className="file-date">
+                      Upload: {formatDate(uploadHistory["pengajaran"].latestFile.uploadedAt)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="no-file">Pilih file Excel Pengajaran</span>
+                )}
+              </div>
             </div>
             <ButtonWithIcon
               text={isUploading ? "Mengunggah..." : "Upload"}
@@ -195,7 +258,24 @@ const AdminProdi = () => {
                 <FaFileArrowUp />
                 Pilih file
               </label>
-              <div>{dosenPPFileName ? dosenPPFileName : "Pilih file Excel Dosen Pembimbing & Penguji"}</div>
+              <div className="file-display">
+                {dosenPPFileName ? (
+                  <span className="selected-file">{dosenPPFileName}</span>
+                ) : uploadHistory["pembimbing-penguji"]?.latestFile ? (
+                  <div 
+                    className="uploaded-file-info" 
+                    onClick={() => handleDownloadFile("pembimbing-penguji", uploadHistory["pembimbing-penguji"].latestFile.filename)}
+                    title="Klik untuk download"
+                  >
+                    <span className="file-name">📄 {uploadHistory["pembimbing-penguji"].latestFile.filename}</span>
+                    <span className="file-date">
+                      Upload: {formatDate(uploadHistory["pembimbing-penguji"].latestFile.uploadedAt)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="no-file">Pilih file Excel Dosen Pembimbing & Penguji</span>
+                )}
+              </div>
             </div>
             <ButtonWithIcon
               text={isUploading ? "Mengunggah..." : "Upload"}

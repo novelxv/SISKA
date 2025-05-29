@@ -219,4 +219,39 @@ export const uploadExcelDosbingAktif = async (file: File) => {
   }
 };
 
+// Tambahkan fungsi untuk get upload history
+export const getUploadHistory = async (jenis: string) => {
+  try {
+    const response = await api.get(`/excel/upload-history/${jenis}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error getting upload history:", error);
+    throw error.response?.data || { message: "Gagal mengambil riwayat upload" };
+  }
+};
+
+// Tambahkan fungsi untuk download file
+export const downloadUploadedFile = async (jenis: string, filename: string) => {
+  try {
+    const response = await api.get(`/excel/download/${jenis}/${filename}`, {
+      responseType: 'blob'
+    });
+    
+    // Create download link
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    return { success: true, message: "File berhasil didownload" };
+  } catch (error: any) {
+    console.error("Error downloading file:", error);
+    throw error.response?.data || { message: "Gagal mendownload file" };
+  }
+};
+
 export default excelService;

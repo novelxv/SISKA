@@ -1,6 +1,6 @@
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { FaDownload } from "react-icons/fa"
 import { toast, ToastContainer } from "react-toastify"
@@ -14,7 +14,7 @@ import dosenWaliTemplate from "../assets/template-excel-dosen-wali.xlsx"
 import asistenTemplate from "../assets/template-excel-asisten.xlsx"
 import dosbingAktifTemplate from "../assets/template-excel-dosen-pembimbing-aktif.xlsx"
 
-import { uploadExcelDosenWali, uploadExcelAsisten, uploadExcelDosbingAktif } from "../services/excelService"
+import { uploadExcelDosenWali, uploadExcelAsisten, uploadExcelDosbingAktif, getUploadHistory, downloadUploadedFile } from "../services/excelService"
 
 const UploadExcelAkademik = () => {
   const [dosenWaliFile, setDosenWaliFile] = useState<File | null>(null)
@@ -24,6 +24,49 @@ const UploadExcelAkademik = () => {
   const [dosbingAktifFile, setDosbingAktifFile] = useState<File | null>(null)
   const [dosbingAktifFileName, setDosbingAktifFileName] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadHistory, setUploadHistory] = useState<any>({})
+
+  // Load upload history saat component mount
+  useEffect(() => {
+    loadUploadHistory();
+  }, []);
+
+  const loadUploadHistory = async () => {
+    try {
+      const [dosenWaliHistory, asistenHistory, dosbingAktifHistory] = await Promise.all([
+        getUploadHistory("dosen-wali"),
+        getUploadHistory("asisten"),
+        getUploadHistory("pembimbing-aktif")
+      ]);
+      
+      setUploadHistory({
+        "dosen-wali": dosenWaliHistory.data,
+        "asisten": asistenHistory.data,
+        "pembimbing-aktif": dosbingAktifHistory.data
+      });
+    } catch (error) {
+      console.error("Error loading upload history:", error);
+    }
+  };
+
+  const handleDownloadFile = async (jenis: string, filename: string) => {
+    try {
+      await downloadUploadedFile(jenis, filename);
+      toast.success("File berhasil didownload");
+    } catch (error) {
+      toast.error("Gagal mendownload file");
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString('id-ID', {
+      year: 'numeric',
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   const handleDownloadDosenWaliTemplate = () => {
     try {
@@ -121,6 +164,9 @@ const UploadExcelAkademik = () => {
       setDosenWaliFile(null)
       setDosenWaliFileName(null)
       ;(document.getElementById("dosenWaliInput") as HTMLInputElement).value = ""
+      
+      // Reload history setelah upload
+      await loadUploadHistory();
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Wali"
       toast.error(errorMsg)
@@ -142,6 +188,9 @@ const UploadExcelAkademik = () => {
       setAsistenFile(null);
       setAsistenFileName(null);
       (document.getElementById("asistenInput") as HTMLInputElement).value = ""; // Reset input file
+      
+      // Reload history setelah upload
+      await loadUploadHistory();
     } catch (err: any) {
       const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Asisten Perkuliahan dan Praktikum";
       toast.error(errorMsg);
@@ -163,6 +212,9 @@ const UploadExcelAkademik = () => {
         setDosbingAktifFile(null);
         setDosbingAktifFileName(null);
         (document.getElementById("dosbingAktifInput") as HTMLInputElement).value = "";
+        
+        // Reload history setelah upload
+        await loadUploadHistory();
       } catch (err: any) {
         const errorMsg = err.response?.data?.message || "Gagal mengunggah file Excel Dosen Pembimbing Mahasiswa Aktif";
         toast.error(errorMsg);
@@ -217,7 +269,24 @@ const UploadExcelAkademik = () => {
                 <FaFileArrowUp />
                 Pilih file
               </label>
-              <div>{dosenWaliFileName ? dosenWaliFileName : "Pilih file Excel Dosen Wali"}</div>
+              <div className="file-display">
+                {dosenWaliFileName ? (
+                  <span className="selected-file">{dosenWaliFileName}</span>
+                ) : uploadHistory["dosen-wali"]?.latestFile ? (
+                  <div 
+                    className="uploaded-file-info" 
+                    onClick={() => handleDownloadFile("dosen-wali", uploadHistory["dosen-wali"].latestFile.filename)}
+                    title="Klik untuk download"
+                  >
+                    <span className="file-name">📄 {uploadHistory["dosen-wali"].latestFile.filename}</span>
+                    <span className="file-date">
+                      Upload: {formatDate(uploadHistory["dosen-wali"].latestFile.uploadedAt)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="no-file">Pilih file Excel Dosen Wali</span>
+                )}
+              </div>
             </div>
             <ButtonWithIcon
               text={isUploading ? "Mengunggah..." : "Upload"}
@@ -250,7 +319,24 @@ const UploadExcelAkademik = () => {
                 <FaFileArrowUp />
                 Pilih file
               </label>
-              <div>{asistenFileName ? asistenFileName : "Pilih file Excel Asisten Perkuliahan dan Praktikum"}</div>
+              <div className="file-display">
+                {asistenFileName ? (
+                  <span className="selected-file">{asistenFileName}</span>
+                ) : uploadHistory["asisten"]?.latestFile ? (
+                  <div 
+                    className="uploaded-file-info" 
+                    onClick={() => handleDownloadFile("asisten", uploadHistory["asisten"].latestFile.filename)}
+                    title="Klik untuk download"
+                  >
+                    <span className="file-name">📄 {uploadHistory["asisten"].latestFile.filename}</span>
+                    <span className="file-date">
+                      Upload: {formatDate(uploadHistory["asisten"].latestFile.uploadedAt)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="no-file">Pilih file Excel Asisten Perkuliahan dan Praktikum</span>
+                )}
+              </div>
             </div>
             <ButtonWithIcon
               text={isUploading ? "Mengunggah..." : "Upload"}
@@ -283,7 +369,24 @@ const UploadExcelAkademik = () => {
                 <FaFileArrowUp />
                 Pilih file
               </label>
-              <div>{dosbingAktifFileName ? dosbingAktifFileName : "Pilih file Excel Dosen Pembimbing Mahasiswa Aktif"}</div>
+              <div className="file-display">
+                {dosbingAktifFileName ? (
+                  <span className="selected-file">{dosbingAktifFileName}</span>
+                ) : uploadHistory["pembimbing-aktif"]?.latestFile ? (
+                  <div 
+                    className="uploaded-file-info" 
+                    onClick={() => handleDownloadFile("pembimbing-aktif", uploadHistory["pembimbing-aktif"].latestFile.filename)}
+                    title="Klik untuk download"
+                  >
+                    <span className="file-name">📄 {uploadHistory["pembimbing-aktif"].latestFile.filename}</span>
+                    <span className="file-date">
+                      Upload: {formatDate(uploadHistory["pembimbing-aktif"].latestFile.uploadedAt)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="no-file">Pilih file Excel Dosen Pembimbing Mahasiswa Aktif</span>
+                )}
+              </div>
             </div>
             <ButtonWithIcon
               text={isUploading ? "Mengunggah..." : "Upload"}
