@@ -50,7 +50,9 @@ interface DraftSKData {
 }
 
 interface ExcelCheckResult {
-  complete: boolean
+  complete: boolean;
+  missingProdi?: string[];
+  foundProdi?: string[];
 }
 
 const DraftSK = () => {
@@ -81,6 +83,7 @@ const DraftSK = () => {
   const handleCloseExcelModal = () => setShowExcelModal(false);
   const handleGoToExcelUpload = () => navigate("/upload-excel-akademik");
 
+  const [missingProdi, setMissingProdi] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchDraftData = async () => {
@@ -158,9 +161,16 @@ const DraftSK = () => {
       }
 
       setExcelComplete(result?.complete || false)
+      setMissingProdi(result?.missingProdi || [])
+      
+      // Log missing prodi for debugging
+      if (result?.missingProdi && result.missingProdi.length > 0) {
+        console.log("Missing prodi:", result.missingProdi)
+      }
     } catch (error) {
       console.error(`Error checking Excel completeness for ${skType}:`, error)
       setExcelComplete(false)
+      setMissingProdi([])
     } finally {
       setCheckingExcel(false)
     }
@@ -473,12 +483,26 @@ const DraftSK = () => {
           <div className="modal">
             <h2>Data Excel Belum Lengkap</h2>
             <div>Masukkan data Excel terlebih dahulu di halaman upload Excel.</div>
-            <br></br>
+            {missingProdi.length > 0 && (
+              <div>
+                <br />
+                <strong>Prodi yang belum tersedia:</strong>
+                <div style={{ marginLeft: '7px' }}>
+                    {missingProdi.map((prodi) => (
+                        <div key={prodi}>{prodi}</div>
+                    ))}
+                </div>
+                <strong>Minta prodi untuk segera mengunggah excel</strong>
+              </div>
+            )}
+            <br />
             <div className="modal-buttons">
               <button className="button-outline" onClick={handleCloseExcelModal}>Tutup</button>
-              <button className="button-gotoexcel" onClick={handleGoToExcelUpload}>
-                Ke Halaman Upload Excel
-              </button>
+                {selectedJenisSK !== "PENGAJARAN" && selectedJenisSK !== "PEMBIMBING_PENGUJI" && (
+                    <button className="button-gotoexcel" onClick={handleGoToExcelUpload}>
+                        Ke Halaman Upload Excel
+                    </button>
+                )}
             </div>
           </div>
         </div>

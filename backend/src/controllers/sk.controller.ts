@@ -239,11 +239,13 @@ export const updateDraftSK = async (req: Request, res: Response) => {
 };
 
 export const validatePengajaranExcel = (req: Request, res: Response) => {
-    res.json({ complete: checkPengajaranExcel() });
+    const result = checkPengajaranExcel();
+    res.json(result);
 };
 
 export const validatePembimbingPengujiExcel = (req: Request, res: Response) => {
-    res.json({ complete: checkPembimbingPengujiExcel() });
+    const result = checkPembimbingPengujiExcel();
+    res.json(result);
 };
 
 export const validatePembimbingAktifExcel = (req: Request, res: Response) => {

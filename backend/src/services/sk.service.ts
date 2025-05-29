@@ -268,15 +268,24 @@ export const updateDraftSKService = async (no_sk: string, data: any) => {
 
 const PRODI_CODES = ["132", "135", "180", "181", "182", "183", "232", "235", "332", "932", "935"];
 
-function checkExcelByProdi(dirPath: string): boolean {
-  if (!fs.existsSync(dirPath)) return false;
+function checkExcelByProdi(dirPath: string): { complete: boolean; missingProdi: string[]; foundProdi: string[] } {
+  if (!fs.existsSync(dirPath)) {
+    return { complete: false, missingProdi: PRODI_CODES, foundProdi: [] };
+  }
+  
   const files = fs.readdirSync(dirPath);
   const foundCodes = new Set<string>();
+  
   files.forEach((f) => {
-  const match = f.match(/^(\d{3})[-_].+\.xlsx$/);
+    const match = f.match(/^(\d{3})[-_].+\.xlsx$/);
     if (match) foundCodes.add(match[1]);
   });
-  return PRODI_CODES.every((code) => foundCodes.has(code));
+  
+  const foundProdi = Array.from(foundCodes);
+  const missingProdi = PRODI_CODES.filter(code => !foundCodes.has(code));
+  const complete = PRODI_CODES.every((code) => foundCodes.has(code));
+  
+  return { complete, missingProdi, foundProdi };
 }
 
 function checkSingleExcel(dirPath: string): boolean {
