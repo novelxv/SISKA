@@ -85,6 +85,8 @@ const DraftSK = () => {
 
   const [missingProdi, setMissingProdi] = useState<string[]>([]);
 
+  const [previewLoading, setPreviewLoading] = useState(false);
+
   useEffect(() => {
     const fetchDraftData = async () => {
       if (!noSKParam) return
@@ -273,6 +275,7 @@ const DraftSK = () => {
 
   const handlePreview = async () => {
     try {
+      setPreviewLoading(true)
       const payload = {
         no_sk: noSK,
         judul,
@@ -289,6 +292,8 @@ const DraftSK = () => {
       window.open(url, "_blank")
     } catch (err) {
       toast.error("Gagal membuka preview")
+    } finally {
+      setPreviewLoading(false)
     }
   }
 
@@ -344,7 +349,7 @@ const DraftSK = () => {
           </div>
             <div className="button-blue" onClick={handlePreview}>
               <FaRegEye />
-              Preview
+              {previewLoading ? "Loading..." : "Preview"}
             </div>
         </div>
         <form className="form-container">
