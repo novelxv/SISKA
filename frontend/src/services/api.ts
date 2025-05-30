@@ -4,7 +4,11 @@ const API_BASE_URL = "https://siska-production.up.railway.app/api";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+    },
+    withCredentials: false,
 });
 
 api.interceptors.request.use((config) => {
@@ -14,5 +18,16 @@ api.interceptors.request.use((config) => {
     }
     return config;
 });
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default api;
