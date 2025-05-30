@@ -11,6 +11,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast, ToastContainer } from 'react-toastify';
+import api from '../services/api';
 
 interface DosenData {
   id: number;
@@ -53,28 +54,20 @@ export default function Dosen() {
     { value: "REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN", label: "KK Rekayasa Perangkat Lunak dan Pengetahuan" },
   ];
 
-  const token = localStorage.getItem("token");
   // Ambil data dari API
   useEffect(() => {
-    fetch('http://localhost:3000/api/dosen', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+    const fetchDosenData = async () => {
+      try {
+        const response = await api.get('/dosen');
+        setDosenData(response.data);
+      } catch (error: any) {
+        console.error('Error fetching dosen data:', error);
+        const errorMessage = error.response?.data?.message || 'Gagal mengambil data dosen';
+        toast.error(errorMessage);
       }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch dosen data');
-      }
-      return response.json();
-    })
-    .then(data => {
-      setDosenData(data);
-    })
-    .catch(error => {
-      console.error('Error fetching dosen data:', error);
-    });
+    };
+
+    fetchDosenData();
   }, []);
 
   // Filter dan sortir data
@@ -168,9 +161,9 @@ export default function Dosen() {
   };
 
   const handleDeleteDosen = (dosen: DosenData) => {
-    setDosenToDelete(dosen.id_dosen); // Set the selected Dosen to delete
+    setDosenToDelete(dosen.id_dosen);
     console.log("Fetched dosen data:", dosen); 
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true);
   };
 
   const confirmDelete = async () => {
@@ -178,25 +171,15 @@ export default function Dosen() {
   
     try {
       console.log("Deleting dosen with ID:", dosenToDelete);
-      const response = await fetch(`http://localhost:3000/api/dosen/${dosenToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-  
-      if (!response.ok) {
-        const errorBody = await response.text();
-        console.error('Server error:', response.status, errorBody);
-        throw new Error('Gagal menghapus dosen');
-      }
-  
+      await api.delete(`/dosen/${dosenToDelete}`);
+      
       // Update UI setelah hapus
       setDosenData(prev => prev.filter(dosen => dosen.id_dosen !== dosenToDelete));
-    } catch (error) {
+      toast.success("Dosen berhasil dihapus");
+    } catch (error: any) {
       console.error('Error deleting dosen:', error);
-      toast.error('Terjadi kesalahan saat menghapus dosen.');
+      const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat menghapus dosen.';
+      toast.error(errorMessage);
     } finally {
       setIsModalOpen(false);
       setDosenToDelete(null);
@@ -283,13 +266,11 @@ export default function Dosen() {
     return Status;
   };
 
-const formatDate = (isoDate: string): string => {
-  if (!isoDate) return '';
-  return new Date(isoDate).toISOString().slice(0, 10); 
-};
+  const formatDate = (isoDate: string): string => {
+    if (!isoDate) return '';
+    return new Date(isoDate).toISOString().slice(0, 10); 
+  };
 
-
-  
   const handleDownloadPDF = () => {
     // Buat dokumen PDF dengan orientasi landscape
     const doc = new jsPDF({

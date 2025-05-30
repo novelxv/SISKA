@@ -4,34 +4,15 @@ import InputField from "../components/Input";
 import { ArrowLeft } from "lucide-react";
 import "../styles/AddDosen.css";
 import "../styles/Global.css";
-import { useNavigate, useParams } from 'react-router-dom';  // useParams to get URL params
+import { useNavigate, useParams } from 'react-router-dom';
 import { FormEvent } from 'react';
 import SortButtonNew from '../components/SortButtonNew';
 import { toast, ToastContainer } from 'react-toastify';
 import { RiArrowLeftSLine } from 'react-icons/ri';
-import { checkWaliAktifExcel } from '../services/skService';
-
-const fetchDosenData = async (id: string) => {
-  const token = localStorage.getItem('token');
-
-  const response = await fetch(`http://localhost:3000/api/dosen/${id}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`, 
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Gagal mengambil data dosen. Status: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data;
-};
-
+import api from '../services/api';
 
 export default function EditDosen() {
-  const { id } = useParams();  // Ambil id dari URL params
+  const { id } = useParams();
   const navigate = useNavigate();
 
   // State untuk menampung data dosen
@@ -52,8 +33,11 @@ export default function EditDosen() {
 
   useEffect(() => {
     if (id) {
-      fetchDosenData(id)
-        .then(data => {
+      const fetchDosenData = async () => {
+        try {
+          const response = await api.get(`/dosen/${id}`);
+          const data = response.data;
+          
           setDosenData({
             nama_tanpa_gelar: data.nama_tanpa_gelar || '',
             nama_dengan_gelar: data.nama_plus_gelar || '',
@@ -68,16 +52,19 @@ export default function EditDosen() {
             aktif_sampai: data.aktif_sampai ? new Date(data.aktif_sampai).toISOString().split('T')[0] : '',
             instansi_asal: data.instansi_asal || '',
           });
-        })
-        .catch(error => {
+        } catch (error: any) {
           console.error('Error fetching dosen data:', error);
-        });
+          const errorMessage = error.response?.data?.message || 'Gagal mengambil data dosen';
+          toast.error(errorMessage);
+        }
+      };
+
+      fetchDosenData();
     }
   }, [id]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
     if (!dosenData.nama_tanpa_gelar.trim()) {
       toast.warning("Nama tanpa gelar wajib diisi.");
@@ -95,43 +82,29 @@ export default function EditDosen() {
       toast.warning("Jenis kepegawaian wajib dipilih.");
       return;
     }
-  
-    fetch(`http://localhost:3000/api/dosen/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(dosenData),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-      .then(response => {
-        if (response.status === 401) {
-          // Token tidak valid atau kadaluarsa
-          toast.error("Sesi Anda telah berakhir. Silakan login kembali.");
-          localStorage.removeItem("token");
-          navigate("/login"); // ganti dengan route login kamu
-          return;
-        }
-  
-        if (!response.ok) {
-          throw new Error("Gagal menyimpan data dosen.");
-        }
-  
-        return response.json();
-      })
-      .then(() => {
-        navigate("/dosen");
-      })
-      .catch(error => {
-        console.error("Error saat menyimpan data dosen:", error);
-        toast.error("Terjadi kesalahan saat menyimpan data.");
-      });
+
+    try {
+      await api.put(`/dosen/${id}`, dosenData);
+      toast.success("Data dosen berhasil diperbarui!");
+      navigate("/dosen");
+    } catch (error: any) {
+      console.error("Error saat menyimpan data dosen:", error);
+      
+      if (error.response?.status === 401) {
+        toast.error("Sesi Anda telah berakhir. Silakan login kembali.");
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
+      }
+      
+      const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat menyimpan data.";
+      toast.error(errorMessage);
+    }
   };
 
   const handleCancel = () => {
     navigate("/dosen");
   };
-  
 
   return (
     <div className="sk-container">
@@ -274,7 +247,6 @@ export default function EditDosen() {
               </div> 
             </div>
             <InputField label="Instansi Asal" name="instansi_asal" value={dosenData.instansi_asal} onChange={(e) => setDosenData({ ...dosenData, instansi_asal: e.target.value })} />
-
 
             <div className="form-actions">
               <button type="button" className="btn btn-cancel" onClick={() => navigate("/dosen")}>

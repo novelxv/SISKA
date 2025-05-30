@@ -7,8 +7,8 @@ import '../styles/Global.css';
 import { useNavigate } from 'react-router-dom';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import SortButtonNew from '../components/SortButtonNew';
-import { toast, ToastContainer } from "react-toastify"
-
+import { toast, ToastContainer } from "react-toastify";
+import api from '../services/api';
 
 export default function AddDosen() {
   const navigate = useNavigate();
@@ -55,33 +55,15 @@ export default function AddDosen() {
       toast.warning("Jenis kepegawaian wajib dipilih.");
       return;
     }
-    
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("Tidak ada token, silakan login kembali.");
-      return;
-    }
 
     try {
-      const response = await fetch("http://localhost:3000/api/dosen", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Gagal menambahkan dosen.");
-      }
-
+      const response = await api.post("/dosen", formData);
       toast.success("Dosen berhasil ditambahkan!");
       navigate("/dosen");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
-      toast.error("Terjadi kesalahan saat mengirim data.");
+      const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat mengirim data.";
+      toast.error(errorMessage);
     }
   };
 
