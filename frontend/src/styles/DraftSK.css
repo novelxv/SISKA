@@ -248,3 +248,23 @@
   cursor: pointer;
   border-radius: 6px;
 }
+
+.template-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.button-template {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: #1075ba;
+}

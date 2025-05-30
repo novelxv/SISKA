@@ -1,5 +1,5 @@
 import express from "express";
-import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK, getArchivedSKs, previewPublishedSK } from "../controllers/sk.controller";
+import { createDraftSK, getDraftSKs, publishSK, getPublishedSKs, generatePreviewSK, downloadPublishedSK, getSKDetail, uploadSKFile, deleteDraftSK, getDraftSKDetail, updateDraftSK, getDosenFromSK, getArchivedSKs, previewPublishedSK, downloadSKTemplate, uploadSKTemplateController, undoSKTemplate } from "../controllers/sk.controller";
 import { authMiddleware, akademikMiddleware } from "../middleware/auth.middleware";
 import {
     validatePengajaranExcel,
@@ -11,6 +11,7 @@ import {
     archiveSK,
     unarchiveSK,
 } from "../controllers/sk.controller";
+import { uploadSKTemplate } from "../utils/multer";
 
 const router = express.Router();
 
@@ -36,5 +37,8 @@ router.put("/:no_sk/archive", authMiddleware, akademikMiddleware, archiveSK);
 router.put("/:no_sk/unarchive", authMiddleware, akademikMiddleware, unarchiveSK);
 router.get("/archived", authMiddleware, akademikMiddleware, getArchivedSKs);
 router.get("/:no_sk/preview", authMiddleware, previewPublishedSK);
+router.get("/template/:jenis_sk/download", authMiddleware, akademikMiddleware, downloadSKTemplate);
+router.post("/template/:jenis_sk/upload", authMiddleware, akademikMiddleware, uploadSKTemplate.single("template"), uploadSKTemplateController);
+router.post("/template/:jenis_sk/undo", authMiddleware, akademikMiddleware, undoSKTemplate);
 
 export default router;

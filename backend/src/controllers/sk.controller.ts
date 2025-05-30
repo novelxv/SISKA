@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { NextFunction, Request, Response } from "express";
-import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService, getDraftSKDetailService, updateDraftSKService, archiveSKService, unarchiveSKService, getArchivedSKsService } from "../services/sk.service";
+import { createDraftSKService, getDraftSKsService, publishSKService, getPublishedSKsService, getDownloadPathService, getSKDetailService, uploadSKService, deleteDraftSKService, getDraftSKDetailService, updateDraftSKService, archiveSKService, unarchiveSKService, getArchivedSKsService, getTemplatePathService } from "../services/sk.service";
 import { generateSKPreviewService } from "../services/sk.template.service";
 import { convertDocxToPdf } from "../utils/convertToPdf";
 import { extractDosenFromSK } from "../utils/extractDosenFromSK";
@@ -312,3 +312,56 @@ export const previewPublishedSK = async(req: Request, res: Response) => {
         res.status(500).json({ message: "Gagal preview SK" })
     }
 }
+
+export const downloadSKTemplate = async (req: Request, res: Response) => {
+    try {
+        const { jenis_sk } = req.params;
+        const filePath = await getTemplatePathService(jenis_sk);
+        res.download(filePath, `template_sk_${jenis_sk}.pdf`);
+    } catch (err) {
+        console.error("Download SK error:", err);
+        res.status(500).json({ message: (err as Error).message || "Gagal mengunduh SK" });
+    }
+};
+
+export const uploadSKTemplateController = async (req: Request, res: Response) => {
+    try {
+        const { jenis_sk } = req.params;
+        const filePath = path.join(__dirname, "../../public/uploads", `sk_${jenis_sk}.docx`)
+
+        const templatePath = path.join(__dirname, "../templates", `sk_${jenis_sk}.docx`)
+        const backupPath = path.join(__dirname, "../templates", `sk_${jenis_sk}_backup.docx`)
+
+        if (fs.existsSync(templatePath)) {
+            fs.copyFileSync(templatePath, backupPath);
+        }
+
+        fs.copyFileSync(filePath, templatePath);
+
+        fs.unlinkSync(filePath);
+        res.status(200).json({ message: "Template SK berhasil diunggah", path: filePath });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Gagal upload template SK" });
+    }
+};
+
+export const undoSKTemplate = async (req: Request, res: Response) => {
+    try {
+        const { jenis_sk } = req.params;
+        const filePath = path.join(__dirname, "../../public/uploads", `sk_${jenis_sk}.docx`)
+
+        const templatePath = path.join(__dirname, "../templates", `sk_${jenis_sk}.docx`)
+        const backupPath = path.join(__dirname, "../templates", `sk_${jenis_sk}_backup.docx`)
+
+        if (fs.existsSync(templatePath)) {
+            fs.unlinkSync(templatePath);
+        }
+
+        fs.renameSync(backupPath, templatePath);
+        res.status(200).json({ message: "Berhasil undo upload template", path: filePath });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Gagal undo upload template" });
+    }
+};

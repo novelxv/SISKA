@@ -134,3 +134,22 @@ export const getArchivedSK = async () => {
   const res = await api.get("/sk/archived");
   return res.data;
 };
+
+export const downloadTemplate = async (jenis_sk: string): Promise<Blob> => {
+    const res = await api.get(`/sk/template/${jenis_sk.toLowerCase()}/download`, { responseType: "blob" });
+    return res.data;
+};
+
+export const uploadTemplate = async (jenis_sk: string, file: File) => {
+    const formData = new FormData();
+    formData.append("template", file);
+    const response = await api.post(`/sk/template/${jenis_sk.toLowerCase()}/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+};
+
+export const undoTemplate = async (jenis_sk: string): Promise<Blob> => {
+    const res = await api.post(`/sk/template/${jenis_sk.toLowerCase()}/undo`);
+    return res.data;
+};

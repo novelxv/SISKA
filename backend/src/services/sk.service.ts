@@ -332,3 +332,12 @@ export const getArchivedSKsService = async () => {
     include: { Dekan: true },
   });
 };
+
+export const getTemplatePathService = async (jenis_sk: string): Promise<string> => {
+    const filePath = path.join(__dirname, "../templates", `sk_${jenis_sk}.docx`);
+    if (!fs.existsSync(filePath)) {
+        throw new Error("Template SK tidak ditemukan");
+    }
+
+    return filePath;
+};

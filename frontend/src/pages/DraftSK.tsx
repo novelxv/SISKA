@@ -1,11 +1,11 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Sidebar from "../components/Navbar"
 import "../styles/Global.css"
 import "../styles/DraftSK.css"
-import { FaAngleLeft, FaImage, FaRegEye } from "react-icons/fa"
+import { FaAngleLeft, FaDownload, FaImage, FaRegEye, FaUndo, FaUpload } from "react-icons/fa"
 import { FaFileArrowUp } from "react-icons/fa6"
 import { useNavigate, useLocation } from "react-router-dom"
 import { toast, ToastContainer } from "react-toastify"
@@ -24,6 +24,9 @@ import {
   checkWaliTPBExcel,
   checkWaliAktifExcel,
   checkAsistenExcel,
+  downloadTemplate,
+  uploadTemplate,
+  undoTemplate,
 } from "../services/skService"
 import { RiQuestionLine } from "react-icons/ri"
 
@@ -86,6 +89,9 @@ const DraftSK = () => {
   const [missingProdi, setMissingProdi] = useState<string[]>([]);
 
   const [previewLoading, setPreviewLoading] = useState(false);
+
+  const [hasBackup, setHasBackup] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const fetchDraftData = async () => {
@@ -323,6 +329,44 @@ const DraftSK = () => {
   );
 };
 
+  const handleTemplateDownload = async (jenis_sk: string) => {
+    try {
+      const blob = await downloadTemplate(jenis_sk)
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.setAttribute("download", `template_sk_${jenis_sk.toLowerCase()}.docx`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch {
+      toast.error("Gagal mengunduh Template")
+    }
+  }
+
+  const handleTemplateUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+
+      try {
+        await uploadTemplate(selectedJenisSK, file)
+        setHasBackup(true)
+        toast.success("Template berhasil diunggah")
+      } catch (err) {
+        toast.error("Gagal upload template")
+      }
+    }
+  }
+
+  const handleTemplateUndo = async (jenis_sk: string) => {
+    try {
+      await undoTemplate(jenis_sk)
+      setHasBackup(false)
+      toast.success("Undo template berhasil")
+    } catch {
+      toast.error("Undo template gagal")
+    }
+  }
 
   if (isLoading) {
     return (
@@ -369,6 +413,28 @@ const DraftSK = () => {
                 </div>
               </div>
           </div>
+          {
+            selectedJenisSK != "" &&
+            <div className="template-buttons">
+              <button className="button-template" onClick={() => handleTemplateDownload(selectedJenisSK)}>
+                <FaDownload />Download Template
+              </button>
+              <button className="button-template" onClick={() => {fileInputRef.current? fileInputRef.current.click() : {}}}>
+                <FaUpload />Upload
+              </button>
+              <input
+                type="file"
+                accept=".docx"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleTemplateUpload}
+              />
+              {hasBackup &&
+              <button className="button-template" onClick={() => handleTemplateUndo(selectedJenisSK)}>
+                <FaUndo />
+              </button>}
+            </div>
+          }
           {getExcelStatusMessage()}
 
           <div className="inputrow2">
