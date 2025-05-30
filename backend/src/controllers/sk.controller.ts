@@ -140,6 +140,9 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
 };
 
 export const generatePreviewSK = async (req: Request, res: Response) => {
+    let tempDocxPath = '';
+    let tempPdfPath = '';
+    
     try {
         console.log("Starting preview generation...");
         console.log("Request body:", JSON.stringify(req.body, null, 2));
@@ -161,15 +164,42 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
         
         console.log("Document buffer generated, size:", docBuffer.length);
         
-        // Return DOCX directly to avoid LibreOffice crashes
+        const tmpDir = os.tmpdir();
         const timestamp = Date.now();
+        tempDocxPath = path.join(tmpDir, `preview-${timestamp}.docx`);
         
-        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        res.setHeader("Content-Disposition", `attachment; filename=preview-${timestamp}.docx`);
-        res.setHeader("Content-Length", docBuffer.length.toString());
-        res.status(200).send(docBuffer);
+        // Write DOCX file
+        fs.writeFileSync(tempDocxPath, docBuffer);
+        console.log("DOCX file written successfully");
         
-        console.log("DOCX preview sent successfully");
+        try {
+            // Try to convert to PDF
+            console.log("Converting DOCX to PDF...");
+            tempPdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
+            
+            // Read PDF file
+            const pdfBuffer = fs.readFileSync(tempPdfPath);
+            console.log("PDF buffer size:", pdfBuffer.length);
+            
+            // Set headers for PDF preview (inline, not attachment)
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader("Content-Disposition", `inline; filename=preview-${timestamp}.pdf`);
+            res.setHeader("Content-Length", pdfBuffer.length.toString());
+            res.status(200).send(pdfBuffer);
+            
+            console.log("PDF preview sent successfully");
+            
+        } catch (pdfError) {
+            console.warn("PDF conversion failed, falling back to DOCX:", pdfError);
+            
+            // Fallback to DOCX download
+            res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            res.setHeader("Content-Disposition", `attachment; filename=preview-${timestamp}.docx`);
+            res.setHeader("Content-Length", docBuffer.length.toString());
+            res.status(200).send(docBuffer);
+            
+            console.log("DOCX fallback sent successfully");
+        }
         
     } catch (err: any) {
         console.error("Error in generatePreviewSK:", err);
@@ -177,6 +207,20 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
             message: "Gagal generate preview SK",
             error: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
+    } finally {
+        // Cleanup temporary files
+        try {
+            if (tempDocxPath && fs.existsSync(tempDocxPath)) {
+                fs.unlinkSync(tempDocxPath);
+                console.log("Cleaned up DOCX file");
+            }
+            if (tempPdfPath && fs.existsSync(tempPdfPath)) {
+                fs.unlinkSync(tempPdfPath);
+                console.log("Cleaned up PDF file");
+            }
+        } catch (cleanupError) {
+            console.warn("Warning: Failed to cleanup temporary files:", cleanupError);
+        }
     }
 };
 
