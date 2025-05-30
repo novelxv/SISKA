@@ -105,8 +105,8 @@ async function categorizeLecturer(name: string): Promise<{
   }
 
   if (dosen?.jenis_kepegawaian === JenisKepegawaian.DOSEN_LUAR_STEI && dosen.instansi_asal != undefined) {
-    console.log(dosen.nama_plus_gelar)
-    console.log(dosen.instansi_asal)
+    // console.log(dosen.nama_plus_gelar)
+    // console.log(dosen.instansi_asal)
     return {
       category: "luar",
       group: "Dosen Luar STEI",
@@ -391,6 +391,6 @@ export async function processDosenPembimbingExcel(filePath: string): Promise<Pro
     result[programKey].tidak_tetap.sort((a, b) => a.jenis.localeCompare(b.jenis))
     result[programKey].luar.sort((a, b) => a.jenis.localeCompare(b.jenis))
   }
-  console.log("Processed Data:", JSON.stringify(result, null, 2));
+//   console.log("Processed Data:", JSON.stringify(result, null, 2));
   return result
 }

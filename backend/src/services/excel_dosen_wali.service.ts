@@ -272,7 +272,7 @@ export async function processDosenWaliMahasiswaAktifExcel(filePath: string) {
         })
       }
     }
-    console.log("Processed Data:", JSON.stringify(result, null, 2));
+    // console.log("Processed Data:", JSON.stringify(result, null, 2));
     return result
   } catch (error) {
     console.error("Error processing Excel file:", error)

@@ -139,9 +139,16 @@ const mapKKToEnum = (kk: string | undefined): KelompokKeahlian | undefined => {
   }
 
 async function main() {
+    // Cek apakah database sudah memiliki data
+    const existingUserCount = await prisma.user.count();
+    const existingDosenCount = await prisma.dosen.count();
 
-    // await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Dosen" CASCADE;`);
-    // await prisma.$executeRawUnsafe(`TRUNCATE TABLE "User" CASCADE;`);
+    if (existingUserCount > 0 || existingDosenCount > 0) {
+        console.log('Database sudah memiliki data, skipping seed...');
+        return;
+    }
+
+    console.log('Database kosong, menjalankan seeding...');
 
     const hashedPassword = await bcrypt.hash('akademik123', 10);
     const dosen = readExcelDosen("./sheets/sheets_pengajaran.xlsx");
