@@ -28,6 +28,7 @@ import {
   uploadTemplate,
   undoTemplate,
 } from "../services/skService"
+import api from "../services/api"
 import { RiQuestionLine } from "react-icons/ri"
 
 const jenisSKMap: Record<string, string> = {
@@ -114,8 +115,9 @@ const DraftSK = () => {
         setNamaDekan(draftData.Dekan?.nama || "")
 
         if (draftData.Dekan && draftData.Dekan.ttd_url) {
-          const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000"
-          setTtdPreview(apiBase + draftData.Dekan.ttd_url)
+          // Use API base URL instead of hardcoded localhost
+          const apiBaseUrl = api.defaults.baseURL?.replace('/api', '') || "https://siska-production.up.railway.app"
+          setTtdPreview(apiBaseUrl + draftData.Dekan.ttd_url)
           setTtdFilename(draftData.Dekan.ttd_url)
         } else {
           setTtdPreview(null)

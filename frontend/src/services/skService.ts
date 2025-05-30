@@ -87,7 +87,8 @@ export const updateDraftSK = async (no_sk: string, data: any) => {
 };
 
 export const getTTDPreview = (nip: string): string => {
-    return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/dekan/${nip}/ttd`;
+    const apiBaseUrl = api.defaults.baseURL?.replace('/api', '') || "https://siska-production.up.railway.app"
+    return `${apiBaseUrl}/dekan/${nip}/ttd`;
 };
 
 export const checkPengajaranExcel = async () => {
