@@ -1,10 +1,12 @@
 generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["multiSchema"]
 }
 
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
+    schemas = ["siska"]
 }
 
 model User {
@@ -14,12 +16,16 @@ model User {
     role       Role
     jenisKK    KelompokKeahlian?
     jenisProdi Prodi?
+    
+    @@schema("siska")
 }
 
 enum Role {
     AKADEMIK
     ADMIN_KK
     ADMIN_PRODI
+    
+    @@schema("siska")
 }
 
 model Dosen {
@@ -39,6 +45,8 @@ model Dosen {
   Pembimbing        Pembimbing[]
   Penguji           Penguji[]
   DosenMatkul       DosenMatkul[]
+  
+  @@schema("siska")
 }
 
 enum KelompokKeahlian {
@@ -51,6 +59,8 @@ enum KelompokKeahlian {
     TEKNOLOGI_INFORMASI
     TEKNIK_TELEKOMUNIKASI
     REKAYASA_PERANGKAT_LUNAK_DAN_PENGETAHUAN
+    
+    @@schema("siska")
 }
 
 enum JenisKepegawaian {
@@ -62,6 +72,8 @@ enum JenisKepegawaian {
     DOSEN_INDUSTRI
     ASISTEN_AKADEMIK
     TUTOR
+    
+    @@schema("siska")
 }
 
 enum StatusKepegawaian {
@@ -72,6 +84,8 @@ enum StatusKepegawaian {
     TUGAS_BELAJAR
     MENGUNDURKAN_DIRI
     DIBERHENTIKAN_HORMAT
+    
+    @@schema("siska")
 }
 
 enum JabatanFungsional {
@@ -79,6 +93,8 @@ enum JabatanFungsional {
   LEKTOR
   LEKTOR_KEPALA
   GURU_BESAR
+  
+  @@schema("siska")
 }
 
 model Pembimbing {
@@ -91,6 +107,8 @@ model Pembimbing {
   Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
 
   @@id([id_dosen, NIM])
+  
+  @@schema("siska")
 }
 
 model Penguji {
@@ -103,6 +121,8 @@ model Penguji {
   Mahasiswa       Mahasiswa @relation(fields: [NIM], references: [NIM])
 
   @@id([id_dosen, NIM])
+  
+  @@schema("siska")
 }
 
 model Mahasiswa {
@@ -115,6 +135,8 @@ model Mahasiswa {
   Pembimbing      Pembimbing[]
   Penguji         Penguji[]
   Asisten         Asisten[]
+  
+  @@schema("siska")
 }
 
 model Asisten {
@@ -144,6 +166,8 @@ model Asisten {
   MataKuliah      MataKuliah @relation(fields: [kode_matkul], references: [kode_matkul])
 
   @@id([NIM, kode_matkul])
+  
+  @@schema("siska")
 }
 
 enum JabatanAsisten {
@@ -151,6 +175,8 @@ enum JabatanAsisten {
     KOORDINATOR_ASISTEN_KULIAH
     ASISTEN_PRAKTIKUM
     KOORDINATOR_ASISTEN_PRAKTIKUM
+    
+    @@schema("siska")
 }
 
 model MataKuliah {
@@ -165,6 +191,8 @@ model MataKuliah {
   pembatasan      String
   DosenMatkul     DosenMatkul[]
   Asisten         Asisten[] 
+  
+  @@schema("siska")
 }
 
 model DosenMatkul {
@@ -178,6 +206,8 @@ model DosenMatkul {
   MataKuliah      MataKuliah  @relation(fields: [kode_matkul], references: [kode_matkul])
 
   @@id([id_dosen, kode_matkul])
+  
+  @@schema("siska")
 }
 
 model SK {
@@ -195,6 +225,8 @@ model SK {
   archived          Boolean  @default(false)
 
   Dekan         Dekan @relation(fields: [NIP_dekan], references: [NIP])
+  
+  @@schema("siska")
 }
 
 enum JenisSK {
@@ -205,11 +237,15 @@ enum JenisSK {
   WALI_MHS_AKTIF
   ASISTEN_PRAKTIKUM
   LUAR_PRODI
+  
+  @@schema("siska")
 }
 
 enum SKStatus {
   DRAFT
   PUBLISHED
+  
+  @@schema("siska")
 }
 
 model Dekan {
@@ -217,6 +253,8 @@ model Dekan {
   nama          String
   ttd_url       String?
   SKs           SK[]
+  
+  @@schema("siska")
 }
 
 model UploadStatus {
@@ -228,6 +266,8 @@ model UploadStatus {
   filePath        String?
   
   @@map("upload_status")
+  
+  @@schema("siska")
 }
 
 enum Prodi {
@@ -242,4 +282,6 @@ enum Prodi {
     PRODI_332 @map("332")
     PRODI_932 @map("932")
     PRODI_935 @map("935")
+    
+    @@schema("siska")
 }
