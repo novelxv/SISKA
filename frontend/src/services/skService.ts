@@ -41,7 +41,6 @@ export const uploadTTD = async (nip: string, file: File) => {
 export const previewSK = async (formData: any): Promise<Blob> => {
     const response = await api.post("/sk/preview", formData, {
         responseType: "blob",
-        timeout: 60000
     });
     return response.data;
 };
