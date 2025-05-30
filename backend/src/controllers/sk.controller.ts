@@ -141,26 +141,79 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
 
 export const generatePreviewSK = async (req: Request, res: Response) => {
     try {
+        console.log("Starting preview generation...");
+        console.log("Request body:", JSON.stringify(req.body, null, 2));
+        
         const data = req.body;
+        
+        // Validasi data input
+        if (!data || Object.keys(data).length === 0) {
+            res.status(400).json({ message: "Data SK tidak lengkap" });
+            return;
+        }
+        
+        console.log("Generating SK preview service...");
         const docBuffer = await generateSKPreviewService(data);
         
-        const tmpDir = os.tmpdir();
-        const tempDocxPath = path.join(tmpDir, `preview-${Date.now()}.docx`);
-        const tempPdfPath = tempDocxPath.replace(".docx", ".pdf");
+        if (!docBuffer || docBuffer.length === 0) {
+            throw new Error("Document buffer is empty");
+        }
         
+        console.log("Document buffer generated, size:", docBuffer.length);
+        
+        const tmpDir = os.tmpdir();
+        const timestamp = Date.now();
+        const tempDocxPath = path.join(tmpDir, `preview-${timestamp}.docx`);
+        const tempPdfPath = path.join(tmpDir, `preview-${timestamp}.pdf`);
+        
+        console.log("Temp DOCX path:", tempDocxPath);
+        console.log("Temp PDF path:", tempPdfPath);
+        
+        // Write DOCX file
         fs.writeFileSync(tempDocxPath, docBuffer);
+        console.log("DOCX file written successfully");
+        
+        // Convert to PDF
+        console.log("Converting DOCX to PDF...");
         const pdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
+        console.log("PDF conversion completed, path:", pdfPath);
+        
+        // Verify PDF file exists
+        if (!fs.existsSync(pdfPath)) {
+            throw new Error(`PDF file not found at: ${pdfPath}`);
+        }
         
         const pdfBuffer = fs.readFileSync(pdfPath);
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `inline; filename=preview.pdf`);
-        res.send(pdfBuffer);
+        console.log("PDF buffer size:", pdfBuffer.length);
         
-        fs.unlinkSync(tempDocxPath);
-        fs.unlinkSync(tempPdfPath);
-    } catch (err) {
-        console.error("Error preview SK PDF:", err);
-        res.status(500).json({ message: "Gagal generate preview PDF SK" });
+        // Set headers and send response
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", `inline; filename=preview-${timestamp}.pdf`);
+        res.setHeader("Content-Length", pdfBuffer.length.toString());
+        res.status(200).send(pdfBuffer);
+        
+        // Cleanup temporary files
+        try {
+            if (fs.existsSync(tempDocxPath)) fs.unlinkSync(tempDocxPath);
+            if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+            console.log("Temporary files cleaned up");
+        } catch (cleanupError) {
+            console.warn("Warning: Failed to cleanup temporary files:", cleanupError);
+        }
+        
+    } catch (err: any) {
+        console.error("Error in generatePreviewSK:", err);
+        console.error("Error stack:", err.stack);
+        
+        // Send detailed error for development
+        const errorMessage = process.env.NODE_ENV === 'development' 
+            ? `Gagal generate preview PDF SK: ${err.message}` 
+            : "Gagal generate preview PDF SK";
+            
+        res.status(500).json({ 
+            message: errorMessage,
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
     }
 };
 
