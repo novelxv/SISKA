@@ -87,7 +87,7 @@ export const updateDraftSK = async (no_sk: string, data: any) => {
 };
 
 export const getTTDPreview = (nip: string): string => {
-    const apiBaseUrl = api.defaults.baseURL?.replace('/api', '') || "https://siska-production.up.railway.app"
+    const apiBaseUrl = api.defaults.baseURL || "https://siska-production.up.railway.app/api"
     return `${apiBaseUrl}/dekan/${nip}/ttd`;
 };
 
