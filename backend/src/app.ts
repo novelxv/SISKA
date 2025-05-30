@@ -13,13 +13,27 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://siska-akademik.vercel.app",
+];
+
 app.use(cors({
-  origin: ["http://localhost:5173", "https://siska-production.up.railway.app", "https://siska-akademik.vercel.app"],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 
+app.use(express.json());
+
+// Static and routes
 app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 app.use("/api/auth", authRoutes);
 app.use('/api/users', userRoutes);

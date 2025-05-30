@@ -417,10 +417,10 @@ const DraftSK = () => {
             selectedJenisSK != "" &&
             <div className="template-buttons">
               <button className="button-template" onClick={() => handleTemplateDownload(selectedJenisSK)}>
-                <FaDownload />Download Template
+                <FaDownload />Download Template SK
               </button>
               <button className="button-template" onClick={() => {fileInputRef.current? fileInputRef.current.click() : {}}}>
-                <FaUpload />Upload
+                <FaUpload />Upload Template SK Baru
               </button>
               <input
                 type="file"
