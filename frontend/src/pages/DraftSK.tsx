@@ -115,7 +115,6 @@ const DraftSK = () => {
         setNamaDekan(draftData.Dekan?.nama || "")
 
         if (draftData.Dekan && draftData.Dekan.ttd_url) {
-          // Use API base URL instead of hardcoded localhost
           const apiBaseUrl = api.defaults.baseURL?.replace('/api', '') || "https://siska-production.up.railway.app"
           setTtdPreview(apiBaseUrl + draftData.Dekan.ttd_url)
           setTtdFilename(draftData.Dekan.ttd_url)
