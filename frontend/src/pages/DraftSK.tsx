@@ -295,20 +295,56 @@ const DraftSK = () => {
             nama_dekan: namaDekan,
         }
 
-        // For URL-based approach:
-        const response = await api.post('/sk/preview', payload);
+        // Use blob response approach (like published SK preview)
+        const response = await api.post('/sk/preview', payload, {
+            responseType: 'blob',
+            timeout: 60000
+        });
         
-        if (response.data.previewUrl) {
-            // Open preview URL in new window
-            window.open(api.defaults.baseURL?.replace('/api', '') + response.data.previewUrl, "_blank");
+        const contentType = response.headers['content-type'];
+        console.log('Response content type:', contentType);
+        
+        if (contentType?.includes('application/pdf')) {
+            // Handle PDF preview - open in new tab
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, "_blank");
+            
+            // Clean up URL after some time
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+            }, 60000);
+            
             toast.success('Preview SK berhasil dibuka');
+            
+        } else if (contentType?.includes('application/vnd.openxmlformats-officedocument')) {
+            // Handle DOCX download as fallback
+            const blob = new Blob([response.data], { 
+                type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+            });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `preview-${Date.now()}.docx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            
+            toast.info('PDF conversion gagal, file DOCX berhasil diunduh');
         } else {
-            throw new Error('No preview URL returned');
+            throw new Error('Unknown response format');
         }
         
     } catch (error: any) {
         console.error('Error previewing SK:', error);
-        toast.error('Gagal preview SK');
+        if (error.code === 'ECONNABORTED') {
+            toast.error('Request timeout. Coba lagi.');
+        } else if (error.response?.status === 502) {
+            toast.error('Server sedang mengalami masalah. Coba lagi nanti.');
+        } else {
+            toast.error('Gagal preview SK');
+        }
     } finally {
         setPreviewLoading(false)
     }
