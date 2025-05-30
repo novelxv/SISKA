@@ -140,6 +140,11 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
 };
 
 export const generatePreviewSK = async (req: Request, res: Response) => {
+    res.header('Access-Control-Allow-Origin', 'https://siska-akademik.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
     try {
         console.log("Starting preview generation...");
         console.log("Request body:", JSON.stringify(req.body, null, 2));
