@@ -140,11 +140,6 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
 };
 
 export const generatePreviewSK = async (req: Request, res: Response) => {
-    res.header('Access-Control-Allow-Origin', 'https://siska-akademik.vercel.app');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    
     try {
         console.log("Starting preview generation...");
         console.log("Request body:", JSON.stringify(req.body, null, 2));
@@ -166,57 +161,20 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
         
         console.log("Document buffer generated, size:", docBuffer.length);
         
-        const tmpDir = os.tmpdir();
+        // Return DOCX directly to avoid LibreOffice crashes
         const timestamp = Date.now();
-        const tempDocxPath = path.join(tmpDir, `preview-${timestamp}.docx`);
-        const tempPdfPath = path.join(tmpDir, `preview-${timestamp}.pdf`);
         
-        console.log("Temp DOCX path:", tempDocxPath);
-        console.log("Temp PDF path:", tempPdfPath);
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        res.setHeader("Content-Disposition", `attachment; filename=preview-${timestamp}.docx`);
+        res.setHeader("Content-Length", docBuffer.length.toString());
+        res.status(200).send(docBuffer);
         
-        // Write DOCX file
-        fs.writeFileSync(tempDocxPath, docBuffer);
-        console.log("DOCX file written successfully");
-        
-        // Convert to PDF
-        console.log("Converting DOCX to PDF...");
-        const pdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
-        console.log("PDF conversion completed, path:", pdfPath);
-        
-        // Verify PDF file exists
-        if (!fs.existsSync(pdfPath)) {
-            throw new Error(`PDF file not found at: ${pdfPath}`);
-        }
-        
-        const pdfBuffer = fs.readFileSync(pdfPath);
-        console.log("PDF buffer size:", pdfBuffer.length);
-        
-        // Set headers and send response
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `inline; filename=preview-${timestamp}.pdf`);
-        res.setHeader("Content-Length", pdfBuffer.length.toString());
-        res.status(200).send(pdfBuffer);
-        
-        // Cleanup temporary files
-        try {
-            if (fs.existsSync(tempDocxPath)) fs.unlinkSync(tempDocxPath);
-            if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-            console.log("Temporary files cleaned up");
-        } catch (cleanupError) {
-            console.warn("Warning: Failed to cleanup temporary files:", cleanupError);
-        }
+        console.log("DOCX preview sent successfully");
         
     } catch (err: any) {
         console.error("Error in generatePreviewSK:", err);
-        console.error("Error stack:", err.stack);
-        
-        // Send detailed error for development
-        const errorMessage = process.env.NODE_ENV === 'development' 
-            ? `Gagal generate preview PDF SK: ${err.message}` 
-            : "Gagal generate preview PDF SK";
-            
         res.status(500).json({ 
-            message: errorMessage,
+            message: "Gagal generate preview SK",
             error: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
     }
