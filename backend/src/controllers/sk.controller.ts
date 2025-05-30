@@ -140,6 +140,9 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
 };
 
 export const generatePreviewSK = async (req: Request, res: Response) => {
+    let tempDocxPath = '';
+    let tempPdfPath = '';
+    
     try {
         console.log("Starting preview generation...");
         console.log("Request body:", JSON.stringify(req.body, null, 2));
@@ -161,17 +164,9 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
         
         console.log("Document buffer generated, size:", docBuffer.length);
         
-        // Generate unique filename for preview
+        const tmpDir = os.tmpdir();
         const timestamp = Date.now();
-        const previewFileName = `preview-${timestamp}`;
-        
-        // Save to preview directory
-        const previewDir = path.join(__dirname, "../../public/uploads/preview");
-        if (!fs.existsSync(previewDir)) {
-            fs.mkdirSync(previewDir, { recursive: true });
-        }
-        
-        const tempDocxPath = path.join(previewDir, `${previewFileName}.docx`);
+        tempDocxPath = path.join(tmpDir, `preview-${timestamp}.docx`);
         
         // Write DOCX file
         fs.writeFileSync(tempDocxPath, docBuffer);
@@ -180,9 +175,9 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
         try {
             // Try to convert to PDF
             console.log("Converting DOCX to PDF...");
-            const tempPdfPath = await convertDocxToPdf(tempDocxPath, previewDir);
+            tempPdfPath = await convertDocxToPdf(tempDocxPath, tmpDir);
             
-            // Read and send PDF file
+            // Read PDF file
             const pdfBuffer = fs.readFileSync(tempPdfPath);
             console.log("PDF buffer size:", pdfBuffer.length);
             
@@ -194,22 +189,6 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
             
             console.log("PDF preview sent successfully");
             
-            // Cleanup files after 60 seconds
-            setTimeout(() => {
-                try {
-                    if (fs.existsSync(tempDocxPath)) {
-                        fs.unlinkSync(tempDocxPath);
-                        console.log("Cleaned up DOCX file");
-                    }
-                    if (fs.existsSync(tempPdfPath)) {
-                        fs.unlinkSync(tempPdfPath);
-                        console.log("Cleaned up PDF file");
-                    }
-                } catch (cleanupError) {
-                    console.warn("Warning: Failed to cleanup preview files:", cleanupError);
-                }
-            }, 60000); // Cleanup after 60 seconds
-            
         } catch (pdfError) {
             console.warn("PDF conversion failed, falling back to DOCX:", pdfError);
             
@@ -220,18 +199,6 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
             res.status(200).send(docBuffer);
             
             console.log("DOCX fallback sent successfully");
-            
-            // Cleanup DOCX file after 60 seconds
-            setTimeout(() => {
-                try {
-                    if (fs.existsSync(tempDocxPath)) {
-                        fs.unlinkSync(tempDocxPath);
-                        console.log("Cleaned up DOCX file");
-                    }
-                } catch (cleanupError) {
-                    console.warn("Warning: Failed to cleanup DOCX file:", cleanupError);
-                }
-            }, 60000);
         }
         
     } catch (err: any) {
@@ -240,6 +207,20 @@ export const generatePreviewSK = async (req: Request, res: Response) => {
             message: "Gagal generate preview SK",
             error: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
+    } finally {
+        // Cleanup temporary files
+        try {
+            if (tempDocxPath && fs.existsSync(tempDocxPath)) {
+                fs.unlinkSync(tempDocxPath);
+                console.log("Cleaned up DOCX file");
+            }
+            if (tempPdfPath && fs.existsSync(tempPdfPath)) {
+                fs.unlinkSync(tempPdfPath);
+                console.log("Cleaned up PDF file");
+            }
+        } catch (cleanupError) {
+            console.warn("Warning: Failed to cleanup temporary files:", cleanupError);
+        }
     }
 };
 
