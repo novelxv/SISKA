@@ -283,25 +283,34 @@ const DraftSK = () => {
 
   const handlePreview = async () => {
     try {
-      setPreviewLoading(true)
-      const payload = {
-        no_sk: noSK,
-        judul,
-        jenis_sk: selectedJenisSK,
-        tahun_akademik: Number(tahunAkademik.substring(0, 4)),
-        semester: Number(semester),
-        tanggal,
-        NIP_dekan: nipDekan,
-        nama_dekan: namaDekan,
-      }
+        setPreviewLoading(true)
+        const payload = {
+            no_sk: noSK,
+            judul,
+            jenis_sk: selectedJenisSK,
+            tahun_akademik: Number(tahunAkademik.substring(0, 4)),
+            semester: Number(semester),
+            tanggal,
+            NIP_dekan: nipDekan,
+            nama_dekan: namaDekan,
+        }
 
-      const blob = await previewSK(payload)
-      const url = window.URL.createObjectURL(blob)
-      window.open(url, "_blank")
-    } catch (err) {
-      toast.error("Gagal membuka preview")
+        // For URL-based approach:
+        const response = await api.post('/sk/preview', payload);
+        
+        if (response.data.previewUrl) {
+            // Open preview URL in new window
+            window.open(api.defaults.baseURL?.replace('/api', '') + response.data.previewUrl, "_blank");
+            toast.success('Preview SK berhasil dibuka');
+        } else {
+            throw new Error('No preview URL returned');
+        }
+        
+    } catch (error: any) {
+        console.error('Error previewing SK:', error);
+        toast.error('Gagal preview SK');
     } finally {
-      setPreviewLoading(false)
+        setPreviewLoading(false)
     }
   }
 
