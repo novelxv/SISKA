@@ -417,10 +417,10 @@ const DraftSK = () => {
             selectedJenisSK != "" &&
             <div className="template-buttons">
               <button className="button-template" onClick={() => handleTemplateDownload(selectedJenisSK)}>
-                <FaDownload />Download Template
+                <FaDownload />Download Template SK
               </button>
               <button className="button-template" onClick={() => {fileInputRef.current? fileInputRef.current.click() : {}}}>
-                <FaUpload />Upload
+                <FaUpload />Upload Template SK
               </button>
               <input
                 type="file"
@@ -525,7 +525,7 @@ const DraftSK = () => {
               </div>
               <div className="button-white" id="button-white">
                 <label htmlFor="upload-ttd" style={{ cursor: "pointer" }}>
-                  <FaFileArrowUp /> Pilih file
+                  <FaFileArrowUp /> Pilih file .png
                 </label>
                 <input
                   className="sign-input-button"

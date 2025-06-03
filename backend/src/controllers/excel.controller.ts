@@ -188,6 +188,14 @@ export const getUploadHistory = async (req: AuthenticatedRequest, res: Response)
       if (fs.existsSync(destDir)) {
         files = fs.readdirSync(destDir);
         
+        // Filter out .gitkeep dan file sistem lainnya
+        files = files.filter(file => 
+          !file.startsWith('.') && 
+          file !== '.gitkeep' && 
+          file !== '.DS_Store' && 
+          file !== 'Thumbs.db'
+        );
+        
         // Jika jenis pengajaran atau pembimbing-penguji, filter berdasarkan prefix kodeProdi-
         if (jenis === "pengajaran" || jenis === "pembimbing-penguji") {
           files = files.filter(file => file.startsWith(`${kodeProdi}-`));
