@@ -32,7 +32,7 @@ import {
 } from "../services/sk.service"
 
 // Add CORS headers to all responses
-const addCorsHeaders = (res: Response) => {
+const addCorsHeaders = (res: Response): void => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS,PATCH")
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Accept")
@@ -186,7 +186,7 @@ export const uploadSKFile = [
   },
 ]
 
-export const createDraftSK = async (req: Request, res: Response) => {
+export const createDraftSK = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const data = req.body
@@ -199,7 +199,7 @@ export const createDraftSK = async (req: Request, res: Response) => {
   }
 }
 
-export const getDraftSKs = async (req: Request, res: Response) => {
+export const getDraftSKs = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const drafts = await getDraftSKsService()
@@ -211,7 +211,7 @@ export const getDraftSKs = async (req: Request, res: Response) => {
   }
 }
 
-export const publishSK = async (req: Request, res: Response) => {
+export const publishSK = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -225,7 +225,7 @@ export const publishSK = async (req: Request, res: Response) => {
   }
 }
 
-export const getPublishedSKs = async (req: Request, res: Response) => {
+export const getPublishedSKs = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const published = await getPublishedSKsService()
@@ -237,7 +237,7 @@ export const getPublishedSKs = async (req: Request, res: Response) => {
   }
 }
 
-export const downloadPublishedSK = async (req: Request, res: Response) => {
+export const downloadPublishedSK = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -251,7 +251,7 @@ export const downloadPublishedSK = async (req: Request, res: Response) => {
   }
 }
 
-export const getSKDetail = async (req: Request, res: Response) => {
+export const getSKDetail = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -270,7 +270,7 @@ export const getSKDetail = async (req: Request, res: Response) => {
   }
 }
 
-export const deleteDraftSK = async (req: Request, res: Response) => {
+export const deleteDraftSK = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -284,7 +284,7 @@ export const deleteDraftSK = async (req: Request, res: Response) => {
   }
 }
 
-export const getDraftSKDetail = async (req: Request, res: Response) => {
+export const getDraftSKDetail = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -302,7 +302,7 @@ export const getDraftSKDetail = async (req: Request, res: Response) => {
   }
 }
 
-export const updateDraftSK = async (req: Request, res: Response) => {
+export const updateDraftSK = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -317,34 +317,34 @@ export const updateDraftSK = async (req: Request, res: Response) => {
   }
 }
 
-export const validatePengajaranExcel = (req: Request, res: Response) => {
+export const validatePengajaranExcel = (req: Request, res: Response): void => {
   addCorsHeaders(res)
   const result = checkPengajaranExcel()
   res.json(result)
 }
 
-export const validatePembimbingPengujiExcel = (req: Request, res: Response) => {
+export const validatePembimbingPengujiExcel = (req: Request, res: Response): void => {
   addCorsHeaders(res)
   const result = checkPembimbingPengujiExcel()
   res.json(result)
 }
 
-export const validatePembimbingAktifExcel = (req: Request, res: Response) => {
+export const validatePembimbingAktifExcel = (req: Request, res: Response): void => {
   addCorsHeaders(res)
   res.json({ complete: checkPembimbingAktifExcel() })
 }
 
-export const validateWaliTPBExcel = (req: Request, res: Response) => {
+export const validateWaliTPBExcel = (req: Request, res: Response): void => {
   addCorsHeaders(res)
   res.json({ complete: checkWaliTPBExcel() })
 }
 
-export const validateWaliAktifExcel = (req: Request, res: Response) => {
+export const validateWaliAktifExcel = (req: Request, res: Response): void => {
   addCorsHeaders(res)
   res.json({ complete: checkWaliAktifExcel() })
 }
 
-export const validateAsistenExcel = (req: Request, res: Response) => {
+export const validateAsistenExcel = (req: Request, res: Response): void => {
   addCorsHeaders(res)
   res.json({ complete: checkAsistenExcel() })
 }
@@ -389,7 +389,7 @@ export const getArchivedSKs = async (req: Request, res: Response): Promise<void>
   }
 }
 
-export const previewPublishedSK = async (req: Request, res: Response) => {
+export const previewPublishedSK = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { no_sk } = req.params
@@ -406,7 +406,7 @@ export const previewPublishedSK = async (req: Request, res: Response) => {
   }
 }
 
-export const downloadSKTemplate = async (req: Request, res: Response) => {
+export const downloadSKTemplate = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { jenis_sk } = req.params
@@ -419,7 +419,7 @@ export const downloadSKTemplate = async (req: Request, res: Response) => {
   }
 }
 
-export const uploadSKTemplateController = async (req: Request, res: Response) => {
+export const uploadSKTemplateController = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { jenis_sk } = req.params
@@ -443,7 +443,7 @@ export const uploadSKTemplateController = async (req: Request, res: Response) =>
   }
 }
 
-export const undoSKTemplate = async (req: Request, res: Response) => {
+export const undoSKTemplate = async (req: Request, res: Response): Promise<void> => {
   try {
     addCorsHeaders(res)
     const { jenis_sk } = req.params
