@@ -1,58 +1,98 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import path from "path";
-import authRoutes from "./routes/auth.routes";
-import userRoutes from './routes/user.routes';
-import skRoutes from "./routes/sk.routes";
-import dekanRoutes from "./routes/dekan.routes";
-import dosenRoutes from "./routes/dosen.routes";
-import excelRoutes from "./routes/excel.routes";
+import express from "express"
+import cors from "cors"
+import dotenv from "dotenv"
+import path from "path"
+import authRoutes from "./routes/auth.routes"
+import userRoutes from "./routes/user.routes"
+import skRoutes from "./routes/sk.routes"
+import dekanRoutes from "./routes/dekan.routes"
+import dosenRoutes from "./routes/dosen.routes"
+import excelRoutes from "./routes/excel.routes"
 
-dotenv.config();
+dotenv.config()
 
-const app = express();
+const app = express()
 
 const allowedOrigins = [
   "http://localhost:5173",
   "https://siska-akademik.vercel.app",
   "https://siska-production.up.railway.app",
-];
+]
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log(`CORS blocked origin: ${origin}`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: [
-    "Content-Type", 
-    "Authorization", 
-    "Access-Control-Allow-Origin",
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Methods"
-  ],
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true)
 
-app.options('*', cors());
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        console.log(`CORS blocked origin: ${origin}`)
+        callback(null, true) // change this later
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Headers",
+      "Access-Control-Allow-Methods",
+      "X-Requested-With",
+      "Accept",
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
+  }),
+)
 
-app.use(express.json());
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*")
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS,PATCH")
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Accept")
+  res.header("Access-Control-Allow-Credentials", "true")
+  res.sendStatus(200)
+})
 
-// Static and routes
-app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
-app.use("/api/auth", authRoutes);
-app.use('/api/users', userRoutes);
-app.use("/api/sk", skRoutes);
-app.use("/api/dekan", dekanRoutes);
-app.use("/api/dosen", dosenRoutes);
-app.use("/api/excel", excelRoutes);
+app.use(express.json({ limit: "50mb" }))
+app.use(express.urlencoded({ extended: true, limit: "50mb" }))
 
-export default app;
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`)
+  console.log("Headers:", req.headers)
+  next()
+})
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*")
+  res.header("Access-Control-Allow-Credentials", "true")
+  next()
+})
+
+app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")))
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() })
+})
+
+app.use("/api/auth", authRoutes)
+app.use("/api/users", userRoutes)
+app.use("/api/sk", skRoutes)
+app.use("/api/dekan", dekanRoutes)
+app.use("/api/dosen", dosenRoutes)
+app.use("/api/excel", excelRoutes)
+
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error("Error:", err)
+  res.status(500).json({
+    message: "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err.message : "Something went wrong",
+  })
+})
+
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" })
+})
+
+export default app

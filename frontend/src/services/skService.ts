@@ -39,10 +39,22 @@ export const uploadTTD = async (nip: string, file: File) => {
 
 // Modified preview function - now saves the file for drafts
 export const previewSK = async (formData: any): Promise<Blob> => {
-  const response = await api.post("/sk/preview", formData, {
-    responseType: "blob",
-  })
-  return response.data
+  try {
+    const response = await api.post("/sk/preview", formData, {
+      responseType: "blob",
+      timeout: 120000, // 2 minutes
+    })
+    return response.data
+  } catch (error: any) {
+    console.error("Preview failed:", error)
+
+    // Fallback: try with different approach
+    if (error.code === "ECONNABORTED" || error.response?.status === 502) {
+      throw new Error("Server sedang sibuk, silakan coba lagi dalam beberapa saat")
+    }
+
+    throw error
+  }
 }
 
 // New function for previewing draft SK using saved file
@@ -95,8 +107,7 @@ export const updateDraftSK = async (no_sk: string, data: any) => {
 }
 
 export const getTTDPreview = (nip: string): string => {
-    const apiBaseUrl = api.defaults.baseURL?.replace('/api', '') || "https://siska-production.up.railway.app"
-  return `${apiBaseUrl}/dekan/${nip}/ttd`
+  return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/dekan/${nip}/ttd`
 }
 
 export const checkPengajaranExcel = async () => {
