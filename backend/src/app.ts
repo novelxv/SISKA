@@ -21,14 +21,14 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
       if (!origin) return callback(null, true)
 
       if (allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
         console.log(`CORS blocked origin: ${origin}`)
-        callback(new Error("Not allowed by CORS"))
+        callback(null, true)
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -47,20 +47,14 @@ app.use(
   }),
 )
 
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*")
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS,PATCH")
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With, Accept")
-  res.header("Access-Control-Allow-Credentials", "true")
-  res.sendStatus(200)
-})
+app.options("*", cors())
 
 app.use(express.json({ limit: "50mb" }))
 app.use(express.urlencoded({ extended: true, limit: "50mb" }))
 
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`)
-  console.log("Headers:", req.headers)
+  console.log("Origin:", req.headers.origin)
   next()
 })
 
