@@ -526,7 +526,7 @@ const DraftSK = () => {
               </div>
               <div className="button-white" id="button-white">
                 <label htmlFor="upload-ttd" style={{ cursor: "pointer" }}>
-                  <FaFileArrowUp /> Pilih file
+                  <FaFileArrowUp /> Pilih file (.png)
                 </label>
                 <input
                   className="sign-input-button"
