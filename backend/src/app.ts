@@ -28,7 +28,7 @@ app.use(
         callback(null, true)
       } else {
         console.log(`CORS blocked origin: ${origin}`)
-        callback(null, true) // change this later
+        callback(new Error("Not allowed by CORS"))
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -61,12 +61,6 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }))
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`)
   console.log("Headers:", req.headers)
-  next()
-})
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*")
-  res.header("Access-Control-Allow-Credentials", "true")
   next()
 })
 
