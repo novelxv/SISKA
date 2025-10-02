@@ -14,7 +14,7 @@ import { checkWaliAktifExcel } from '../services/skService';
 const fetchDosenData = async (id: string) => {
   const token = localStorage.getItem('token');
 
-  const response = await fetch(`http://localhost:3000/api/dosen/${id}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL || "http://103.107.4.28:3000"}/api/dosen/${id}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`, 
@@ -96,7 +96,7 @@ export default function EditDosen() {
       return;
     }
   
-    fetch(`http://localhost:3000/api/dosen/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://103.107.4.28:3000"}/api/dosen/${id}`, {
       method: 'PUT',
       body: JSON.stringify(dosenData),
       headers: {

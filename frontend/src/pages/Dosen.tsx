@@ -56,7 +56,7 @@ export default function Dosen() {
   const token = localStorage.getItem("token");
   // Ambil data dari API
   useEffect(() => {
-    fetch('http://localhost:3000/api/dosen', {
+    fetch(`${import.meta.env.VITE_API_URL || "http://103.107.4.28:3000"}/api/dosen`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ export default function Dosen() {
   
     try {
       console.log("Deleting dosen with ID:", dosenToDelete);
-      const response = await fetch(`http://localhost:3000/api/dosen/${dosenToDelete}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://103.107.4.28:3000"}/api/dosen/${dosenToDelete}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

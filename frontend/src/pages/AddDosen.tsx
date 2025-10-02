@@ -63,7 +63,7 @@ export default function AddDosen() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/dosen", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://103.107.4.28:3000"}/api/dosen`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
